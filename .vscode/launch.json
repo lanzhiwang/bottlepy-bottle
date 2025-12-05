@@ -12,6 +12,15 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "python": "/root/miniconda3/envs/bottle/bin/python",
+        },
+        {
+            "name": "bottle-debug-codespaces",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "python": "/workspaces/bottlepy-bottle/.venv/bin/python",
         }
     ]
 }
