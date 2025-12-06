@@ -131,15 +131,29 @@ class TemplateError(BottleException):
 
 def WSGIHandler(environ, start_response):
     """The bottle WSGI-handler."""
+
+    print '======================================='
+    print 'WSGIHandler'
+    print 'WSGIHandler environ:', environ
+    print 'WSGIHandler start_response:', start_response
+
     global request
     global response
     request.bind(environ)
     response.bind()
+
     try:
         handler, args = match_url(request.path, request.method)
+        print 'WSGIHandler handler:', handler
+        print 'WSGIHandler args:', args
+
         if not handler:
             raise HTTPError(404, "Not found")
+
         output = handler(**args)
+        print 'WSGIHandler hasattr(output, read):', hasattr(output, 'read')
+        print 'WSGIHandler isinstance(output, str):', isinstance(output, str)
+
     except BreakTheBottle, shard:
         output = shard.output
     except Exception, exception:
@@ -186,6 +200,13 @@ class Request(threading.local):
         self.path = self._environ.get('PATH_INFO', '/').strip()
         if not self.path.startswith('/'):
             self.path = '/' + self.path
+        print
+        print 'Request bind self._environ: ', self._environ
+        print 'Request bind self._GET: ', self._GET
+        print 'Request bind self._POST: ', self._POST
+        print 'Request bind self._GETPOST: ', self._GETPOST
+        print 'Request bind self._COOKIES: ', self._COOKIES
+        print 'Request bind self.path: ', self.path
 
     @property
     def method(self):
@@ -210,12 +231,15 @@ class Request(threading.local):
         """Returns a dict with GET parameters."""
         if self._GET is None:
             raw_dict = parse_qs(self.query_string, keep_blank_values=1)
+            print 'Request GET raw_dict:', raw_dict
+
             self._GET = {}
             for key, value in raw_dict.items():
                 if len(value) == 1:
                     self._GET[key] = value[0]
                 else:
                     self._GET[key] = value
+        print 'Request GET self._GET:', self._GET
         return self._GET
 
     @property
@@ -223,6 +247,8 @@ class Request(threading.local):
         """Returns a dict with parsed POST data."""
         if self._POST is None:
             raw_data = cgi.FieldStorage(fp=self._environ['wsgi.input'], environ=self._environ)
+            print 'Request POST raw_data:', raw_data
+
             self._POST = {}
             if raw_data:
                 for key in raw_data:
@@ -232,6 +258,7 @@ class Request(threading.local):
                         self._POST[key] = raw_data[key]
                     else:
                         self._POST[key] = raw_data[key].value
+        print 'Request POST self._POST:', self._POST
         return self._POST
 
     @property
@@ -240,6 +267,7 @@ class Request(threading.local):
         if self._GETPOST is None:
             self._GETPOST = dict(self.GET)
             self._GETPOST.update(dict(self.POST))
+        print 'Request POST self._GETPOST:', self._GETPOST
         return self._GETPOST
 
     @property
@@ -247,9 +275,12 @@ class Request(threading.local):
         """Returns a dict with COOKIES."""
         if self._COOKIES is None:
             raw_dict = Cookie.SimpleCookie(self._environ.get('HTTP_COOKIE',''))
+            print 'Request COOKIES raw_dict:', raw_dict
+
             self._COOKIES = {}
             for cookie in raw_dict.values():
                 self._COOKIES[cookie.key] = cookie.value
+        print 'Request COOKIES self._COOKIES:', self._COOKIES
         return self._COOKIES
 
 
@@ -264,11 +295,14 @@ class Response(threading.local):
         self.header = HeaderDict()
         self.content_type = 'text/html'
         self.error = None
+        print
+        print 'Response bind self.header: ', self.header
 
     @property
     def COOKIES(self):
         if not self._COOKIES:
             self._COOKIES = Cookie.SimpleCookie()
+        print 'Response COOKIES self._COOKIES: ', self._COOKIES
         return self._COOKIES
 
     def set_cookie(self, key, value, **kargs):
@@ -276,13 +310,16 @@ class Response(threading.local):
         self.COOKIES[key] = value
         for k in kargs:
             self.COOKIES[key][k] = kargs[k]
+        print 'Response set_cookie self._COOKIES: ', self._COOKIES
 
     def get_content_type(self):
         '''Gives access to the 'Content-Type' header and defaults to 'text/html'.'''
+        print 'Response get_content_type self.header: ', self.header
         return self.header['Content-Type']
         
     def set_content_type(self, value):
         self.header['Content-Type'] = value
+        print 'Response set_content_type self.header: ', self.header
         
     content_type = property(get_content_type, set_content_type, None, get_content_type.__doc__)
 
@@ -336,9 +373,17 @@ def redirect(url, code=307):
 
 def send_file(filename, root, guessmime = True, mimetype = 'text/plain'):
     """ Aborts execution and sends a static files as response. """
+    print
+    print 'send_file filename:', filename
+    print 'send_file root:', root
+    print 'send_file guessmime:', guessmime
+    print 'send_file mimetype:', mimetype
+
     root = os.path.abspath(root) + '/'
     filename = os.path.normpath(filename).strip('/')
     filename = os.path.join(root, filename)
+    print 'send_file root:', root
+    print 'send_file filename:', filename
     
     if not filename.startswith(root):
         abort(401, "Access denied.")
@@ -349,6 +394,7 @@ def send_file(filename, root, guessmime = True, mimetype = 'text/plain'):
 
     if guessmime:
         guess = mimetypes.guess_type(filename)[0]
+        print 'send_file guess:', guess
         if guess:
             response.content_type = guess
         elif mimetype:
@@ -357,6 +403,8 @@ def send_file(filename, root, guessmime = True, mimetype = 'text/plain'):
         response.content_type = mimetype
 
     stats = os.stat(filename)
+    print 'send_file stats:', stats
+
     # TODO: HTTP_IF_MODIFIED_SINCE -> 304 (Thu, 02 Jul 2009 23:16:31 CEST)
     if 'Content-Length' not in response.header:
         response.header['Content-Length'] = stats.st_size
@@ -393,7 +441,14 @@ def match_url(url, method='GET'):
     """Returns the first matching handler and a parameter dict or (None, None).
     
     This reorders the ROUTING_REGEXP list every 1000 requests. To turn this off, use OPTIMIZER=False"""
+
+    print
+    print 'match_url url:', url
+    print 'match_url method:', method
+
     url = '/' + url.strip().lstrip("/")
+    print 'match_url url:', url
+
     # Search for static routes first
     route = ROUTES_SIMPLE.get(method,{}).get(url,None)
     if route:
@@ -420,17 +475,38 @@ def add_route(route, handler, method='GET', simple=False):
         def hello():
           return "Hello world!"
         add_route(r'/hello', hello)"""
+
+    print 'add_route route:', route
+    print 'add_route handler:', handler
+    print 'add_route method:', method
+    print 'add_route simple:', simple
+
     method = method.strip().upper()
+
+    print 'add_route re.match:', re.match(r'^/(\w+/)*\w*$', route)
+
     if re.match(r'^/(\w+/)*\w*$', route) or simple:
         ROUTES_SIMPLE.setdefault(method, {})[route] = handler
     else:
         route = compile_route(route)
+        print 'add_route route:', route
         ROUTES_REGEXP.setdefault(method, []).append([route, handler])
+
+    print 'add_route ROUTES_SIMPLE:', ROUTES_SIMPLE
+    print 'add_route ROUTES_REGEXP:', ROUTES_REGEXP
+    print '======================================='
+
 
 
 def route(url, **kargs):
     """ Decorator for request handler. Same as add_route(url, handler)."""
+
+    print '======================================='
+    print 'route'
+    print 'route url:', url
+    print 'route kargs:', kargs
     def wrapper(handler):
+        print 'route handler:', handler
         add_route(url, handler, **kargs)
         return handler
     return wrapper
@@ -542,10 +618,23 @@ def run(server=WSGIRefServer, host='127.0.0.1', port=8080, optinmize = False, **
     You may choose between WSGIRefServer, CherryPyServer, FlupServer and
     PasteServer or write your own server adapter.
     """
+
+    print '======================================='
+    print 'run'
+    print 'run server:', server
+    print 'run host:', host
+    print 'run port:', port
+    print 'run optinmize:', optinmize
+    print 'run kargs:', kargs
+    print 'run DEBUG:', DEBUG
+
     global OPTIMIZER
     
     OPTIMIZER = bool(optinmize)
+    print 'run OPTIMIZER:', OPTIMIZER
+
     quiet = bool('quiet' in kargs and kargs['quiet'])
+    print 'run quiet:', quiet
 
     # Instanciate server, if it is a class instead of an instance
     if isinstance(server, type) and issubclass(server, ServerAdapter):
@@ -874,6 +963,21 @@ response = Response()
 db = BottleDB()
 local = threading.local()
 
+print '======================================='
+print 'Modul initialization'
+print 'DB_PATH:', DB_PATH
+print 'DEBUG:', DEBUG
+print 'OPTIMIZER:', OPTIMIZER
+print 'TEMPLATE_PATH:', TEMPLATE_PATH
+print 'TEMPLATES:', TEMPLATES
+print 'ROUTES_SIMPLE:', ROUTES_SIMPLE
+print 'ROUTES_REGEXP:', ROUTES_REGEXP
+print 'ERROR_HANDLER:', ERROR_HANDLER
+print 'HTTP_CODES:', HTTP_CODES
+print 'response:', response
+print 'db:', db
+print 'local:', local
+print '======================================='
 
 @error(500)
 def error500(exception):
