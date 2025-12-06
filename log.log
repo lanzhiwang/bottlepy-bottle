@@ -55,6 +55,11 @@ response: <bottle.Response object at 0x7f993c781280>
 db: <bottle.BottleDB object at 0x7f993c7812f0>
 local: <thread._local object at 0x7f993c78c230>
 =======================================
+error code: 500
+error handler: <function error500 at 0x7fe7b80b2150>
+set_error_handler code: 500
+set_error_handler handler: <function error500 at 0x7fe7b80b2150>
+set_error_handler ERROR_HANDLER: {500: <function error500 at 0x7fe7b80b2150>}
 =======================================
 route
 route url: /
@@ -280,6 +285,8 @@ add_route ROUTES_REGEXP: {
 route
 route url: /validate/:i/:f/:csv
 route kargs: {}
+validate vkargs: {'i': <type 'int'>, 'csv': <function <lambda> at 0x7fe7b8a30bd0>, 'f': <type 'float'>}
+validate func: <function validate_test at 0x7fe7b8a30e50>
 route handler: <function wrapper at 0x7f993d10e050>
 add_route route: /validate/:i/:f/:csv
 add_route handler: <function wrapper at 0x7f993d10e050>
@@ -1274,6 +1281,7 @@ match_url method: GET
 match_url url: /validate/12/3.4/qwe,asd,zxc
 WSGIHandler handler: <function wrapper at 0x7f6b4390e050>
 WSGIHandler args: {'i': '12', 'csv': 'qwe,asd,zxc', 'f': '3.4'}
+validate kargs: {'i': '12', 'csv': 'qwe,asd,zxc', 'f': '3.4'}
 Response COOKIES self._COOKIES:
 127.0.0.1 - - [06/Dec/2025:16:10:40 +0800] "GET /validate/12/3.4/qwe%2Casd%2Czxc HTTP/1.1" 403 - "-" "curl/7.81.0"
 =======================================
@@ -1344,6 +1352,7 @@ match_url method: GET
 match_url url: /validate/12/3.4/56,78
 WSGIHandler handler: <function wrapper at 0x7f6b4390e050>
 WSGIHandler args: {'i': '12', 'csv': '56,78', 'f': '3.4'}
+validate kargs: {'i': '12', 'csv': '56,78', 'f': '3.4'}
 WSGIHandler hasattr(output, read): False
 WSGIHandler isinstance(output, str): True
 Response COOKIES self._COOKIES:

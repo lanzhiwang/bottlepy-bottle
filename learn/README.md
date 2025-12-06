@@ -22,7 +22,7 @@ conda create --name bottle_python_2_7 python=2.7 -y
 conda activate bottle_python_2_7
 
 pip install -e ./
-pip install -e Paste==3.6.1
+pip install Paste==3.6.1
 
 # 服务端
 $ python examples/howto.py

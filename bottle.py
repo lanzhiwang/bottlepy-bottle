@@ -461,9 +461,19 @@ def match_url(url, method='GET'):
         if match:
             handler = routes[i][1]
             if i > 0 and OPTIMIZER and random.random() <= 0.001:
-              # Every 1000 requests, we swap the matching route with its predecessor.
-              # Frequently used routes will slowly wander up the list.
-              routes[i-1], routes[i] = routes[i], routes[i-1]
+                # Every 1000 requests, we swap the matching route with its predecessor.
+                # Frequently used routes will slowly wander up the list.
+                """
+                >>> routes = [1, 2, 3, 4, 5, 6]
+                >>> routes
+                [1, 2, 3, 4, 5, 6]
+                >>> i = 2
+                >>> routes[i-1], routes[i] = routes[i], routes[i-1]
+                >>> routes
+                [1, 3, 2, 4, 5, 6]
+                >>>
+                """
+                routes[i-1], routes[i] = routes[i], routes[i-1]
             return (handler, match.groupdict())
     return (None, None)
 
@@ -515,8 +525,11 @@ def route(url, **kargs):
 def validate(**vkargs):
     ''' Validates and manipulates keyword arguments by user defined callables 
     and handles ValueError and missing arguments by raising HTTPError(400) '''
+    print 'validate vkargs:', vkargs
     def decorator(func):
+        print 'validate func:', func
         def wrapper(**kargs):
+            print 'validate kargs:', kargs
             for key in vkargs:
                 if key not in kargs:
                     abort(403, 'Missing parameter: %s' % key)
@@ -537,13 +550,18 @@ def validate(**vkargs):
 
 def set_error_handler(code, handler):
     """ Sets a new error handler. """
+    print 'set_error_handler code:', code
+    print 'set_error_handler handler:', handler
     code = int(code)
     ERROR_HANDLER[code] = handler
+    print 'set_error_handler ERROR_HANDLER:', ERROR_HANDLER
 
 
 def error(code=500):
     """ Decorator for error handler. Same as set_error_handler(code, handler)."""
+    print 'error code:', code
     def wrapper(handler):
+        print 'error handler:', handler
         set_error_handler(code, handler)
         return handler
     return wrapper
