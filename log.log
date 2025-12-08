@@ -1423,11 +1423,79 @@ Response bind self.header:  {'Content-Type': 'text/html'}
 match_url url: /template/test
 match_url method: GET
 match_url url: /template/test
-WSGIHandler handler: <function template_test at 0x7f6b43908cd0>
+WSGIHandler handler: <function template_test at 0x7ff8fc507cd0>
 WSGIHandler args: {}
-Error (500) on '/template/test': Template not found: 'howto'
+template template: howto
+template template_adapter: <class 'bottle.SimpleTemplate'>
+template args: {'items': [1, 2, 3, 'fly'], 'title': 'Template Test'}
+template TEMPLATES1: {}
+template template.find("\n"): -1
+template template.find("{"): -1
+template template.find("%"): -1
+BaseTemplate find name: howto
+BaseTemplate find TEMPLATE_PATH: ['./%s.tpl', './views/%s.tpl']
+BaseTemplate find files: ['./howto.tpl', './views/howto.tpl']
+BaseTemplate find files: ['./howto.tpl']
+BaseTemplate __init__ template:
+BaseTemplate __init__ filename: ./howto.tpl
+SimpleTemplate parse template: %message = 'Hello world!'
+<html>
+  <head>
+    <title>{{title.title()}}</title>
+  </head>
+  <body>
+    <h1>{{title.title()}}</h1>
+    <p>{{message}}</p>
+    <p>Items in list: {{len(items)}}</p>
+    <ul>
+    %for item in items:
+      <li>
+      %if isinstance(item, int):
+        Zahl: {{item}}
+      %else:
+        %try:
+          Other type: ({{type(item).__name__}}) {{repr(item)}}
+        %except:
+          Error: Item has no string representation.
+        %end try-block (yes, you may add comments here)
+      %end
+      </li>
+    %end
+    </ul>
+  </body>
+</html>
+
+template TEMPLATES2: {'howto': <bottle.SimpleTemplate object at 0x7fe88bdd9b50>}
+SimpleTemplate render args: {'items': [1, 2, 3, 'fly'], 'abort': <function abort at 0x7fe88be38ad0>, 'request': <bottle.Request object at 0x7fe88bea22f0>, 'response': <bottle.Response object at 0x7fe88bea2360>, 'title': 'Template Test'}
+SimpleTemplate render result: <html>
+  <head>
+    <title>Template Test</title>
+  </head>
+  <body>
+    <h1>Template Test</h1>
+    <p>Hello world!</p>
+    <p>Items in list: 4</p>
+    <ul>
+      <li>
+        Zahl: 1
+      </li>
+      <li>
+        Zahl: 2
+      </li>
+      <li>
+        Zahl: 3
+      </li>
+      <li>
+          Other type: (str) 'fly'
+      </li>
+    </ul>
+  </body>
+</html>
+
+WSGIHandler hasattr(output, read): False
+WSGIHandler isinstance(output, str): True
 Response COOKIES self._COOKIES:
-127.0.0.1 - - [06/Dec/2025:16:11:31 +0800] "GET /template/test HTTP/1.1" 500 - "-" "curl/7.81.0"
+127.0.0.1 - - [08/Dec/2025:20:11:28 +0800] "GET /template/test HTTP/1.1" 200 - "-" "curl/7.81.0"
 =======================================
 WSGIHandler
 WSGIHandler environ: {

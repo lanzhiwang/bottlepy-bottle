@@ -684,6 +684,9 @@ class TemplateNotFoundError(BottleException): pass
 
 class BaseTemplate(object):
     def __init__(self, template='', filename='<template>'):
+        print 'BaseTemplate __init__ template:', template
+        print 'BaseTemplate __init__ filename:', filename
+
         self.source = filename
         if self.source != '<template>':
             fp = open(filename)
@@ -694,7 +697,15 @@ class BaseTemplate(object):
     def render(self, **args): raise NotImplementedError
     @classmethod
     def find(cls, name):
+        print 'BaseTemplate find name:', name
+        print 'BaseTemplate find TEMPLATE_PATH:', TEMPLATE_PATH
+
+        files = [path % name for path in TEMPLATE_PATH]
+        print 'BaseTemplate find files:', files
+
         files = [path % name for path in TEMPLATE_PATH if os.path.isfile(path % name)]
+        print 'BaseTemplate find files:', files
+
         if files:
             return cls(filename = files[0])
         else:
@@ -717,6 +728,8 @@ class SimpleTemplate(BaseTemplate):
     dedent_keywords = ('elif', 'else', 'except', 'finally')
 
     def parse(self, template):
+        print 'SimpleTemplate parse template:', template
+
         indent = 0
         strbuffer = []
         code = []
@@ -763,14 +776,28 @@ class SimpleTemplate(BaseTemplate):
 
     def render(self, **args):
         ''' Returns the rendered template using keyword arguments as local variables. '''
+        print 'SimpleTemplate render args:', args
         args['stdout'] = []
         args['_subtemplates'] = self.subtemplates
         eval(self.co, args, globals())
-        return ''.join(args['stdout'])
+        result = ''.join(args['stdout'])
+        print 'SimpleTemplate render result:', result
+        return result
 
 
 def template(template, template_adapter=SimpleTemplate, **args):
     ''' Returns a string from a template '''
+
+    print 'template template:', template
+    print 'template template_adapter:', template_adapter
+    print 'template args:', args
+
+    print 'template TEMPLATES1:', TEMPLATES
+
+    print 'template template.find("\\n"):', template.find("\n")
+    print 'template template.find("{"):', template.find("{")
+    print 'template template.find("%"):', template.find("%")
+
     if template not in TEMPLATES:
         if template.find("\n") == -1 and template.find("{") == -1 and template.find("%") == -1:
             try:
@@ -778,8 +805,12 @@ def template(template, template_adapter=SimpleTemplate, **args):
             except TemplateNotFoundError: pass
         else:
             TEMPLATES[template] = template_adapter(template)
+
+    print 'template TEMPLATES2:', TEMPLATES
+
     if template not in TEMPLATES:
         abort(500, 'Template not found')
+
     args['abort'] = abort
     args['request'] = request
     args['response'] = response
