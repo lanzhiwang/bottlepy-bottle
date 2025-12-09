@@ -21,7 +21,7 @@ def hello_post():
 # Cookies :D
 @route('/counter')
 def counter():
-    old = request.COOKIES.get('counter',0)
+    old = request.COOKIES.get('counter', 0)
     new = int(old) + 1
     response.COOKIES['counter'] = new
     return "You viewed this page %d times!" % new
@@ -44,14 +44,14 @@ def hello_number(num):
 # Bottle does the content-type guessing and save path checking for you.
 @route('/static/:filename#.*#')
 def static_file(filename):
-    send_file(filename, root='/path/to/static/files/')
+    send_file(filename, root='/root/bottle/examples/')
 
 # You can manually add header and set the content-type of the response.
 @route('/json')
 def json():
     response.header['Cache-Control'] = 'no-cache, must-revalidate'
     response.content_type = 'application/json'
-    return "{counter:%d}" % int(request.COOKIES.get('counter',0))
+    return "{counter:%d}" % int(request.COOKIES.get('counter', 0))
 
 # Throwing an error using abort()
 @route('/private')
@@ -70,7 +70,7 @@ def validate_test(i, f, csv):
 @route('/template/test')
 def template_test():
     return template('howto', title='Template Test', items=[1,2,3,'fly'])
-        
+
 # Database
 @route('/db/counter')
 def db_counter_test():
@@ -82,4 +82,9 @@ def db_counter_test():
 
 import bottle
 bottle.DEBUG = True
-run(server=bottle.PasteServer, host='localhost', port=8080) 
+
+print '======================================='
+print 'bottle.DEBUG: ', bottle.DEBUG
+print '======================================='
+
+run(server=bottle.PasteServer, host='localhost', port=18088)

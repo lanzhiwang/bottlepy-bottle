@@ -1,9 +1,17 @@
 import unittest
 import sys, os.path
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
+print './test/test_routes.py __file__:', __file__
+print './test/test_routes.py os.path.abspath(__file__):', os.path.abspath(__file__)
+print './test/test_routes.py TESTDIR:', TESTDIR
+
 DISTDIR = os.path.dirname(TESTDIR)
+print './test/test_routes.py DISTDIR:', DISTDIR
+
+print './test/test_routes.py sys.path:', sys.path
 sys.path.insert(0, TESTDIR)
 sys.path.insert(0, DISTDIR)
+print './test/test_routes.py sys.path:', sys.path
 
 from bottle import route, add_route, match_url, compile_route, ROUTES_REGEXP, ROUTES_SIMPLE
 
