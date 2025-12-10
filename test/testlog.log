@@ -1,0 +1,37 @@
+(bottle_python_2_7) root@nj-p-zdtc-h20-059:~/bottle# python test/testall.py
+./test/testall.py __file__: test/testall.py
+./test/testall.py os.path.abspath(__file__): /root/bottle/test/testall.py
+./test/testall.py TESTDIR: /root/bottle/test
+./test/testall.py DISTDIR: /root/bottle
+./test/testall.py sys.path: ['/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+./test/testall.py sys.path: ['/root/bottle', '/root/bottle/test', '/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+./test/test_templates.py __file__: /root/bottle/test/test_templates.pyc
+./test/test_templates.py os.path.abspath(__file__): /root/bottle/test/test_templates.pyc
+./test/test_templates.py TESTDIR: /root/bottle/test
+./test/test_templates.py DISTDIR: /root/bottle
+./test/test_templates.py sys.path: ['/root/bottle', '/root/bottle/test', '/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+./test/test_templates.py sys.path: ['/root/bottle', '/root/bottle/test', '/root/bottle', '/root/bottle/test', '/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+./test/test_routes.py __file__: /root/bottle/test/test_routes.pyc
+./test/test_routes.py os.path.abspath(__file__): /root/bottle/test/test_routes.pyc
+./test/test_routes.py TESTDIR: /root/bottle/test
+./test/test_routes.py DISTDIR: /root/bottle
+./test/test_routes.py sys.path: ['/root/bottle', '/root/bottle/test', '/root/bottle', '/root/bottle/test', '/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+./test/test_routes.py sys.path: ['/root/bottle', '/root/bottle/test', '/root/bottle', '/root/bottle/test', '/root/bottle', '/root/bottle/test', '/root/bottle/test', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/root/miniconda3/envs/bottle_python_2_7/lib/python27.zip', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/plat-linux2', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-tk', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-old', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/lib-dynload', '/root/miniconda3/envs/bottle_python_2_7/lib/python2.7/site-packages', '/root/bottle']
+test_blocks (test_templates.TestSimpleTemplate)
+Templates: Code blocks and loops ... ok
+test_inline (test_templates.TestSimpleTemplate)
+Templates: Inline statements ... ok
+test_nobreak (test_templates.TestSimpleTemplate)
+Templates: Nobreak statements ... ok
+test_nonobreak (test_templates.TestSimpleTemplate)
+Templates: Escaped nobreak statements ... ok
+test_dynamic (test_routes.TestRoutes)
+Routes: Dynamic routes ... ok
+test_static (test_routes.TestRoutes)
+Routes: Static routes ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+(bottle_python_2_7) root@nj-p-zdtc-h20-059:~/bottle#
