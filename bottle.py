@@ -30,6 +30,8 @@ __license__ = "MIT"
 
 
 def _cli_parse(args):  # pragma: no coverage
+    print("./bottle.py _cli_parse args:", args)
+
     from argparse import ArgumentParser
 
     parser = ArgumentParser(prog=args[0], usage="%(prog)s [options] package.module:app")
@@ -62,6 +64,8 @@ def _cli_parse(args):  # pragma: no coverage
 
 
 def _cli_patch(cli_args):  # pragma: no coverage
+    print("./bottle.py _cli_patch cli_args:", cli_args)
+
     parsed_args, _ = _cli_parse(cli_args)
     opts = parsed_args
     if opts.server:
@@ -76,6 +80,7 @@ def _cli_patch(cli_args):  # pragma: no coverage
 
 
 if __name__ == "__main__":
+    print("./bottle.py sys.argv:", sys.argv)
     _cli_patch(sys.argv)
 
 ###############################################################################
@@ -96,7 +101,9 @@ except ImportError:
     from json import dumps as json_dumps, loads as json_lds
 
 py = sys.version_info
+print("./bottle.py py:", py)
 py3k = py.major > 2
+print("./bottle.py py3k:", py3k)
 
 # Lots of stdlib and builtin differences.
 if py3k:
@@ -120,6 +127,7 @@ if py3k:
     from inspect import getfullargspec
 
     def getargspec(func):
+        print("./bottle.py py3k getargspec func:", func)
         spec = getfullargspec(func)
         kwargs = makelist(spec[0]) + makelist(spec.kwonlyargs)
         return kwargs, spec[1], spec[2], spec[3]
@@ -131,6 +139,7 @@ if py3k:
     imap = map
 
     def _raise(*a):
+        print("./bottle.py py3k _raise a:", a)
         raise a[0](a[1]).with_traceback(a[2])
 
 else:  # 2.x
@@ -151,12 +160,15 @@ else:  # 2.x
 
     class _UTC(tzinfo):
         def utcoffset(self, dt):
+            print("./bottle.py _UTC utcoffset dt:", dt)
             return timedelta(0)
 
         def tzname(self, dt):
+            print("./bottle.py _UTC tzname dt:", dt)
             return "UTC"
 
         def dst(self, dt):
+            print("./bottle.py _UTC dst dt:", dt)
             return timedelta(0)
 
     UTC = _UTC()
@@ -169,21 +181,31 @@ else:  # 2.x
 
 # Some helpers for string/byte handling
 def tob(s, enc="utf8"):
+    print("./bottle.py tob s:", s)
+    print("./bottle.py tob enc:", enc)
+
     if isinstance(s, unicode):
         return s.encode(enc)
     return b"" if s is None else bytes(s)
 
 
 def touni(s, enc="utf8", err="strict"):
+    print("./bottle.py touni s:", s)
+    print("./bottle.py touni enc:", enc)
+    print("./bottle.py touni err:", err)
+
     if isinstance(s, bytes):
         return s.decode(enc, err)
     return unicode("" if s is None else s)
 
 
 tonat = touni if py3k else tob
+print("./bottle.py tonat:", tonat)
 
 
 def _stderr(*args):
+    print("./bottle.py _stderr args:", args)
+
     try:
         print(*args, file=sys.stderr)
     except (IOError, AttributeError):
@@ -192,6 +214,11 @@ def _stderr(*args):
 
 # A bug in functools causes it to break if the wrapper is an instance method
 def update_wrapper(wrapper, wrapped, *a, **ka):
+    print("./bottle.py update_wrapper wrapper:", wrapper)
+    print("./bottle.py update_wrapper wrapped:", wrapped)
+    print("./bottle.py update_wrapper a:", a)
+    print("./bottle.py update_wrapper ka:", ka)
+
     try:
         functools.update_wrapper(wrapper, wrapped, *a, **ka)
     except AttributeError:
@@ -203,6 +230,12 @@ def update_wrapper(wrapper, wrapped, *a, **ka):
 
 
 def depr(major, minor, cause, fix, stacklevel=3):
+    print("./bottle.py depr major:", major)
+    print("./bottle.py depr minor:", minor)
+    print("./bottle.py depr cause:", cause)
+    print("./bottle.py depr fix:", fix)
+    print("./bottle.py depr stacklevel:", stacklevel)
+
     text = (
         "Warning: Use of deprecated feature or API. (Deprecated in Bottle-%d.%d)\n"
         "Cause: %s\n"
@@ -215,6 +248,8 @@ def depr(major, minor, cause, fix, stacklevel=3):
 
 
 def makelist(data):  # This is just too handy
+    print("./bottle.py makelist data:", data)
+
     if isinstance(data, (tuple, list, set, dict)):
         return list(data)
     elif data:
@@ -227,14 +262,23 @@ class DictProperty(object):
     """Property that maps to a key in a local dict-like attribute."""
 
     def __init__(self, attr, key=None, read_only=False):
+        print("./bottle.py DictProperty __init__ attr:", attr)
+        print("./bottle.py DictProperty __init__ key:", key)
+        print("./bottle.py DictProperty __init__ read_only:", read_only)
+
         self.attr, self.key, self.read_only = attr, key, read_only
 
     def __call__(self, func):
+        print("./bottle.py DictProperty __call__ func:", func)
+
         functools.update_wrapper(self, func, updated=[])
         self.getter, self.key = func, self.key or func.__name__
         return self
 
     def __get__(self, obj, cls):
+        # print("./bottle.py DictProperty __get__ obj:", obj)
+        # print("./bottle.py DictProperty __get__ cls:", cls)
+
         if obj is None:
             return self
         key, storage = self.key, getattr(obj, self.attr)
@@ -243,11 +287,16 @@ class DictProperty(object):
         return storage[key]
 
     def __set__(self, obj, value):
+        print("./bottle.py DictProperty __set__ obj:", obj)
+        print("./bottle.py DictProperty __set__ value:", value)
+
         if self.read_only:
             raise AttributeError("Read-Only property.")
         getattr(obj, self.attr)[self.key] = value
 
     def __delete__(self, obj):
+        print("./bottle.py DictProperty __delete__ obj:", obj)
+
         if self.read_only:
             raise AttributeError("Read-Only property.")
         del getattr(obj, self.attr)[self.key]
@@ -259,10 +308,15 @@ class cached_property(object):
     property."""
 
     def __init__(self, func):
+        print("./bottle.py cached_property __init__ func:", func)
+
         update_wrapper(self, func)
         self.func = func
 
     def __get__(self, obj, cls):
+        print("./bottle.py cached_property __get__ obj:", obj)
+        print("./bottle.py cached_property __get__ cls:", cls)
+
         if obj is None:
             return self
         value = obj.__dict__[self.func.__name__] = self.func(obj)
@@ -273,10 +327,15 @@ class lazy_attribute(object):
     """A property that caches itself to the class object."""
 
     def __init__(self, func):
+        print("./bottle.py lazy_attribute __init__ func:", func)
+
         functools.update_wrapper(self, func, updated=[])
         self.getter = func
 
     def __get__(self, obj, cls):
+        print("./bottle.py lazy_attribute __get__ obj:", obj)
+        print("./bottle.py lazy_attribute __get__ cls:", cls)
+
         value = self.getter(cls)
         setattr(cls, self.__name__, value)
         return value
@@ -323,6 +382,9 @@ class RouteBuildError(RouteError):
 def _re_flatten(p):
     """Turn all capturing groups in a regular expression pattern into
     non-capturing groups."""
+
+    print("./bottle.py _re_flatten p:", p)
+
     if "(" not in p:
         return p
     return re.sub(
@@ -352,6 +414,8 @@ class Router(object):
     _MAX_GROUPS_PER_PATTERN = 99
 
     def __init__(self, strict=False):
+        print("./bottle.py Router __init__ strict:", strict)
+
         self.rules = []  # All rules in order
         self._groups = {}  # index of regexes to find them in dyna_routes
         self.builder = {}  # Data structure for the url builder
@@ -371,6 +435,10 @@ class Router(object):
         """Add a filter. The provided function is called with the configuration
         string as parameter and must return a (regexp, to_python, to_url) tuple.
         The first element is a string, the last two are callables or None."""
+
+        print("./bottle.py Router add_filter name:", name)
+        print("./bottle.py Router add_filter func:", func)
+
         self.filters[name] = func
 
     rule_syntax = re.compile(
@@ -381,6 +449,8 @@ class Router(object):
     )
 
     def _itertokens(self, rule):
+        print("./bottle.py Router _itertokens rule:", rule)
+
         offset, prefix = 0, ""
         for match in self.rule_syntax.finditer(rule):
             prefix += rule[offset : match.start()]
@@ -407,6 +477,12 @@ class Router(object):
 
     def add(self, rule, method, target, name=None):
         """Add a new rule or replace the target for an existing rule."""
+
+        print("./bottle.py Router add rule:", rule)
+        print("./bottle.py Router add method:", method)
+        print("./bottle.py Router add target:", target)
+        print("./bottle.py Router add name:", name)
+
         anons = 0  # Number of anonymous wildcards found
         keys = []  # Names of keys
         pattern = ""  # Regular expression pattern with named groups
@@ -483,6 +559,8 @@ class Router(object):
         self._compile(method)
 
     def _compile(self, method):
+        print("./bottle.py Router _compile method:", method)
+
         all_rules = self.dyna_routes[method]
         comborules = self.dyna_regexes[method] = []
         maxgroups = self._MAX_GROUPS_PER_PATTERN
@@ -496,6 +574,11 @@ class Router(object):
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
+
+        print("./bottle.py Router build _name:", _name)
+        print("./bottle.py Router build anons:", anons)
+        print("./bottle.py Router build query:", query)
+
         builder = self.builder.get(_name)
         if not builder:
             raise RouteBuildError("No route with that name.", _name)
@@ -509,6 +592,9 @@ class Router(object):
 
     def match(self, environ):
         """Return a (target, url_args) tuple or raise HTTPError(400/404/405)."""
+
+        print("./bottle.py Router match environ:", environ)
+
         verb = environ["REQUEST_METHOD"].upper()
         path = environ["PATH_INFO"] or "/"
 
@@ -565,6 +651,15 @@ class Route(object):
         skiplist=None,
         **config
     ):
+        print("./bottle.py Route __init__ app:", app)
+        print("./bottle.py Route __init__ rule:", rule)
+        print("./bottle.py Route __init__ method:", method)
+        print("./bottle.py Route __init__ callback:", callback)
+        print("./bottle.py Route __init__ name:", name)
+        print("./bottle.py Route __init__ plugins:", plugins)
+        print("./bottle.py Route __init__ skiplist:", skiplist)
+        print("./bottle.py Route __init__ config:", config)
+
         #: The application this route is installed to.
         self.app = app
         #: The path-rule string (e.g. ``/wiki/<page>``).
@@ -655,6 +750,10 @@ class Route(object):
     def get_config(self, key, default=None):
         """Lookup a config field and return its value, first checking the
         route.config, then route.app.config."""
+
+        print("./bottle.py Route get_config key:", key)
+        print("./bottle.py Route get_config default:", default)
+
         depr(
             0,
             13,
@@ -690,12 +789,17 @@ class Bottle(object):
 
     @lazy_attribute
     def _global_config(cls):
+        print("./bottle.py Bottle _global_config cls:", cls)
+
         cfg = ConfigDict()
         cfg.meta_set("catchall", "validate", bool)
         return cfg
 
     def __init__(self, **kwargs):
         #: A :class:`ConfigDict` for app specific configuration.
+
+        print("./bottle.py Bottle __init__ kwargs:", kwargs)
+
         self.config = self._global_config._make_overlay()
         self.config._add_change_listener(functools.partial(self.trigger_hook, "config"))
 
@@ -755,6 +859,10 @@ class Bottle(object):
         app_reset
             Called whenever :meth:`Bottle.reset` is called.
         """
+
+        print("./bottle.py Bottle add_hook name:", name)
+        print("./bottle.py Bottle add_hook func:", func)
+
         if name in self.__hook_reversed:
             self._hooks[name].insert(0, func)
         else:
@@ -762,25 +870,41 @@ class Bottle(object):
 
     def remove_hook(self, name, func):
         """Remove a callback from a hook."""
+
+        print("./bottle.py Bottle remove_hook name:", name)
+        print("./bottle.py Bottle remove_hook func:", func)
+
         if name in self._hooks and func in self._hooks[name]:
             self._hooks[name].remove(func)
             return True
 
     def trigger_hook(self, __name, *args, **kwargs):
         """Trigger a hook and return a list of results."""
+
+        print("./bottle.py Bottle trigger_hook __name:", __name)
+        print("./bottle.py Bottle trigger_hook args:", args)
+        print("./bottle.py Bottle trigger_hook kwargs:", kwargs)
+
         return [hook(*args, **kwargs) for hook in self._hooks[__name][:]]
 
     def hook(self, name):
         """Return a decorator that attaches a callback to a hook. See
         :meth:`add_hook` for details."""
 
+        print("./bottle.py Bottle hook name:", name)
+
         def decorator(func):
+            print("./bottle.py Bottle hook decorator func:", func)
             self.add_hook(name, func)
             return func
 
         return decorator
 
     def _mount_wsgi(self, prefix, app, **options):
+        print("./bottle.py Bottle _mount_wsgi prefix:", prefix)
+        print("./bottle.py Bottle _mount_wsgi app:", app)
+        print("./bottle.py Bottle _mount_wsgi options:", options)
+
         segments = [p for p in prefix.split("/") if p]
         if not segments:
             raise ValueError('WSGI applications cannot be mounted to "/".')
@@ -824,6 +948,10 @@ class Bottle(object):
             self.route("/" + "/".join(segments), **options)
 
     def _mount_app(self, prefix, app, **options):
+        print("./bottle.py Bottle _mount_app prefix:", prefix)
+        print("./bottle.py Bottle _mount_app app:", app)
+        print("./bottle.py Bottle _mount_app options:", options)
+
         if app in self._mounts or "_mount.app" in app.config:
             depr(
                 0,
@@ -880,6 +1008,10 @@ class Bottle(object):
         parent application.
         """
 
+        print("./bottle.py Bottle mount prefix:", prefix)
+        print("./bottle.py Bottle mount app:", app)
+        print("./bottle.py Bottle mount options:", options)
+
         if not prefix.startswith("/"):
             raise ValueError("Prefix must start with '/'")
 
@@ -893,6 +1025,9 @@ class Bottle(object):
         :class:`Route` objects into this application. The routes keep their
         'owner', meaning that the :data:`Route.app` attribute is not
         changed."""
+
+        print("./bottle.py Bottle merge routes:", routes)
+
         if isinstance(routes, Bottle):
             routes = routes.routes
         for route in routes:
@@ -903,6 +1038,9 @@ class Bottle(object):
         applied to all routes of this application. A plugin may be a simple
         decorator or an object that implements the :class:`Plugin` API.
         """
+
+        print("./bottle.py Bottle install plugin:", plugin)
+
         if hasattr(plugin, "setup"):
             plugin.setup(self)
         if not callable(plugin) and not hasattr(plugin, "apply"):
@@ -916,6 +1054,9 @@ class Bottle(object):
         object to remove all plugins that match that type, a string to remove
         all plugins with a matching ``name`` attribute or ``True`` to remove all
         plugins. Return the list of removed plugins."""
+
+        print("./bottle.py Bottle uninstall plugin:", plugin)
+
         removed, remove = [], plugin
         for i, plugin in list(enumerate(self.plugins))[::-1]:
             if (
@@ -936,6 +1077,9 @@ class Bottle(object):
         """Reset all routes (force plugins to be re-applied) and clear all
         caches. If an ID or route object is given, only that specific route
         is affected."""
+
+        print("./bottle.py Bottle reset route:", route)
+
         if route is None:
             routes = self.routes
         elif isinstance(route, Route):
@@ -957,16 +1101,26 @@ class Bottle(object):
 
     def run(self, **kwargs):
         """Calls :func:`run` with the same parameters."""
+
+        print("./bottle.py Bottle run kwargs:", kwargs)
+
         run(self, **kwargs)
 
     def match(self, environ):
         """Search for a matching route and return a (:class:`Route`, urlargs)
         tuple. The second value is a dictionary with parameters extracted
         from the URL. Raise :exc:`HTTPError` (404/405) on a non-match."""
+
+        print("./bottle.py Bottle match environ:", environ)
+
         return self.router.match(environ)
 
     def get_url(self, routename, **kargs):
         """Return a string that matches a named route"""
+
+        print("./bottle.py Bottle get_url routename:", routename)
+        print("./bottle.py Bottle get_url kargs:", kargs)
+
         scriptname = request.environ.get("SCRIPT_NAME", "").strip("/") + "/"
         location = self.router.build(routename, **kargs).lstrip("/")
         return urljoin(urljoin("/", scriptname), location)
@@ -974,6 +1128,9 @@ class Bottle(object):
     def add_route(self, route):
         """Add a route object, but do not change the :data:`Route.app`
         attribute."""
+
+        print("./bottle.py Bottle add_route route:", route)
+
         self.routes.append(route)
         self.router.add(route.rule, route.method, route, name=route.name)
         if DEBUG:
@@ -1014,6 +1171,15 @@ class Bottle(object):
         Any additional keyword arguments are stored as route-specific
         configuration and passed to plugins (see :meth:`Plugin.apply`).
         """
+
+        print("./bottle.py Bottle route path:", path)
+        print("./bottle.py Bottle route method:", method)
+        print("./bottle.py Bottle route callback:", callback)
+        print("./bottle.py Bottle route name:", name)
+        print("./bottle.py Bottle route apply:", apply)
+        print("./bottle.py Bottle route skip:", skip)
+        print("./bottle.py Bottle route config:", config)
+
         if callable(path):
             path, callback = None, path
         plugins = makelist(apply)
@@ -1042,22 +1208,47 @@ class Bottle(object):
 
     def get(self, path=None, method="GET", **options):
         """Equals :meth:`route`."""
+
+        print("./bottle.py Bottle get path:", path)
+        print("./bottle.py Bottle get method:", method)
+        print("./bottle.py Bottle get options:", options)
+
         return self.route(path, method, **options)
 
     def post(self, path=None, method="POST", **options):
         """Equals :meth:`route` with a ``POST`` method parameter."""
+
+        print("./bottle.py Bottle post path:", path)
+        print("./bottle.py Bottle post method:", method)
+        print("./bottle.py Bottle post options:", options)
+
         return self.route(path, method, **options)
 
     def put(self, path=None, method="PUT", **options):
         """Equals :meth:`route` with a ``PUT`` method parameter."""
+
+        print("./bottle.py Bottle put path:", path)
+        print("./bottle.py Bottle put method:", method)
+        print("./bottle.py Bottle put options:", options)
+
         return self.route(path, method, **options)
 
     def delete(self, path=None, method="DELETE", **options):
         """Equals :meth:`route` with a ``DELETE`` method parameter."""
+
+        print("./bottle.py Bottle delete path:", path)
+        print("./bottle.py Bottle delete method:", method)
+        print("./bottle.py Bottle delete options:", options)
+
         return self.route(path, method, **options)
 
     def patch(self, path=None, method="PATCH", **options):
         """Equals :meth:`route` with a ``PATCH`` method parameter."""
+
+        print("./bottle.py Bottle patch path:", path)
+        print("./bottle.py Bottle patch method:", method)
+        print("./bottle.py Bottle patch options:", options)
+
         return self.route(path, method, **options)
 
     def error(self, code=500, callback=None):
@@ -1075,6 +1266,9 @@ class Bottle(object):
 
         """
 
+        print("./bottle.py Bottle error code:", code)
+        print("./bottle.py Bottle error callback:", callback)
+
         def decorator(callback):
             if isinstance(callback, basestring):
                 callback = load(callback)
@@ -1084,6 +1278,8 @@ class Bottle(object):
         return decorator(callback) if callback else decorator
 
     def default_error_handler(self, res):
+        print("./bottle.py Bottle default_error_handler res:", res)
+
         return tob(
             template(
                 ERROR_PAGE_TEMPLATE,
@@ -1093,6 +1289,8 @@ class Bottle(object):
         )
 
     def _handle(self, environ):
+        print("./bottle.py Bottle _handle environ:", environ)
+
         path = environ["bottle.raw_path"] = environ["PATH_INFO"]
         if py3k:
             environ["PATH_INFO"] = path.encode("latin1").decode("utf8", "ignore")
@@ -1153,6 +1351,9 @@ class Bottle(object):
         Support: False, str, unicode, dict, HTTPResponse, HTTPError, file-like,
         iterable of strings and iterable of unicodes
         """
+
+        print("./bottle.py Bottle _cast out:", out)
+        print("./bottle.py Bottle _cast peek:", peek)
 
         # Empty output is done here
         if not out:
@@ -1223,6 +1424,10 @@ class Bottle(object):
 
     def wsgi(self, environ, start_response):
         """The bottle WSGI-interface."""
+
+        print("./bottle.py Bottle wsgi environ:", environ)
+        print("./bottle.py Bottle wsgi start_response:", start_response)
+
         try:
             out = self._cast(self._handle(environ))
             # rfc2616 section 4.3
@@ -1260,6 +1465,10 @@ class Bottle(object):
 
     def __call__(self, environ, start_response):
         """Each instance of :class:'Bottle' is a WSGI application."""
+
+        print("./bottle.py Bottle __call__ environ:", environ)
+        print("./bottle.py Bottle __call__ start_response:", start_response)
+
         return self.wsgi(environ, start_response)
 
     def __enter__(self):
@@ -1271,6 +1480,9 @@ class Bottle(object):
         default_app.pop()
 
     def __setattr__(self, name, value):
+        print("./bottle.py Bottle __setattr__ name:", name)
+        print("./bottle.py Bottle __setattr__ value:", value)
+
         if name in self.__dict__:
             raise AttributeError(
                 "Attribute %s already defined. Plugin conflict?" % name
@@ -1301,6 +1513,9 @@ class BaseRequest(object):
         """Wrap a WSGI environ dictionary."""
         #: The wrapped WSGI environ dictionary. This is the only real attribute.
         #: All other attributes actually are read-only properties.
+
+        print("./bottle.py BaseRequest __init__ environ:", environ)
+
         self.environ = {} if environ is None else environ
         self.environ["bottle.request"] = self
 
@@ -1338,6 +1553,10 @@ class BaseRequest(object):
 
     def get_header(self, name, default=None):
         """Return the value of a request header, or a given default value."""
+
+        print("./bottle.py BaseRequest get_header name:", name)
+        print("./bottle.py BaseRequest get_header default:", default)
+
         return self.headers.get(name, default)
 
     @DictProperty("environ", "bottle.request.cookies", read_only=True)
@@ -1352,6 +1571,12 @@ class BaseRequest(object):
         `secret` must match the one used to create the cookie (see
         :meth:`BaseResponse.set_cookie`). If anything goes wrong (missing
         cookie or wrong signature), return a default value."""
+
+        print("./bottle.py BaseRequest get_cookie key:", key)
+        print("./bottle.py BaseRequest get_cookie default:", default)
+        print("./bottle.py BaseRequest get_cookie secret:", secret)
+        print("./bottle.py BaseRequest get_cookie digestmod:", digestmod)
+
         value = self.cookies.get(key)
         if secret:
             # See BaseResponse.set_cookie for details on signed cookies.
@@ -1434,6 +1659,9 @@ class BaseRequest(object):
         return None
 
     def _iter_body(self, read, bufsize):
+        print("./bottle.py BaseRequest _iter_body read:", read)
+        print("./bottle.py BaseRequest _iter_body bufsize:", bufsize)
+
         maxread = max(0, self.content_length)
         while maxread:
             part = read(min(maxread, bufsize))
@@ -1444,6 +1672,9 @@ class BaseRequest(object):
 
     @staticmethod
     def _iter_chunked(read, bufsize):
+        print("./bottle.py BaseRequest _iter_chunked read:", read)
+        print("./bottle.py BaseRequest _iter_chunked bufsize:", bufsize)
+
         err = HTTPError(400, "Error while parsing chunked transfer body.")
         rn, sem, bs = tob("\r\n"), tob(";"), tob("")
         while True:
@@ -1498,6 +1729,9 @@ class BaseRequest(object):
     def _get_body_string(self, maxread):
         """Read body into a string. Raise HTTPError(413) on requests that are
         too large."""
+
+        print("./bottle.py BaseRequest _get_body_string maxread:", maxread)
+
         if self.content_length > maxread:
             raise HTTPError(413, "Request entity too large")
         data = self.body.read(maxread + 1)
@@ -1617,6 +1851,9 @@ class BaseRequest(object):
         :param shift: The number of path segments to shift. May be negative
                       to change the shift direction. (default: 1)
         """
+
+        print("./bottle.py BaseRequest path_shift shift:", shift)
+
         script, path = path_shift(
             self.environ.get("SCRIPT_NAME", "/"), self.path, shift
         )
@@ -1687,12 +1924,17 @@ class BaseRequest(object):
         return Request(self.environ.copy())
 
     def get(self, value, default=None):
+        print("./bottle.py BaseRequest get value:", value)
+        print("./bottle.py BaseRequest get default:", default)
+
         return self.environ.get(value, default)
 
     def __getitem__(self, key):
+        print("./bottle.py BaseRequest __getitem__ key:", key)
         return self.environ[key]
 
     def __delitem__(self, key):
+        print("./bottle.py BaseRequest __delitem__ key:", key)
         self[key] = ""
         del self.environ[key]
 
@@ -1707,6 +1949,9 @@ class BaseRequest(object):
 
     def __setitem__(self, key, value):
         """Change an environ value and clear all caches that depend on it."""
+
+        print("./bottle.py BaseRequest __setitem__ key:", key)
+        print("./bottle.py BaseRequest __setitem__ value:", value)
 
         if self.environ.get("bottle.request.readonly"):
             raise KeyError("The environ dictionary is read-only.")
@@ -1729,6 +1974,9 @@ class BaseRequest(object):
 
     def __getattr__(self, name):
         """Search in self.environ for additional user defined attributes."""
+
+        print("./bottle.py BaseRequest __getattr__ name:", name)
+
         try:
             var = self.environ["bottle.request.ext.%s" % name]
             return var.__get__(self) if hasattr(var, "__get__") else var
@@ -1737,6 +1985,10 @@ class BaseRequest(object):
 
     def __setattr__(self, name, value):
         """Define new attributes that are local to the bound request environment."""
+
+        print("./bottle.py BaseRequest __setattr__ name:", name)
+        print("./bottle.py BaseRequest __setattr__ value:", value)
+
         if name == "environ":
             return object.__setattr__(self, name, value)
         key = "bottle.request.ext.%s" % name
@@ -1745,6 +1997,9 @@ class BaseRequest(object):
         self.environ[key] = value
 
     def __delattr__(self, name):
+
+        print("./bottle.py BaseRequest __delattr__ name:", name)
+
         try:
             del self.environ["bottle.request.ext.%s" % name]
         except KeyError:
@@ -1752,12 +2007,16 @@ class BaseRequest(object):
 
 
 def _hkey(key):
+    print("./bottle.py _hkey key:", key)
+
     if "\n" in key or "\r" in key or "\0" in key:
         raise ValueError("Header names must not contain control characters: %r" % key)
     return key.title().replace("_", "-")
 
 
 def _hval(value):
+    print("./bottle.py _hval value:", value)
+
     value = tonat(value)
     if "\n" in value or "\r" in value or "\0" in value:
         raise ValueError("Header value must not contain control characters: %r" % value)
@@ -1766,20 +2025,32 @@ def _hval(value):
 
 class HeaderProperty(object):
     def __init__(self, name, reader=None, writer=None, default=""):
+        print("./bottle.py HeaderProperty __init__ name:", name)
+        print("./bottle.py HeaderProperty __init__ reader:", reader)
+        print("./bottle.py HeaderProperty __init__ writer:", writer)
+        print("./bottle.py HeaderProperty __init__ default:", default)
+
         self.name, self.default = name, default
         self.reader, self.writer = reader, writer
         self.__doc__ = "Current value of the %r header." % name.title()
 
     def __get__(self, obj, _):
+        print("./bottle.py HeaderProperty __get__ obj:", obj)
+
         if obj is None:
             return self
         value = obj.get_header(self.name, self.default)
         return self.reader(value) if self.reader else value
 
     def __set__(self, obj, value):
+        print("./bottle.py HeaderProperty __set__ obj:", obj)
+        print("./bottle.py HeaderProperty __set__ value:", value)
+
         obj[self.name] = self.writer(value) if self.writer else value
 
     def __delete__(self, obj):
+        print("./bottle.py HeaderProperty __delete__ obj:", obj)
+
         del obj[self.name]
 
 
@@ -1823,6 +2094,12 @@ class BaseResponse(object):
         Additional keyword arguments are added to the list of headers.
         Underscores in the header name are replaced with dashes.
         """
+
+        print("./bottle.py BaseResponse __init__ body:", body)
+        print("./bottle.py BaseResponse __init__ status:", status)
+        print("./bottle.py BaseResponse __init__ headers:", headers)
+        print("./bottle.py BaseResponse __init__ more_headers:", more_headers)
+
         self._cookies = None
         self._headers = {}
         self.body = body
@@ -1838,6 +2115,9 @@ class BaseResponse(object):
 
     def copy(self, cls=None):
         """Returns a copy of self."""
+
+        print("./bottle.py BaseResponse copy cls:", cls)
+
         cls = cls or BaseResponse
         assert issubclass(cls, BaseResponse)
         copy = cls()
@@ -1868,6 +2148,8 @@ class BaseResponse(object):
         return self._status_code
 
     def _set_status(self, status):
+        print("./bottle.py BaseResponse _set_status status:", status)
+
         if isinstance(status, int):
             code, status = status, _HTTP_STATUS_LINES.get(status)
         elif " " in status:
@@ -1906,29 +2188,50 @@ class BaseResponse(object):
         return hdict
 
     def __contains__(self, name):
+        print("./bottle.py BaseResponse __contains__ name:", name)
+
         return _hkey(name) in self._headers
 
     def __delitem__(self, name):
+        print("./bottle.py BaseResponse __delitem__ name:", name)
+
         del self._headers[_hkey(name)]
 
     def __getitem__(self, name):
+        print("./bottle.py BaseResponse __getitem__ name:", name)
+
         return self._headers[_hkey(name)][-1]
 
     def __setitem__(self, name, value):
+        print("./bottle.py BaseResponse __setitem__ name:", name)
+        print("./bottle.py BaseResponse __setitem__ value:", value)
+
         self._headers[_hkey(name)] = [_hval(value)]
 
     def get_header(self, name, default=None):
         """Return the value of a previously defined header. If there is no
         header with that name, return a default value."""
+
+        print("./bottle.py BaseResponse get_header name:", name)
+        print("./bottle.py BaseResponse get_header default:", default)
+
         return self._headers.get(_hkey(name), [default])[-1]
 
     def set_header(self, name, value):
         """Create a new response header, replacing any previously defined
         headers with the same name."""
+
+        print("./bottle.py BaseResponse set_header name:", name)
+        print("./bottle.py BaseResponse set_header value:", value)
+
         self._headers[_hkey(name)] = [_hval(value)]
 
     def add_header(self, name, value):
         """Add an additional response header, not removing duplicates."""
+
+        print("./bottle.py BaseResponse add_header name:", name)
+        print("./bottle.py BaseResponse add_header value:", value)
+
         self._headers.setdefault(_hkey(name), []).append(_hval(value))
 
     def iter_headers(self):
@@ -1971,6 +2274,9 @@ class BaseResponse(object):
     @property
     def charset(self, default="UTF-8"):
         """Return the charset specified in the content-type header (default: utf8)."""
+
+        print("./bottle.py BaseResponse charset default:", default)
+
         if "charset=" in self.content_type:
             return self.content_type.split("charset=")[-1].split(";")[0].strip()
         return default
@@ -2015,6 +2321,13 @@ class BaseResponse(object):
         cookie). The main intention is to make pickling and unpickling
         save, not to store secret information at client side.
         """
+
+        print("./bottle.py BaseResponse set_cookie name:", name)
+        print("./bottle.py BaseResponse set_cookie value:", value)
+        print("./bottle.py BaseResponse set_cookie secret:", secret)
+        print("./bottle.py BaseResponse set_cookie digestmod:", digestmod)
+        print("./bottle.py BaseResponse set_cookie options:", options)
+
         if not self._cookies:
             self._cookies = SimpleCookie()
 
@@ -2063,6 +2376,10 @@ class BaseResponse(object):
     def delete_cookie(self, key, **kwargs):
         """Delete a cookie. Be sure to use the same `domain` and `path`
         settings as used to create the cookie."""
+
+        print("./bottle.py BaseResponse delete_cookie key:", key)
+        print("./bottle.py BaseResponse delete_cookie kwargs:", kwargs)
+
         kwargs["max_age"] = -1
         kwargs["expires"] = 0
         self.set_cookie(key, "", **kwargs)
@@ -2084,6 +2401,8 @@ def _local_property():
             raise RuntimeError("Request context not initialized.")
 
     def fset(_, value):
+        print("./bottle.py _local_property fset value:", value)
+
         ls.var = value
 
     def fdel(_):
@@ -2119,7 +2438,9 @@ class LocalResponse(BaseResponse):
 
 
 Request = BaseRequest
+print("./bottle.py Request:", Request)
 Response = BaseResponse
+print("./bottle.py Response:", Response)
 
 
 class HTTPResponse(Response, BottleException):
@@ -2131,10 +2452,18 @@ class HTTPResponse(Response, BottleException):
     """
 
     def __init__(self, body="", status=None, headers=None, **more_headers):
+        print("./bottle.py HTTPResponse __init__ body:", body)
+        print("./bottle.py HTTPResponse __init__ status:", status)
+        print("./bottle.py HTTPResponse __init__ headers:", headers)
+        print("./bottle.py HTTPResponse __init__ more_headers:", more_headers)
+
         super(HTTPResponse, self).__init__(body, status, headers, **more_headers)
 
     def apply(self, other):
         """Copy the state of this response to a different :class:`Response` object."""
+
+        print("./bottle.py HTTPResponse apply other:", other)
+
         other._status_code = self._status_code
         other._status_line = self._status_line
         other._headers = self._headers
@@ -2150,6 +2479,12 @@ class HTTPError(HTTPResponse):
     def __init__(
         self, status=None, body=None, exception=None, traceback=None, **more_headers
     ):
+        print("./bottle.py HTTPError __init__ status:", status)
+        print("./bottle.py HTTPError __init__ body:", body)
+        print("./bottle.py HTTPError __init__ exception:", exception)
+        print("./bottle.py HTTPError __init__ traceback:", traceback)
+        print("./bottle.py HTTPError __init__ more_headers:", more_headers)
+
         self.exception = exception
         self.traceback = traceback
         super(HTTPError, self).__init__(body, status, **more_headers)
@@ -2169,9 +2504,13 @@ class JSONPlugin(object):
     api = 2
 
     def __init__(self, json_dumps=json_dumps):
+        print("./bottle.py JSONPlugin __init__ json_dumps:", json_dumps)
+
         self.json_dumps = json_dumps
 
     def setup(self, app):
+        print("./bottle.py JSONPlugin setup app:", app)
+
         app.config._define(
             "json.enable",
             default=True,
@@ -2199,6 +2538,9 @@ class JSONPlugin(object):
         )
 
     def apply(self, callback, route):
+        print("./bottle.py JSONPlugin apply callback:", callback)
+        print("./bottle.py JSONPlugin apply route:", route)
+
         dumps = self.json_dumps
         if not self.json_dumps:
             return callback
@@ -2234,9 +2576,13 @@ class TemplatePlugin(object):
     api = 2
 
     def setup(self, app):
+        print("./bottle.py TemplatePlugin setup app:", app)
         app.tpl = self
 
     def apply(self, callback, route):
+        print("./bottle.py TemplatePlugin apply callback:", callback)
+        print("./bottle.py TemplatePlugin apply route:", route)
+
         conf = route.config.get("template")
         if isinstance(conf, (tuple, list)) and len(conf) == 2:
             return view(conf[0], **conf[1])(callback)
@@ -2250,6 +2596,10 @@ class TemplatePlugin(object):
 class _ImportRedirect(object):
     def __init__(self, name, impmask):
         """Create a virtual package that redirects imports (see PEP 302)."""
+
+        print("./bottle.py _ImportRedirect __init__ name:", name)
+        print("./bottle.py _ImportRedirect __init__ impmask:", impmask)
+
         self.name = name
         self.impmask = impmask
         self.module = sys.modules.setdefault(name, new_module(name))
@@ -2259,6 +2609,10 @@ class _ImportRedirect(object):
         sys.meta_path.append(self)
 
     def find_spec(self, fullname, path, target=None):
+        print("./bottle.py _ImportRedirect find_spec fullname:", fullname)
+        print("./bottle.py _ImportRedirect find_spec path:", path)
+        print("./bottle.py _ImportRedirect find_spec target:", target)
+
         if "." not in fullname:
             return
         if fullname.rsplit(".", 1)[0] != self.name:
@@ -2268,6 +2622,9 @@ class _ImportRedirect(object):
         return spec_from_loader(fullname, self)
 
     def find_module(self, fullname, path=None):
+        print("./bottle.py _ImportRedirect find_module fullname:", fullname)
+        print("./bottle.py _ImportRedirect find_module path:", path)
+
         if "." not in fullname:
             return
         if fullname.rsplit(".", 1)[0] != self.name:
@@ -2275,12 +2632,15 @@ class _ImportRedirect(object):
         return self
 
     def create_module(self, spec):
+        print("./bottle.py _ImportRedirect create_module spec:", spec)
         return self.load_module(spec.name)
 
     def exec_module(self, module):
         pass  # This probably breaks importlib.reload() :/
 
     def load_module(self, fullname):
+        print("./bottle.py _ImportRedirect load_module fullname:", fullname)
+
         if fullname in sys.modules:
             return sys.modules[fullname]
         modname = fullname.rsplit(".", 1)[1]
@@ -2304,6 +2664,9 @@ class MultiDict(DictMixin):
     """
 
     def __init__(self, *a, **k):
+        print("./bottle.py MultiDict __init__ a:", a)
+        print("./bottle.py MultiDict __init__ k:", k)
+
         self.dict = dict((k, [v]) for (k, v) in dict(*a, **k).items())
 
     def __len__(self):
@@ -2313,15 +2676,20 @@ class MultiDict(DictMixin):
         return iter(self.dict)
 
     def __contains__(self, key):
+        print("./bottle.py MultiDict __contains__ key:", key)
         return key in self.dict
 
     def __delitem__(self, key):
+        print("./bottle.py MultiDict __delitem__ key:", key)
         del self.dict[key]
 
     def __getitem__(self, key):
+        print("./bottle.py MultiDict __getitem__ key:", key)
         return self.dict[key][-1]
 
     def __setitem__(self, key, value):
+        print("./bottle.py MultiDict __setitem__ key:", key)
+        print("./bottle.py MultiDict __setitem__ value:", value)
         self.append(key, value)
 
     def keys(self):
@@ -2376,6 +2744,12 @@ class MultiDict(DictMixin):
                 into a specific type. Exception are suppressed and result in
                 the default value to be returned.
         """
+
+        print("./bottle.py MultiDict get key:", key)
+        print("./bottle.py MultiDict get default:", default)
+        print("./bottle.py MultiDict get index:", index)
+        print("./bottle.py MultiDict get type:", type)
+
         try:
             val = self.dict[key][index]
             return type(val) if type else val
@@ -2385,14 +2759,25 @@ class MultiDict(DictMixin):
 
     def append(self, key, value):
         """Add a new value to the list of values for this key."""
+
+        print("./bottle.py MultiDict append key:", key)
+        print("./bottle.py MultiDict append value:", value)
+
         self.dict.setdefault(key, []).append(value)
 
     def replace(self, key, value):
         """Replace the list of values with a single value."""
+
+        print("./bottle.py MultiDict replace key:", key)
+        print("./bottle.py MultiDict replace value:", value)
+
         self.dict[key] = [value]
 
     def getall(self, key):
         """Return a (possibly empty) list of values for a key."""
+
+        print("./bottle.py MultiDict getall key:", key)
+
         return self.dict.get(key) or []
 
     #: Aliases for WTForms to mimic other multi-dict APIs (Django)
@@ -2415,6 +2800,9 @@ class FormsDict(MultiDict):
     recode_unicode = True
 
     def _fix(self, s, encoding=None):
+        print("./bottle.py FormsDict _fix s:", s)
+        print("./bottle.py FormsDict _fix encoding:", encoding)
+
         if isinstance(s, unicode) and self.recode_unicode:  # Python 3 WSGI
             return s.encode("latin1").decode(encoding or self.input_encoding)
         elif isinstance(s, bytes):  # Python 2 WSGI
@@ -2426,6 +2814,9 @@ class FormsDict(MultiDict):
         """Returns a copy with all keys and values de- or recoded to match
         :attr:`input_encoding`. Some libraries (e.g. WTForms) want a
         unicode dictionary."""
+
+        print("./bottle.py FormsDict decode encoding:", encoding)
+
         copy = FormsDict()
         enc = copy.input_encoding = encoding or self.input_encoding
         copy.recode_unicode = False
@@ -2435,6 +2826,11 @@ class FormsDict(MultiDict):
 
     def getunicode(self, name, default=None, encoding=None):
         """Return the value as a unicode string, or the default."""
+
+        print("./bottle.py FormsDict getunicode name:", name)
+        print("./bottle.py FormsDict getunicode default:", default)
+        print("./bottle.py FormsDict getunicode encoding:", encoding)
+
         try:
             return self._fix(self[name], encoding)
         except (UnicodeError, KeyError):
@@ -2442,6 +2838,10 @@ class FormsDict(MultiDict):
 
     def __getattr__(self, name, default=unicode()):
         # Without this guard, pickle generates a cryptic TypeError:
+
+        print("./bottle.py FormsDict __getattr__ name:", name)
+        print("./bottle.py FormsDict __getattr__ default:", default)
+
         if name.startswith("__") and name.endswith("__"):
             return super(FormsDict, self).__getattr__(name)
         return self.getunicode(name, default=default)
@@ -2452,35 +2852,52 @@ class HeaderDict(MultiDict):
     replace the old value instead of appending it."""
 
     def __init__(self, *a, **ka):
+        print("./bottle.py HeaderDict __init__ a:", a)
+        print("./bottle.py HeaderDict __init__ ka:", ka)
+
         self.dict = {}
         if a or ka:
             self.update(*a, **ka)
 
     def __contains__(self, key):
+        print("./bottle.py HeaderDict __contains__ key:", key)
         return _hkey(key) in self.dict
 
     def __delitem__(self, key):
+        print("./bottle.py HeaderDict __delitem__ key:", key)
         del self.dict[_hkey(key)]
 
     def __getitem__(self, key):
+        print("./bottle.py HeaderDict __getitem__ key:", key)
         return self.dict[_hkey(key)][-1]
 
     def __setitem__(self, key, value):
+        print("./bottle.py HeaderDict __setitem__ key:", key)
+        print("./bottle.py HeaderDict __setitem__ value:", value)
         self.dict[_hkey(key)] = [_hval(value)]
 
     def append(self, key, value):
+        print("./bottle.py HeaderDict append key:", key)
+        print("./bottle.py HeaderDict append value:", value)
         self.dict.setdefault(_hkey(key), []).append(_hval(value))
 
     def replace(self, key, value):
+        print("./bottle.py HeaderDict replace key:", key)
+        print("./bottle.py HeaderDict replace value:", value)
         self.dict[_hkey(key)] = [_hval(value)]
 
     def getall(self, key):
+        print("./bottle.py HeaderDict getall key:", key)
         return self.dict.get(_hkey(key)) or []
 
     def get(self, key, default=None, index=-1):
+        print("./bottle.py HeaderDict get key:", key)
+        print("./bottle.py HeaderDict get default:", default)
+        print("./bottle.py HeaderDict get index:", index)
         return MultiDict.get(self, _hkey(key), default, index)
 
     def filter(self, names):
+        print("./bottle.py HeaderDict filter names:", names)
         for name in (_hkey(n) for n in names):
             if name in self.dict:
                 del self.dict[name]
@@ -2502,10 +2919,14 @@ class WSGIHeaderDict(DictMixin):
     cgikeys = ("CONTENT_TYPE", "CONTENT_LENGTH")
 
     def __init__(self, environ):
+        print("./bottle.py WSGIHeaderDict __init__ environ:", environ)
         self.environ = environ
 
     def _ekey(self, key):
         """Translate header field name to CGI/WSGI environ key."""
+
+        print("./bottle.py WSGIHeaderDict _ekey key:", key)
+
         key = key.replace("-", "_").upper()
         if key in self.cgikeys:
             return key
@@ -2513,9 +2934,15 @@ class WSGIHeaderDict(DictMixin):
 
     def raw(self, key, default=None):
         """Return the header value as is (may be bytes or unicode)."""
+
+        print("./bottle.py WSGIHeaderDict raw key:", key)
+        print("./bottle.py WSGIHeaderDict raw default:", default)
+
         return self.environ.get(self._ekey(key), default)
 
     def __getitem__(self, key):
+        print("./bottle.py WSGIHeaderDict __getitem__ key:", key)
+
         val = self.environ[self._ekey(key)]
         if py3k:
             if isinstance(val, unicode):
@@ -2525,9 +2952,13 @@ class WSGIHeaderDict(DictMixin):
         return val
 
     def __setitem__(self, key, value):
+        print("./bottle.py WSGIHeaderDict __setitem__ key:", key)
+        print("./bottle.py WSGIHeaderDict __setitem__ value:", value)
+
         raise TypeError("%s is read-only." % self.__class__)
 
     def __delitem__(self, key):
+        print("./bottle.py WSGIHeaderDict __delitem__ key:", key)
         raise TypeError("%s is read-only." % self.__class__)
 
     def __iter__(self):
@@ -2544,10 +2975,12 @@ class WSGIHeaderDict(DictMixin):
         return len(self.keys())
 
     def __contains__(self, key):
+        print("./bottle.py WSGIHeaderDict __contains__ key:", key)
         return self._ekey(key) in self.environ
 
 
 _UNSET = object()
+print("./bottle.py _UNSET:", _UNSET)
 
 
 class ConfigDict(dict):
@@ -2587,6 +3020,10 @@ class ConfigDict(dict):
         :param squash: If true (default), nested dicts are assumed to
            represent namespaces and flattened (see :meth:`load_dict`).
         """
+
+        print("./bottle.py ConfigDict load_module name:", name)
+        print("./bottle.py ConfigDict load_module squash:", squash)
+
         config_obj = load(name)
         obj = {
             key: getattr(config_obj, key) for key in dir(config_obj) if key.isupper()
@@ -2614,6 +3051,10 @@ class ConfigDict(dict):
             :class:`python:configparser.ConfigParser` constructor call.
 
         """
+
+        print("./bottle.py ConfigDict load_config filename:", filename)
+        print("./bottle.py ConfigDict load_config options:", options)
+
         options.setdefault("allow_no_value", True)
         if py3k:
             options.setdefault("interpolation", configparser.ExtendedInterpolation())
@@ -2635,6 +3076,10 @@ class ConfigDict(dict):
         >>> c.load_dict({'some': {'namespace': {'key': 'value'} } })
         {'some.namespace.key': 'value'}
         """
+
+        print("./bottle.py ConfigDict load_dict source:", source)
+        print("./bottle.py ConfigDict load_dict namespace:", namespace)
+
         for key, value in source.items():
             if isinstance(key, basestring):
                 nskey = (namespace + "." + key).strip(".")
@@ -2653,6 +3098,10 @@ class ConfigDict(dict):
         >>> c = ConfigDict()
         >>> c.update('some.namespace', key='value')
         """
+
+        print("./bottle.py ConfigDict update a:", a)
+        print("./bottle.py ConfigDict update ka:", ka)
+
         prefix = ""
         if a and isinstance(a[0], basestring):
             prefix = a[0].strip(".") + "."
@@ -2661,11 +3110,17 @@ class ConfigDict(dict):
             self[prefix + key] = value
 
     def setdefault(self, key, value=None):
+        print("./bottle.py ConfigDict setdefault key:", key)
+        print("./bottle.py ConfigDict setdefault value:", value)
+
         if key not in self:
             self[key] = value
         return self[key]
 
     def __setitem__(self, key, value):
+        print("./bottle.py ConfigDict __setitem__ key:", key)
+        print("./bottle.py ConfigDict __setitem__ value:", value)
+
         if not isinstance(key, basestring):
             raise TypeError("Key has type %r (not a string)" % type(key))
 
@@ -2682,6 +3137,7 @@ class ConfigDict(dict):
             overlay._set_virtual(key, value)
 
     def __delitem__(self, key):
+        print("./bottle.py ConfigDict __delitem__ key:", key)
         if key not in self:
             raise KeyError(key)
         if key in self._virtual_keys:
@@ -2699,6 +3155,10 @@ class ConfigDict(dict):
 
     def _set_virtual(self, key, value):
         """Recursively set or update virtual keys."""
+
+        print("./bottle.py ConfigDict _set_virtual key:", key)
+        print("./bottle.py ConfigDict _set_virtual value:", value)
+
         if key in self and key not in self._virtual_keys:
             return  # Do nothing for non-virtual keys.
 
@@ -2711,6 +3171,9 @@ class ConfigDict(dict):
 
     def _delete_virtual(self, key):
         """Recursively delete virtual entry."""
+
+        print("./bottle.py ConfigDict _delete_virtual key:", key)
+
         if key not in self._virtual_keys:
             return  # Do nothing for non-virtual keys.
 
@@ -2722,16 +3185,26 @@ class ConfigDict(dict):
             overlay._delete_virtual(key)
 
     def _on_change(self, key, value):
+        print("./bottle.py ConfigDict _on_change key:", key)
+        print("./bottle.py ConfigDict _on_change value:", value)
+
         for cb in self._change_listener:
             if cb(self, key, value):
                 return True
 
     def _add_change_listener(self, func):
+        print("./bottle.py ConfigDict _add_change_listener func:", func)
+
         self._change_listener.append(func)
         return func
 
     def meta_get(self, key, metafield, default=None):
         """Return the value of a meta field for a key."""
+
+        print("./bottle.py ConfigDict meta_get key:", key)
+        print("./bottle.py ConfigDict meta_get metafield:", metafield)
+        print("./bottle.py ConfigDict meta_get default:", default)
+
         return self._meta.get(key, {}).get(metafield, default)
 
     def meta_set(self, key, metafield, value):
@@ -2739,14 +3212,28 @@ class ConfigDict(dict):
 
         Meta-fields are shared between all members of an overlay tree.
         """
+
+        print("./bottle.py ConfigDict meta_set key:", key)
+        print("./bottle.py ConfigDict meta_set metafield:", metafield)
+        print("./bottle.py ConfigDict meta_set value:", value)
+
         self._meta.setdefault(key, {})[metafield] = value
 
     def meta_list(self, key):
         """Return an iterable of meta field names defined for a key."""
+
+        print("./bottle.py ConfigDict meta_list key:", key)
+
         return self._meta.get(key, {}).keys()
 
     def _define(self, key, default=_UNSET, help=_UNSET, validate=_UNSET):
         """(Unstable) Shortcut for plugins to define own config parameters."""
+
+        print("./bottle.py ConfigDict _define key:", key)
+        print("./bottle.py ConfigDict _define default:", default)
+        print("./bottle.py ConfigDict _define help:", help)
+        print("./bottle.py ConfigDict _define validate:", validate)
+
         if default is not _UNSET:
             self.setdefault(key, default)
         if help is not _UNSET:
@@ -2805,6 +3292,9 @@ class AppStack(list):
 
     def push(self, value=None):
         """Add a new :class:`Bottle` instance to the stack"""
+
+        print("./bottle.py AppStack push value:", value)
+
         if not isinstance(value, Bottle):
             value = Bottle()
         self.append(value)
@@ -2822,6 +3312,9 @@ class AppStack(list):
 
 class WSGIFileWrapper(object):
     def __init__(self, fp, buffer_size=1024 * 64):
+        print("./bottle.py WSGIFileWrapper __init__ fp:", fp)
+        print("./bottle.py WSGIFileWrapper __init__ buffer_size:", buffer_size)
+
         self.fp, self.buffer_size = fp, buffer_size
         for attr in "fileno", "close", "read", "readlines", "tell", "seek":
             if hasattr(fp, attr):
@@ -2840,6 +3333,9 @@ class _closeiter(object):
     do not support attribute assignment (most of itertools)."""
 
     def __init__(self, iterator, close=None):
+        print("./bottle.py _closeiter __init__ iterator:", iterator)
+        print("./bottle.py _closeiter __init__ close:", close)
+
         self.iterator = iterator
         self.close_callbacks = makelist(close)
 
@@ -2862,6 +3358,10 @@ class ResourceManager(object):
     """
 
     def __init__(self, base="./", opener=open, cachemode="all"):
+        print("./bottle.py ResourceManager __init__ base:", base)
+        print("./bottle.py ResourceManager __init__ opener:", opener)
+        print("./bottle.py ResourceManager __init__ cachemode:", cachemode)
+
         self.opener = opener
         self.base = base
         self.cachemode = cachemode
@@ -2888,6 +3388,12 @@ class ResourceManager(object):
 
             res.add_path('./resources/', __file__)
         """
+
+        print("./bottle.py ResourceManager add_path path:", path)
+        print("./bottle.py ResourceManager add_path base:", base)
+        print("./bottle.py ResourceManager add_path index:", index)
+        print("./bottle.py ResourceManager add_path create:", create)
+
         base = os.path.abspath(os.path.dirname(base or self.base))
         path = os.path.abspath(os.path.join(base, os.path.dirname(path)))
         path += os.sep
@@ -2922,6 +3428,9 @@ class ResourceManager(object):
         The :attr:`path` list is searched in order. The first match is
         returned. Symlinks are followed. The result is cached to speed up
         future lookups."""
+
+        print("./bottle.py ResourceManager lookup name:", name)
+
         if name not in self.cache or DEBUG:
             for path in self.path:
                 fpath = os.path.join(path, name)
@@ -2935,6 +3444,12 @@ class ResourceManager(object):
 
     def open(self, name, mode="r", *args, **kwargs):
         """Find a resource and return a file object, or raise IOError."""
+
+        print("./bottle.py ResourceManager open name:", name)
+        print("./bottle.py ResourceManager open mode:", mode)
+        print("./bottle.py ResourceManager open args:", args)
+        print("./bottle.py ResourceManager open kwargs:", kwargs)
+
         fname = self.lookup(name)
         if not fname:
             raise IOError("Resource %r not found." % name)
@@ -2944,6 +3459,12 @@ class ResourceManager(object):
 class FileUpload(object):
     def __init__(self, fileobj, name, filename, headers=None):
         """Wrapper for a single file uploaded via ``multipart/form-data``."""
+
+        print("./bottle.py FileUpload __init__ fileobj:", fileobj)
+        print("./bottle.py FileUpload __init__ name:", name)
+        print("./bottle.py FileUpload __init__ filename:", filename)
+        print("./bottle.py FileUpload __init__ headers:", headers)
+
         #: Open file(-like) object (BytesIO buffer or temporary file)
         self.file = fileobj
         #: Name of the upload form field
@@ -2958,6 +3479,10 @@ class FileUpload(object):
 
     def get_header(self, name, default=None):
         """Return the value of a header within the multipart part."""
+
+        print("./bottle.py FileUpload get_header name:", name)
+        print("./bottle.py FileUpload get_header default:", default)
+
         return self.headers.get(name, default)
 
     @cached_property
@@ -2981,6 +3506,9 @@ class FileUpload(object):
         return fname[:255] or "empty"
 
     def _copy_file(self, fp, chunk_size=2**16):
+        print("./bottle.py FileUpload _copy_file fp:", fp)
+        print("./bottle.py FileUpload _copy_file chunk_size:", chunk_size)
+
         read, write, offset = self.file.read, fp.write, self.file.tell()
         while 1:
             buf = read(chunk_size)
@@ -2998,6 +3526,11 @@ class FileUpload(object):
         :param overwrite: If True, replace existing files. (default: False)
         :param chunk_size: Bytes to read at a time. (default: 64kb)
         """
+
+        print("./bottle.py FileUpload save destination:", destination)
+        print("./bottle.py FileUpload save overwrite:", overwrite)
+        print("./bottle.py FileUpload save chunk_size:", chunk_size)
+
         if isinstance(destination, basestring):  # Except file-likes here
             if os.path.isdir(destination):
                 destination = os.path.join(destination, self.filename)
@@ -3016,12 +3549,20 @@ class FileUpload(object):
 
 def abort(code=500, text="Unknown Error."):
     """Aborts execution and causes a HTTP error."""
+
+    print("./bottle.py abort code:", code)
+    print("./bottle.py abort text:", text)
+
     raise HTTPError(code, text)
 
 
 def redirect(url, code=None):
     """Aborts execution and causes a 303 or 302 redirect, depending on
     the HTTP protocol version."""
+
+    print("./bottle.py redirect url:", url)
+    print("./bottle.py redirect code:", code)
+
     if not code:
         code = 303 if request.get("SERVER_PROTOCOL") == "HTTP/1.1" else 302
     res = response.copy(cls=HTTPResponse)
@@ -3033,6 +3574,12 @@ def redirect(url, code=None):
 
 def _rangeiter(fp, offset, limit, bufsize=1024 * 1024):
     """Yield chunks from a range in a file."""
+
+    print("./bottle.py _rangeiter fp:", fp)
+    print("./bottle.py _rangeiter offset:", offset)
+    print("./bottle.py _rangeiter limit:", limit)
+    print("./bottle.py _rangeiter bufsize:", bufsize)
+
     fp.seek(offset)
     while limit > 0:
         part = fp.read(min(limit, bufsize))
@@ -3081,6 +3628,14 @@ def static_file(
     possible. ``HEAD`` and ``Range`` requests (used by download managers to
     check or continue partial downloads) are also handled automatically.
     """
+
+    print("./bottle.py static_file filename:", filename)
+    print("./bottle.py static_file root:", root)
+    print("./bottle.py static_file mimetype:", mimetype)
+    print("./bottle.py static_file download:", download)
+    print("./bottle.py static_file charset:", charset)
+    print("./bottle.py static_file etag:", etag)
+    print("./bottle.py static_file headers:", headers)
 
     root = os.path.join(os.path.abspath(root), "")
     filename = os.path.abspath(os.path.join(root, filename.strip("/\\")))
@@ -3173,6 +3728,9 @@ def static_file(
 def debug(mode=True):
     """Change the debug level.
     There is only one debug level supported at the moment."""
+
+    print("./bottle.py debug mode:", mode)
+
     global DEBUG
     if mode:
         warnings.simplefilter("default")
@@ -3180,6 +3738,8 @@ def debug(mode=True):
 
 
 def http_date(value):
+    print("./bottle.py http_date value:", value)
+
     if isinstance(value, basestring):
         return value
     if isinstance(value, datetime):
@@ -3197,6 +3757,9 @@ def http_date(value):
 
 def parse_date(ims):
     """Parse rfc1123, rfc850 and asctime timestamps and return UTC epoch."""
+
+    print("./bottle.py parse_date ims:", ims)
+
     try:
         ts = email.utils.parsedate_tz(ims)
         return calendar.timegm(ts[:8] + (0,)) - (ts[9] or 0)
@@ -3206,6 +3769,9 @@ def parse_date(ims):
 
 def parse_auth(header):
     """Parse rfc2617 HTTP authentication header string (basic) and return (user,pass) tuple or None"""
+
+    print("./bottle.py parse_auth header:", header)
+
     try:
         method, data = header.split(None, 1)
         if method.lower() == "basic":
@@ -3218,6 +3784,10 @@ def parse_auth(header):
 def parse_range_header(header, maxlen=0):
     """Yield (start, end) ranges parsed from a HTTP Range header. Skip
     unsatisfiable ranges. The end index is non-inclusive."""
+
+    print("./bottle.py parse_range_header header:", header)
+    print("./bottle.py parse_range_header maxlen:", maxlen)
+
     if not header or header[:6] != "bytes=":
         return
     ranges = [r.split("-", 1) for r in header[6:].split(",") if "-" in r]
@@ -3245,6 +3815,9 @@ def _parse_http_header(h):
     :param h: A header string (e.g. ``text/html,text/plain;q=0.9,*/*;q=0.8``)
     :return: List of (value, params) tuples. The second element is a (possibly empty) dict.
     """
+
+    print("./bottle.py _parse_http_header h:", h)
+
     values = []
     if '"' not in h:  # INFO: Fast path without regexp (~2x faster)
         for value in h.split(","):
@@ -3273,6 +3846,8 @@ def _parse_http_header(h):
 
 
 def _parse_qsl(qs):
+    print("./bottle.py _parse_qsl qs:", qs)
+
     r = []
     for pair in qs.split("&"):
         if not pair:
@@ -3289,11 +3864,20 @@ def _parse_qsl(qs):
 def _lscmp(a, b):
     """Compares two strings in a cryptographically safe way:
     Runtime is not affected by length of common prefix."""
+
+    print("./bottle.py _lscmp a:", a)
+    print("./bottle.py _lscmp b:", b)
+
     return not sum(0 if x == y else 1 for x, y in zip(a, b)) and len(a) == len(b)
 
 
 def cookie_encode(data, key, digestmod=None):
     """Encode and sign a pickle-able object. Return a (byte) string"""
+
+    print("./bottle.py cookie_encode data:", data)
+    print("./bottle.py cookie_encode key:", key)
+    print("./bottle.py cookie_encode digestmod:", digestmod)
+
     depr(
         0, 13, "cookie_encode() will be removed soon.", "Do not use this API directly."
     )
@@ -3305,6 +3889,11 @@ def cookie_encode(data, key, digestmod=None):
 
 def cookie_decode(data, key, digestmod=None):
     """Verify and decode an encoded string. Return an object or None."""
+
+    print("./bottle.py cookie_decode data:", data)
+    print("./bottle.py cookie_decode key:", key)
+    print("./bottle.py cookie_decode digestmod:", digestmod)
+
     depr(
         0, 13, "cookie_decode() will be removed soon.", "Do not use this API directly."
     )
@@ -3320,6 +3909,9 @@ def cookie_decode(data, key, digestmod=None):
 
 def cookie_is_encoded(data):
     """Return True if the argument looks like a encoded cookie."""
+
+    print("./bottle.py cookie_is_encoded data:", data)
+
     depr(
         0,
         13,
@@ -3331,6 +3923,9 @@ def cookie_is_encoded(data):
 
 def html_escape(string):
     """Escape HTML special characters ``&<>`` and quotes ``'"``."""
+
+    print("./bottle.py html_escape string:", string)
+
     return (
         string.replace("&", "&amp;")
         .replace("<", "&lt;")
@@ -3342,6 +3937,9 @@ def html_escape(string):
 
 def html_quote(string):
     """Escape and quote a string to be used as an HTTP attribute."""
+
+    print("./bottle.py html_quote string:", string)
+
     return '"%s"' % html_escape(string).replace("\n", "&#10;").replace(
         "\r", "&#13;"
     ).replace("\t", "&#9;")
@@ -3357,6 +3955,9 @@ def yieldroutes(func):
         c(x, y=5)   -> '/c/<x>' and '/c/<x>/<y>'
         d(x=5, y=6) -> '/d' and '/d/<x>' and '/d/<x>/<y>'
     """
+
+    print("./bottle.py yieldroutes func:", func)
+
     path = "/" + func.__name__.replace("__", "/").lstrip("/")
     spec = getargspec(func)
     argc = len(spec[0]) - len(spec[3] or [])
@@ -3376,6 +3977,11 @@ def path_shift(script_name, path_info, shift=1):
     :param shift: The number of path fragments to shift. May be negative to
       change the shift direction. (default: 1)
     """
+
+    print("./bottle.py path_shift script_name:", script_name)
+    print("./bottle.py path_shift path_info:", path_info)
+    print("./bottle.py path_shift shift:", shift)
+
     if shift == 0:
         return script_name, path_info
     pathlist = path_info.strip("/").split("/")
@@ -3406,10 +4012,19 @@ def auth_basic(check, realm="private", text="Access denied"):
     """Callback decorator to require HTTP auth (basic).
     TODO: Add route(check_auth=...) parameter."""
 
+    print("./bottle.py auth_basic check:", check)
+    print("./bottle.py auth_basic realm:", realm)
+    print("./bottle.py auth_basic text:", text)
+
     def decorator(func):
+
+        print("./bottle.py auth_basic decorator func:", func)
 
         @functools.wraps(func)
         def wrapper(*a, **ka):
+            print("./bottle.py auth_basic decorator wrapper a:", a)
+            print("./bottle.py auth_basic decorator wrapper ka:", ka)
+
             user, password = request.auth or (None, None)
             if user is None or not check(user, password):
                 err = HTTPError(401, text)
@@ -3429,8 +4044,13 @@ def auth_basic(check, realm="private", text="Access denied"):
 def make_default_app_wrapper(name):
     """Return a callable that relays calls to the current default app."""
 
+    print("./bottle.py make_default_app_wrapper name:", name)
+
     @functools.wraps(getattr(Bottle, name))
     def wrapper(*a, **ka):
+        print("./bottle.py make_default_app_wrapper wrapper a:", a)
+        print("./bottle.py make_default_app_wrapper wrapper ka:", ka)
+
         return getattr(app(), name)(*a, **ka)
 
     return wrapper
@@ -3448,7 +4068,18 @@ hook = make_default_app_wrapper("hook")
 install = make_default_app_wrapper("install")
 uninstall = make_default_app_wrapper("uninstall")
 url = make_default_app_wrapper("get_url")
-
+print("./bottle.py route:", route)
+print("./bottle.py get:", get)
+print("./bottle.py post:", post)
+print("./bottle.py put:", put)
+print("./bottle.py delete:", delete)
+print("./bottle.py patch:", patch)
+print("./bottle.py error:", error)
+print("./bottle.py mount:", mount)
+print("./bottle.py hook:", hook)
+print("./bottle.py install:", install)
+print("./bottle.py uninstall:", uninstall)
+print("./bottle.py url:", url)
 
 ###############################################################################
 # Multipart Handling ###########################################################
@@ -3459,6 +4090,8 @@ url = make_default_app_wrapper("get_url")
 
 class MultipartError(HTTPError):
     def __init__(self, msg):
+        print("./bottle.py MultipartError __init__ msg:", msg)
+
         HTTPError.__init__(self, 400, "MultipartError: " + msg)
 
 
@@ -3474,6 +4107,15 @@ class _MultipartParser(object):
         buffer_size=2**16,
         charset="latin1",
     ):
+        print("./bottle.py _MultipartParser __init__ stream:", stream)
+        print("./bottle.py _MultipartParser __init__ boundary:", boundary)
+        print("./bottle.py _MultipartParser __init__ content_length:", content_length)
+        print("./bottle.py _MultipartParser __init__ disk_limit:", disk_limit)
+        print("./bottle.py _MultipartParser __init__ mem_limit:", mem_limit)
+        print("./bottle.py _MultipartParser __init__ memfile_limit:", memfile_limit)
+        print("./bottle.py _MultipartParser __init__ buffer_size:", buffer_size)
+        print("./bottle.py _MultipartParser __init__ charset:", charset)
+
         self.stream = stream
         self.boundary = boundary
         self.content_length = content_length
@@ -3588,6 +4230,10 @@ class _MultipartParser(object):
 
 class _MultipartPart(object):
     def __init__(self, buffer_size=2**16, memfile_limit=2**18, charset="latin1"):
+        print("./bottle.py _MultipartPart __init__ buffer_size:", buffer_size)
+        print("./bottle.py _MultipartPart __init__ memfile_limit:", memfile_limit)
+        print("./bottle.py _MultipartPart __init__ charset:", charset)
+
         self.headerlist = []
         self.headers = None
         self.file = False
@@ -3602,11 +4248,17 @@ class _MultipartPart(object):
         self.buffer_size = buffer_size
 
     def feed(self, line, nl=""):
+        print("./bottle.py _MultipartPart feed line:", line)
+        print("./bottle.py _MultipartPart feed nl:", nl)
+
         if self.file:
             return self.write_body(line, nl)
         return self.write_header(line, nl)
 
     def write_header(self, line, nl):
+        print("./bottle.py _MultipartPart write_header line:", line)
+        print("./bottle.py _MultipartPart write_header nl:", nl)
+
         line = line.decode(self.charset)
 
         if not nl:
@@ -3625,6 +4277,9 @@ class _MultipartPart(object):
             self.headerlist.append((name.strip(), value.strip()))
 
     def write_body(self, line, nl):
+        print("./bottle.py _MultipartPart write_body line:", line)
+        print("./bottle.py _MultipartPart write_body nl:", nl)
+
         if not line and not nl:
             return  # This does not even flush the buffer
 
@@ -3714,6 +4369,10 @@ class ServerAdapter(object):
     quiet = False
 
     def __init__(self, host="127.0.0.1", port=8080, **options):
+        print("./bottle.py ServerAdapter __init__ host:", host)
+        print("./bottle.py ServerAdapter __init__ port:", port)
+        print("./bottle.py ServerAdapter __init__ options:", options)
+
         self.options = options
         self.host = host
         self.port = int(port)
@@ -4091,6 +4750,8 @@ class AutoServer(ServerAdapter):
     ]
 
     def run(self, handler):
+        print("./bottle.py AutoServer run handler:", handler)
+
         for sa in self.adapters:
             try:
                 return sa(self.host, self.port, **self.options).run(handler)
@@ -4120,6 +4781,7 @@ server_names = {
     "uvloop": AiohttpUVLoopServer,
     "auto": AutoServer,
 }
+print("./bottle.py server_names:", server_names)
 
 ###############################################################################
 # Application Control ##########################################################
@@ -4137,6 +4799,10 @@ def load(target, **namespace):
     expression. Keyword arguments passed to this function are available as
     local variables. Example: ``import_string('re:compile(x)', x='[a-z]')``
     """
+
+    print("./bottle.py load target:", target)
+    print("./bottle.py load namespace:", namespace)
+
     module, target = target.split(":", 1) if ":" in target else (target, None)
     if module not in sys.modules:
         __import__(module)
@@ -4153,6 +4819,9 @@ def load_app(target):
     """Load a bottle application from a module and make sure that the import
     does not affect the current default application, but returns a separate
     application object. See :func:`load` for the target parameter."""
+
+    print("./bottle.py load_app target:", target)
+
     global NORUN
     NORUN, nr_old = True, NORUN
     tmp = default_app.push()  # Create a new "default application"
@@ -4165,6 +4834,7 @@ def load_app(target):
 
 
 _debug = debug
+print("./bottle.py _debug:", _debug)
 
 
 def run(
@@ -4196,6 +4866,19 @@ def run(
     :param quiet: Suppress output to stdout and stderr? (default: False)
     :param options: Options passed to the server adapter.
     """
+
+    print("./bottle.py run app:", app)
+    print("./bottle.py run server:", server)
+    print("./bottle.py run host:", host)
+    print("./bottle.py run port:", port)
+    print("./bottle.py run interval:", interval)
+    print("./bottle.py run reloader:", reloader)
+    print("./bottle.py run quiet:", quiet)
+    print("./bottle.py run plugins:", plugins)
+    print("./bottle.py run debug:", debug)
+    print("./bottle.py run config:", config)
+    print("./bottle.py run kargs:", kargs)
+
     if NORUN:
         return
     if reloader and not os.environ.get("BOTTLE_CHILD"):
@@ -4293,6 +4976,9 @@ class FileCheckerThread(threading.Thread):
     the lockfile gets deleted or gets too old."""
 
     def __init__(self, lockfile, interval):
+        print("./bottle.py FileCheckerThread __init__ lockfile:", lockfile)
+        print("./bottle.py FileCheckerThread __init__ interval:", interval)
+
         threading.Thread.__init__(self)
         self.daemon = True
         self.lockfile, self.interval = lockfile, interval
@@ -4329,6 +5015,8 @@ class FileCheckerThread(threading.Thread):
         self.start()
 
     def __exit__(self, exc_type, *_):
+        print("./bottle.py FileCheckerThread __exit__ exc_type:", exc_type)
+
         if not self.status:
             self.status = "exit"  # silent exit
         self.join()
@@ -4364,6 +5052,13 @@ class BaseTemplate(object):
         The encoding parameter should be used to decode byte strings or files.
         The settings parameter contains a dict for engine-specific settings.
         """
+
+        print("./bottle.py BaseTemplate __init__ source:", source)
+        print("./bottle.py BaseTemplate __init__ name:", name)
+        print("./bottle.py BaseTemplate __init__ lookup:", lookup)
+        print("./bottle.py BaseTemplate __init__ encoding:", encoding)
+        print("./bottle.py BaseTemplate __init__ settings:", settings)
+
         self.name = name
         self.source = source.read() if hasattr(source, "read") else source
         self.filename = source.filename if hasattr(source, "filename") else None
@@ -4383,6 +5078,10 @@ class BaseTemplate(object):
     def search(cls, name, lookup=None):
         """Search name in all directories specified in lookup.
         First without, then with common extensions. Return first hit."""
+
+        print("./bottle.py BaseTemplate search name:", name)
+        print("./bottle.py BaseTemplate search lookup:", lookup)
+
         if not lookup:
             raise depr(
                 0,
@@ -4413,6 +5112,10 @@ class BaseTemplate(object):
     @classmethod
     def global_config(cls, key, *args):
         """This reads or sets the global settings stored in class.settings."""
+
+        print("./bottle.py BaseTemplate global_config key:", key)
+        print("./bottle.py BaseTemplate global_config args:", args)
+
         if args:
             cls.settings = cls.settings.copy()  # Make settings local to class
             cls.settings[key] = args[0]
@@ -4656,6 +5359,10 @@ class StplParser(object):
     default_syntax = "<% %> % {{ }}"
 
     def __init__(self, source, syntax=None, encoding="utf8"):
+        print("./bottle.py StplParser __init__ source:", source)
+        print("./bottle.py StplParser __init__ syntax:", syntax)
+        print("./bottle.py StplParser __init__ encoding:", encoding)
+
         self.source, self.encoding = touni(source, encoding), encoding
         self.set_syntax(syntax or self.default_syntax)
         self.code_buffer, self.text_buffer = [], []
@@ -4668,6 +5375,8 @@ class StplParser(object):
         return self._syntax
 
     def set_syntax(self, syntax):
+        print("./bottle.py StplParser set_syntax syntax:", syntax)
+
         self._syntax = syntax
         self._tokens = syntax.split()
         if syntax not in self._re_cache:
@@ -4708,6 +5417,9 @@ class StplParser(object):
         return "".join(self.code_buffer)
 
     def read_code(self, pysource, multiline):
+        print("./bottle.py StplParser read_code pysource:", pysource)
+        print("./bottle.py StplParser read_code multiline:", multiline)
+
         code_line, comment = "", ""
         offset = 0
         while True:
@@ -4789,11 +5501,16 @@ class StplParser(object):
 
     @staticmethod
     def process_inline(chunk):
+        print("./bottle.py StplParser process_inline chunk:", chunk)
+
         if chunk[0] == "!":
             return "_str(%s)" % chunk[1:]
         return "_escape(%s)" % chunk
 
     def write_code(self, line, comment=""):
+        print("./bottle.py StplParser write_code line:", line)
+        print("./bottle.py StplParser write_code comment:", comment)
+
         code = "  " * (self.indent + self.indent_mod)
         code += line.lstrip() + comment + "\n"
         self.code_buffer.append(code)
@@ -4806,6 +5523,10 @@ def template(*args, **kwargs):
     Template rendering arguments can be passed as dictionaries
     or directly (as keyword arguments).
     """
+
+    print("./bottle.py template args:", args)
+    print("./bottle.py template kwargs:", kwargs)
+
     tpl = args[0] if args else None
     for dictarg in args[1:]:
         kwargs.update(dictarg)
@@ -4830,6 +5551,9 @@ def template(*args, **kwargs):
 mako_template = functools.partial(template, template_adapter=MakoTemplate)
 cheetah_template = functools.partial(template, template_adapter=CheetahTemplate)
 jinja2_template = functools.partial(template, template_adapter=Jinja2Template)
+print("./bottle.py mako_template:", mako_template)
+print("./bottle.py cheetah_template:", cheetah_template)
+print("./bottle.py jinja2_template:", jinja2_template)
 
 
 def view(tpl_name, **defaults):
@@ -4843,10 +5567,18 @@ def view(tpl_name, **defaults):
         for instance, JSON with autojson or other castfilters.
     """
 
+    print("./bottle.py view tpl_name:", tpl_name)
+    print("./bottle.py view defaults:", defaults)
+
     def decorator(func):
+
+        print("./bottle.py view decorator func:", func)
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            print("./bottle.py view decorator wrapper args:", args)
+            print("./bottle.py view decorator wrapper kwargs:", kwargs)
+
             result = func(*args, **kwargs)
             if isinstance(result, (dict, DictMixin)):
                 tplvars = defaults.copy()
@@ -4864,6 +5596,9 @@ def view(tpl_name, **defaults):
 mako_view = functools.partial(view, template_adapter=MakoTemplate)
 cheetah_view = functools.partial(view, template_adapter=CheetahTemplate)
 jinja2_view = functools.partial(view, template_adapter=Jinja2Template)
+print("./bottle.py mako_view:", mako_view)
+print("./bottle.py cheetah_view:", cheetah_view)
+print("./bottle.py jinja2_view:", jinja2_view)
 
 ###############################################################################
 # Constants and Globals ########################################################
@@ -4873,16 +5608,23 @@ TEMPLATE_PATH = ["./", "./views/"]
 TEMPLATES = {}
 DEBUG = False
 NORUN = False  # If set, run() does nothing. Used by load_app()
+print("./bottle.py TEMPLATE_PATH:", TEMPLATE_PATH)
+print("./bottle.py TEMPLATES:", TEMPLATES)
+print("./bottle.py DEBUG:", DEBUG)
+print("./bottle.py NORUN:", NORUN)
 
 #: A dict to map HTTP status codes (e.g. 404) to phrases (e.g. 'Not Found')
 HTTP_CODES = httplib.responses.copy()
+print("./bottle.py HTTP_CODES:", HTTP_CODES)
 HTTP_CODES[418] = "I'm a teapot"  # RFC 2324
 HTTP_CODES[428] = "Precondition Required"
 HTTP_CODES[429] = "Too Many Requests"
 HTTP_CODES[431] = "Request Header Fields Too Large"
 HTTP_CODES[451] = "Unavailable For Legal Reasons"  # RFC 7725
 HTTP_CODES[511] = "Network Authentication Required"
+print("./bottle.py HTTP_CODES:", HTTP_CODES)
 _HTTP_STATUS_LINES = dict((k, "%d %s" % (k, v)) for (k, v) in HTTP_CODES.items())
+print("./bottle.py _HTTP_STATUS_LINES:", _HTTP_STATUS_LINES)
 
 #: The default template used for error pages. Override with @error()
 ERROR_PAGE_TEMPLATE = (
@@ -4927,31 +5669,41 @@ ERROR_PAGE_TEMPLATE = (
 """
     % __name__
 )
+print("./bottle.py ERROR_PAGE_TEMPLATE:", ERROR_PAGE_TEMPLATE)
 
 #: A thread-safe instance of :class:`LocalRequest`. If accessed from within a
 #: request callback, this instance always refers to the *current* request
 #: (even on a multi-threaded server).
 request = LocalRequest()
+print("./bottle.py request:", request)
 
 #: A thread-safe instance of :class:`LocalResponse`. It is used to change the
 #: HTTP response for the *current* request.
 response = LocalResponse()
+print("./bottle.py response:", response)
 
 #: A thread-safe namespace. Not used by Bottle.
 local = threading.local()
+print("./bottle.py local:", local)
 
 # Initialize app stack (create first empty Bottle app now deferred until needed)
 # BC: 0.6.4 and needed for run()
 apps = app = default_app = AppStack()
+print("./bottle.py default_app:", default_app)
+print("./bottle.py app:", app)
+print("./bottle.py apps:", apps)
 
 #: A virtual package that redirects import statements.
 #: Example: ``import bottle.ext.sqlite`` actually imports `bottle_sqlite`.
 ext = _ImportRedirect(
     "bottle.ext" if __name__ == "__main__" else __name__ + ".ext", "bottle_%s"
 ).module
+print("./bottle.py ext:", ext)
 
 
 def _main(argv):  # pragma: no coverage
+    print("./bottle.py _main argv:", argv)
+
     args, parser = _cli_parse(argv)
 
     def _cli_error(cli_msg):
@@ -5008,6 +5760,7 @@ def _main(argv):  # pragma: no coverage
 
 
 def main():
+    print("./bottle.py main sys.argv:", sys.argv)
     _main(sys.argv)
 
 
