@@ -20,12 +20,20 @@ conda env remove -n bottle_python_3_12 -y
 conda deactivate
 
 pip install -e ./
+pip install Mako==1.3.10 Jinja2==3.1.6
 pip install Paste==3.6.1
 
 # 调试时选择 python 解释器
 Python: Select Interpreter
 
 find . -name __pycache__ -exec rm -rf {} \;
+
+####################### 测试用例
+
+python -m unittest discover
+python -m unittest test/test_app.py
+python -m unittest test/test_formsdict.py
+python -m unittest test/test_config.py
 
 ####################### 服务端
 
