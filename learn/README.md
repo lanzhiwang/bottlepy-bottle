@@ -13,11 +13,10 @@ conda activate bottle_python_2_7
 conda activate bottle_python_3_6
 conda activate bottle_python_3_12
 
+conda deactivate
 conda env remove -n bottle_python_2_7 -y
 conda env remove -n bottle_python_3_6 -y
 conda env remove -n bottle_python_3_12 -y
-
-conda deactivate
 
 pip install -e ./
 pip install Mako==1.3.10 Jinja2==3.1.6
@@ -31,6 +30,8 @@ find . -name __pycache__ -exec rm -rf {} \;
 ####################### 测试用例
 
 python -m unittest discover
+python -m unittest test/test_environ.py
+python -m unittest test/test_oorouting.py
 python -m unittest test/test_app.py
 python -m unittest test/test_formsdict.py
 python -m unittest test/test_config.py

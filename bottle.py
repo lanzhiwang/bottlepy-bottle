@@ -1514,6 +1514,32 @@ class BaseRequest(object):
         #: The wrapped WSGI environ dictionary. This is the only real attribute.
         #: All other attributes actually are read-only properties.
 
+        """
+        >>> import wsgiref.util
+        >>> environ = {}
+        >>> environ
+        {}
+        >>> wsgiref.util.setup_testing_defaults(environ)
+        >>> environ
+        {
+            'SERVER_NAME': '127.0.0.1',
+            'SERVER_PROTOCOL': 'HTTP/1.0',
+            'HTTP_HOST': '127.0.0.1',
+            'REQUEST_METHOD': 'GET',
+            'SCRIPT_NAME': '',
+            'PATH_INFO': '/',
+            'wsgi.version': (1, 0),
+            'wsgi.run_once': 0,
+            'wsgi.multithread': 0,
+            'wsgi.multiprocess': 0,
+            'wsgi.input': <_io.BytesIO object at 0x7f756f9b2c50>,
+            'wsgi.errors': <_io.StringIO object at 0x7f756f710940>,
+            'wsgi.url_scheme': 'http',
+            'SERVER_PORT': '80'
+        }
+        >>>
+        """
+
         print("./bottle.py BaseRequest __init__ environ:", environ)
 
         self.environ = {} if environ is None else environ

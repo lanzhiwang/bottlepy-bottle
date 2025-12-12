@@ -8,8 +8,12 @@ from bottle import (
     debug,
 )
 
+print(1, "----------------" * 10)
+
 debug(True)
 
+
+print(2, "----------------" * 10)
 
 # Lets start with "Hello World!"
 # Point your Browser to 'http://localhost:8080/' and greet the world :D
@@ -46,5 +50,7 @@ def private():
         abort(401, "Go away!")
     return "Welcome!"
 
+
+print(3, "----------------" * 10)
 
 run(host="localhost", port=8080)
