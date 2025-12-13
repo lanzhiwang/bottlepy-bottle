@@ -1,6 +1,11 @@
+import os
 from bottle import route, run, request, response, send_file, abort, validate, template, db, debug
+
+print "1 ----------------------------------------------------------"
+
 debug(True)
 
+print "2 ----------------------------------------------------------"
 
 # Lets start with "Hello World!"
 # Point your Browser to 'http://localhost:8080/' and greet the world :D
@@ -46,7 +51,7 @@ def hello_number(num):
 # Bottle does the content-type guessing and save path checking for you.
 @route('/static/:filename#.*#')
 def static_file(filename):
-    send_file(filename, root='/path/to/static/files/')
+    send_file(filename, root='/root/bottle/examples')
 
 # You can manually add header and set the content-type of the response.
 @route('/json')
@@ -81,4 +86,11 @@ def db_counter_test():
     db['counter']['hits'] +=  1
     return "Total hits in this page: %d!" % db.counter.hits
 
-run(host='localhost', port=8080) 
+print "3 ----------------------------------------------------------"
+
+# run(host='localhost', port=8080)
+
+print "./examples/howto.py os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
+run(host='localhost', port=8080, reloader=True)
+
+# print "----------------------------------------------------------"

@@ -153,12 +153,16 @@ class BreakTheBottle(BottleException):
 # WSGI abstraction: Request and response management
 
 _default_app = None
+print "./bottle.py _default_app:", _default_app
 def default_app(newapp = None):
     """
     Returns the current default app or sets a new one.
     Defaults to an instance of Bottle
     """
     global _default_app
+
+    print "./bottle.py default_app _default_app:", _default_app
+
     if newapp:
         _default_app = newapp
     if not _default_app:
@@ -169,6 +173,10 @@ def default_app(newapp = None):
 class Bottle(object):
 
     def __init__(self, catchall=True, optimize=False, autojson=True):
+        print "./bottle.py Bottle __init__ catchall:", catchall
+        print "./bottle.py Bottle __init__ optimize:", optimize
+        print "./bottle.py Bottle __init__ autojson:", autojson
+
         self.simple_routes = {}
         self.regexp_routes = {}
         self.default_route = None
@@ -205,6 +213,11 @@ class Bottle(object):
 
     def add_controller(self, route, controller, **kargs):
         """ Adds a controller class or object """
+
+        # app.add_route('/ctest/{action}', CTest)
+        # app.add_route('/ctest/yes/:test', CTest, action='yes2')
+        # self.add_controller(route, handler, method=method, simple=simple, **kargs)
+
         if '{action}' not in route and 'action' not in kargs:
             raise BottleException("Routes to controller classes or object MUST"
                 " contain an {action} placeholder or use the action-parameter")
@@ -215,6 +228,17 @@ class Bottle(object):
 
     def add_route(self, route, handler, method='GET', simple=False, **kargs):
         """ Adds a new route to the route mappings. """
+
+        print "./bottle.py Bottle add_route route:", route
+        print "./bottle.py Bottle add_route handler:", handler
+        print "./bottle.py Bottle add_route method:", method
+        print "./bottle.py Bottle add_route simple:", simple
+        print "./bottle.py Bottle add_route kargs:", kargs
+
+        print "./bottle.py Bottle add_route isinstance(handler, type):", isinstance(handler, type)
+        # print "./bottle.py Bottle add_route issubclass(handler, BaseController):", issubclass(handler, BaseController)
+        print "./bottle.py Bottle add_route isinstance(handler, BaseController):", isinstance(handler, BaseController)
+
         if isinstance(handler, type) and issubclass(handler, BaseController):
             handler = handler()
         if isinstance(handler, BaseController):
@@ -230,13 +254,21 @@ class Bottle(object):
             route = re.sub(r':([a-zA-Z_]+)', r'(?P<\1>[^/]+)', route)
             route = re.compile('^%s$' % route)
             self.regexp_routes.setdefault(method, []).append([route, handler])
+        print "./bottle.py Bottle add_route self.simple_routes:", self.simple_routes
+        print "./bottle.py Bottle add_route self.regexp_routes:", self.regexp_routes
 
     def route(self, url, **kargs):
         """
         Decorator for request handler.
         Same as add_route(url, handler, **kargs).
         """
+
+        print "./bottle.py Bottle route url:", url
+        print "./bottle.py Bottle route kargs:", kargs
+        
         def wrapper(handler):
+            print "./bottle.py Bottle route wrapper handler:", handler
+
             self.add_route(url, handler, **kargs)
             return handler
         return wrapper
@@ -297,6 +329,9 @@ class Bottle(object):
 
     def __call__(self, environ, start_response):
         """ The bottle WSGI-interface. """
+        print "./bottle.py Bottle __call__ environ:", environ
+        print "./bottle.py Bottle __call__ start_response:", start_response
+
         request.bind(environ)
         response.bind()
         try: # Unhandled Exceptions
@@ -545,8 +580,14 @@ def validate(**vkargs):
     Validates and manipulates keyword arguments by user defined callables. 
     Handles ValueError and missing arguments by raising HTTPError(403).
     """
+
+    print "./bottle.py validate vkargs:", vkargs
     def decorator(func):
-        def wrapper(**kargs):
+
+        print "./bottle.py validate decorator func:", func
+        def wrapper(**kargs):  # 路由里面拿到的 handler 是 wrapper
+            print "./bottle.py validate decorator wrapper kargs:", kargs
+    
             for key, value in vkargs.iteritems():
                 if key not in kargs:
                     abort(403, 'Missing parameter: %s' % key)
@@ -563,6 +604,9 @@ def route(url, **kargs):
     """
     Decorator for request handler. Same as add_route(url, handler, **kargs).
     """
+    print "./bottle.py route url:", url
+    print "./bottle.py route kargs:", kargs
+
     return default_app().route(url, **kargs)
 
 def default():
@@ -658,12 +702,25 @@ class FapwsServer(ServerAdapter):
 def run(app=None, server=WSGIRefServer, host='127.0.0.1', port=8080,
         interval=1, reloader=False, **kargs):
     """ Runs bottle as a web server. """
+
+    print "./bottle.py run app:", app
+    print "./bottle.py run server:", server
+    print "./bottle.py run host:", host
+    print "./bottle.py run port:", port
+    print "./bottle.py run interval:", interval
+    print "./bottle.py run reloader:", reloader
+    print "./bottle.py run kargs:", kargs
+
     if not app:
         app = default_app()
+    print "./bottle.py run app:", app
     
     quiet = bool(kargs.get('quiet', False))
+    print "./bottle.py run quiet:", quiet
 
     # Instantiate server, if it is a class instead of an instance
+
+    print "./bottle.py run isinstance(server, type):", isinstance(server, type)
     if isinstance(server, type):
         if issubclass(server, CGIServer):
             server = server()
@@ -674,6 +731,9 @@ def run(app=None, server=WSGIRefServer, host='127.0.0.1', port=8080,
         raise RuntimeError("Server must be a subclass of WSGIAdapter")
  
     if not quiet and isinstance(server, ServerAdapter): # pragma: no cover
+        print "./bottle.py run not reloader:", not reloader
+        print "./bottle.py run os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
+
         if not reloader or os.environ.get('BOTTLE_CHILD') == 'true':
             print "Bottle server starting up (using %s)..." % repr(server)
             print "Listening on http://%s:%d/" % (server.host, server.port)
@@ -699,11 +759,14 @@ def reloader_run(server, app, interval):
         files = dict()
         for module in sys.modules.values():
             file_path = getattr(module, '__file__', None)
+            # print "./bottle.py reloader_run file_path:", file_path
             if file_path and os.path.isfile(file_path):
                 file_split = os.path.splitext(file_path)
                 if file_split[1] in ('.py', '.pyc', '.pyo'):
                     file_path = file_split[0] + '.py'
                     files[file_path] = os.stat(file_path).st_mtime
+        print "./bottle.py reloader_run files:", files
+
         thread.start_new_thread(server.run, (app,))
         while True:
             time.sleep(interval)
@@ -718,10 +781,17 @@ def reloader_run(server, app, interval):
                 time.sleep(interval) # be nice and wait for running requests
                 sys.exit(3)
     while True:
+        print "./bottle.py reloader_run sys.executable:", sys.executable
+        print "./bottle.py reloader_run sys.argv:", sys.argv
+
         args = [sys.executable] + sys.argv
+        print "./bottle.py reloader_run args:", args
+
         environ = os.environ.copy()
         environ['BOTTLE_CHILD'] = 'true'
         exit_status = subprocess.call(args, env=environ)
+        print "./bottle.py reloader_run exit_status:", exit_status
+
         if exit_status != 3:
             sys.exit(exit_status)
 
@@ -1216,12 +1286,24 @@ request = Request()
 response = Response()
 db = BottleDB()
 local = threading.local()
+print "./bottle.py DB_PATH:", DB_PATH
+print "./bottle.py TEMPLATE_PATH:", TEMPLATE_PATH
+print "./bottle.py TEMPLATES:", TEMPLATES
+print "./bottle.py DEBUG:", DEBUG
+print "./bottle.py HTTP_CODES:", HTTP_CODES
+print "./bottle.py HTTP_ERROR_TEMPLATE:", HTTP_ERROR_TEMPLATE
+print "./bottle.py TRACEBACK_TEMPLATE:", TRACEBACK_TEMPLATE
+print "./bottle.py request:", request
+print "./bottle.py response:", response
+print "./bottle.py db:", db
+print "./bottle.py local:", local
 
 #TODO: Global and app local configuration (debug, defaults, ...) is a mess
 
 def debug(mode=True):
     global DEBUG
     DEBUG = bool(mode)
+    print "./bottle.py debug DEBUG:", DEBUG
 
 def optimize(mode=True):
     default_app().optimize = bool(mode)
