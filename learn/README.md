@@ -32,9 +32,9 @@ find . -name __pycache__ -exec rm -rf {} \;
 python -m unittest discover
 python -m unittest test/test_environ.py
 python -m unittest test/test_oorouting.py
+python -m unittest test/test_config.py
 python -m unittest test/test_app.py
 python -m unittest test/test_formsdict.py
-python -m unittest test/test_config.py
 
 ####################### 服务端
 

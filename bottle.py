@@ -337,6 +337,8 @@ class lazy_attribute(object):
         print("./bottle.py lazy_attribute __get__ cls:", cls)
 
         value = self.getter(cls)
+        print("./bottle.py lazy_attribute __get__ value:", value)
+        print("./bottle.py lazy_attribute __get__ self.__name__:", self.__name__)
         setattr(cls, self.__name__, value)
         return value
 
@@ -3046,10 +3048,6 @@ class ConfigDict(dict):
         :param squash: If true (default), nested dicts are assumed to
            represent namespaces and flattened (see :meth:`load_dict`).
         """
-
-        print("./bottle.py ConfigDict load_module name:", name)
-        print("./bottle.py ConfigDict load_module squash:", squash)
-
         config_obj = load(name)
         obj = {
             key: getattr(config_obj, key) for key in dir(config_obj) if key.isupper()
@@ -3077,10 +3075,6 @@ class ConfigDict(dict):
             :class:`python:configparser.ConfigParser` constructor call.
 
         """
-
-        print("./bottle.py ConfigDict load_config filename:", filename)
-        print("./bottle.py ConfigDict load_config options:", options)
-
         options.setdefault("allow_no_value", True)
         if py3k:
             options.setdefault("interpolation", configparser.ExtendedInterpolation())
@@ -3102,10 +3096,6 @@ class ConfigDict(dict):
         >>> c.load_dict({'some': {'namespace': {'key': 'value'} } })
         {'some.namespace.key': 'value'}
         """
-
-        print("./bottle.py ConfigDict load_dict source:", source)
-        print("./bottle.py ConfigDict load_dict namespace:", namespace)
-
         for key, value in source.items():
             if isinstance(key, basestring):
                 nskey = (namespace + "." + key).strip(".")
@@ -3124,10 +3114,6 @@ class ConfigDict(dict):
         >>> c = ConfigDict()
         >>> c.update('some.namespace', key='value')
         """
-
-        print("./bottle.py ConfigDict update a:", a)
-        print("./bottle.py ConfigDict update ka:", ka)
-
         prefix = ""
         if a and isinstance(a[0], basestring):
             prefix = a[0].strip(".") + "."
@@ -3136,17 +3122,11 @@ class ConfigDict(dict):
             self[prefix + key] = value
 
     def setdefault(self, key, value=None):
-        print("./bottle.py ConfigDict setdefault key:", key)
-        print("./bottle.py ConfigDict setdefault value:", value)
-
         if key not in self:
             self[key] = value
         return self[key]
 
     def __setitem__(self, key, value):
-        print("./bottle.py ConfigDict __setitem__ key:", key)
-        print("./bottle.py ConfigDict __setitem__ value:", value)
-
         if not isinstance(key, basestring):
             raise TypeError("Key has type %r (not a string)" % type(key))
 
@@ -3163,7 +3143,6 @@ class ConfigDict(dict):
             overlay._set_virtual(key, value)
 
     def __delitem__(self, key):
-        print("./bottle.py ConfigDict __delitem__ key:", key)
         if key not in self:
             raise KeyError(key)
         if key in self._virtual_keys:
@@ -3181,10 +3160,6 @@ class ConfigDict(dict):
 
     def _set_virtual(self, key, value):
         """Recursively set or update virtual keys."""
-
-        print("./bottle.py ConfigDict _set_virtual key:", key)
-        print("./bottle.py ConfigDict _set_virtual value:", value)
-
         if key in self and key not in self._virtual_keys:
             return  # Do nothing for non-virtual keys.
 
@@ -3197,9 +3172,6 @@ class ConfigDict(dict):
 
     def _delete_virtual(self, key):
         """Recursively delete virtual entry."""
-
-        print("./bottle.py ConfigDict _delete_virtual key:", key)
-
         if key not in self._virtual_keys:
             return  # Do nothing for non-virtual keys.
 
@@ -3211,26 +3183,16 @@ class ConfigDict(dict):
             overlay._delete_virtual(key)
 
     def _on_change(self, key, value):
-        print("./bottle.py ConfigDict _on_change key:", key)
-        print("./bottle.py ConfigDict _on_change value:", value)
-
         for cb in self._change_listener:
             if cb(self, key, value):
                 return True
 
     def _add_change_listener(self, func):
-        print("./bottle.py ConfigDict _add_change_listener func:", func)
-
         self._change_listener.append(func)
         return func
 
     def meta_get(self, key, metafield, default=None):
         """Return the value of a meta field for a key."""
-
-        print("./bottle.py ConfigDict meta_get key:", key)
-        print("./bottle.py ConfigDict meta_get metafield:", metafield)
-        print("./bottle.py ConfigDict meta_get default:", default)
-
         return self._meta.get(key, {}).get(metafield, default)
 
     def meta_set(self, key, metafield, value):
@@ -3238,28 +3200,14 @@ class ConfigDict(dict):
 
         Meta-fields are shared between all members of an overlay tree.
         """
-
-        print("./bottle.py ConfigDict meta_set key:", key)
-        print("./bottle.py ConfigDict meta_set metafield:", metafield)
-        print("./bottle.py ConfigDict meta_set value:", value)
-
         self._meta.setdefault(key, {})[metafield] = value
 
     def meta_list(self, key):
         """Return an iterable of meta field names defined for a key."""
-
-        print("./bottle.py ConfigDict meta_list key:", key)
-
         return self._meta.get(key, {}).keys()
 
     def _define(self, key, default=_UNSET, help=_UNSET, validate=_UNSET):
         """(Unstable) Shortcut for plugins to define own config parameters."""
-
-        print("./bottle.py ConfigDict _define key:", key)
-        print("./bottle.py ConfigDict _define default:", default)
-        print("./bottle.py ConfigDict _define help:", help)
-        print("./bottle.py ConfigDict _define validate:", validate)
-
         if default is not _UNSET:
             self.setdefault(key, default)
         if help is not _UNSET:
