@@ -1,5 +1,5 @@
 import os
-from bottle import route, run, request, response, send_file, abort, validate, template, db, debug
+from bottle import route, run, request, response, send_file, abort, validate, template, debug
 
 print "1 ----------------------------------------------------------"
 
@@ -77,20 +77,20 @@ def validate_test(i, f, csv):
 @route('/template/test')
 def template_test():
     return template('howto', title='Template Test', items=[1,2,3,'fly'])
-        
+
 # Database
-@route('/db/counter')
-def db_counter_test():
-    if 'hits' not in db.counter:
-        db.counter.hits = 0
-    db['counter']['hits'] +=  1
-    return "Total hits in this page: %d!" % db.counter.hits
+# @route('/db/counter')
+# def db_counter_test():
+#     if 'hits' not in db.counter:
+#         db.counter.hits = 0
+#     db['counter']['hits'] +=  1
+#     return "Total hits in this page: %d!" % db.counter.hits
 
 print "3 ----------------------------------------------------------"
 
-# run(host='localhost', port=8080)
+run(host='localhost', port=8080)
 
-print "./examples/howto.py os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
-run(host='localhost', port=8080, reloader=True)
+# print "./examples/howto.py os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
+# run(host='localhost', port=8080, reloader=True)
 
 # print "----------------------------------------------------------"
