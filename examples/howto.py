@@ -90,7 +90,7 @@ print "3 ----------------------------------------------------------"
 
 run(host='localhost', port=8080)
 
-# print "./examples/howto.py os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
-# run(host='localhost', port=8080, reloader=True)
+# # print "./examples/howto.py os.environ.get('BOTTLE_CHILD'):", os.environ.get('BOTTLE_CHILD')
+# # run(host='localhost', port=8080, reloader=True)
 
-# print "----------------------------------------------------------"
+print "----------------------------------------------------------"

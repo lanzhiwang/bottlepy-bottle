@@ -112,6 +112,7 @@ try:
 except ImportError: # pragma: no cover
     json_dumps = None
 
+print "bottle.py sys.version_info:", sys.version_info
 if sys.version_info >= (3,0,0): # pragma: no cover
     # See Request.POST
     from io import BytesIO
@@ -287,6 +288,10 @@ class Router(object):
         self.named   = {}  # Cache for named routes and their format strings
         self.static  = {}  # Cache for static routes
         self.dynamic = []  # Search structure for dynamic routes
+        print "bottle.py Router __init__ self.routes:", self.routes
+        print "bottle.py Router __init__ self.named:", self.named
+        print "bottle.py Router __init__ self.static:", self.static
+        print "bottle.py Router __init__ self.dynamic:", self.dynamic
 
     def add(self, route, target=None, **ka):
         """ Add a route->target pair or a :class:`Route` object to the Router.
@@ -379,7 +384,14 @@ class Bottle(object):
         self.castfilter = []
         if autojson and json_dumps:
             self.add_filter(dict, dict2json)
-
+        print "bottle.py Bottle __init__ self.routes:", self.routes
+        print "bottle.py Bottle __init__ self.mounts:", self.mounts
+        print "bottle.py Bottle __init__ self.error_handler:", self.error_handler
+        print "bottle.py Bottle __init__ self.catchall:", self.catchall
+        print "bottle.py Bottle __init__ self.config:", self.config
+        print "bottle.py Bottle __init__ self.serve:", self.serve
+        print "bottle.py Bottle __init__ self.castfilter:", self.castfilter
+ 
     def optimize(self, *a, **ka):
         depr("Bottle.optimize() is obsolete.")
 
@@ -403,11 +415,18 @@ class Bottle(object):
     def add_filter(self, ftype, func):
         ''' Register a new output filter. Whenever bottle hits a handler output
             matching `ftype`, `func` is applied to it. '''
+
+        print "bottle.py Bottle add_filter ftype:", ftype
+        print "bottle.py Bottle add_filter func:", func
+
         if not isinstance(ftype, type):
             raise TypeError("Expected type object, got %s" % type(ftype))
         self.castfilter = [(t, f) for (t, f) in self.castfilter if t != ftype]
+        print "bottle.py Bottle add_filter self.castfilter:", self.castfilter
         self.castfilter.append((ftype, func))
+        print "bottle.py Bottle add_filter self.castfilter:", self.castfilter
         self.castfilter.sort()
+        print "bottle.py Bottle add_filter self.castfilter:", self.castfilter
 
     def match_url(self, path, method='GET'):
         """ Find a callback bound to a path and a specific HTTP method.
@@ -446,9 +465,19 @@ class Bottle(object):
             The method parameter (default: GET) specifies the HTTP request
             method to listen to. You can specify a list of methods too.
         """
+
+        print "bottle.py Bottle route path:", path
+        print "bottle.py Bottle route method:", method
+        print "bottle.py Bottle route kargs:", kargs
+
         def wrapper(callback):
+            print "bottle.py Bottle route wrapper callback:", callback
+
             routes = [path] if path else yieldroutes(callback)
+            print "bottle.py Bottle route wrapper routes:", routes
             methods = method.split(';') if isinstance(method, str) else method
+            print "bottle.py Bottle route wrapper methods:", methods
+
             for r in routes:
                 for m in methods:
                     r, m = r.strip().lstrip('/'), m.strip().upper()
@@ -980,10 +1009,12 @@ class AppStack(list):
 
     def __call__(self):
         """ Return the current default app. """
+        print "bottle.py AppStack __call__"
         return self[-1]
 
     def push(self, value=None):
         """ Add a new Bottle instance to the stack """
+        print "bottle.py AppStack push value:", value
         if not isinstance(value, Bottle):
             value = Bottle()
         self.append(value)
@@ -1083,8 +1114,11 @@ def static_file(filename, root, guessmime=True, mimetype=None, download=False):
 def debug(mode=True):
     """ Change the debug level.
     There is only one debug level supported at the moment."""
+    print "bottle.py debug mode:", mode
     global DEBUG
+    print "bottle.py debug DEBUG:", DEBUG
     DEBUG = bool(mode)
+    print "bottle.py debug DEBUG:", DEBUG
 
 
 def parse_date(ims):
@@ -1223,6 +1257,15 @@ delete = functools.wraps(Bottle.delete)(lambda *a, **ka: app().delete(*a, **ka))
 error  = functools.wraps(Bottle.error)(lambda *a, **ka: app().error(*a, **ka))
 url    = functools.wraps(Bottle.get_url)(lambda *a, **ka: app().get_url(*a, **ka))
 mount  = functools.wraps(Bottle.mount)(lambda *a, **ka: app().mount(*a, **ka))
+print "bottle.py route:", route
+print "bottle.py get:", get
+print "bottle.py post:", post
+print "bottle.py put:", put
+print "bottle.py delete:", delete
+print "bottle.py error:", error
+print "bottle.py url:", url
+print "bottle.py mount:", mount
+
 
 def default():
     depr("The default() decorator is deprecated. Use @error(404) instead.")
@@ -1387,6 +1430,16 @@ class AutoServer(ServerAdapter):
 def run(app=None, server=WSGIRefServer, host='127.0.0.1', port=8080,
         interval=1, reloader=False, quiet=False, **kargs):
     """ Runs bottle as a web server. """
+
+    print "bottle.py run app:", app
+    print "bottle.py run server:", server
+    print "bottle.py run host:", host
+    print "bottle.py run port:", port
+    print "bottle.py run interval:", interval
+    print "bottle.py run reloader:", reloader
+    print "bottle.py run quiet:", quiet
+    print "bottle.py run kargs:", kargs
+
     app = app if app else default_app()
     # Instantiate server, if it is a class instead of an instance
     if isinstance(server, type):
@@ -1880,7 +1933,11 @@ HTTP_CODES = {
 }
 """ A dict of known HTTP error and status codes """
 
-
+print "bottle.py TEMPLATE_PATH:", TEMPLATE_PATH
+print "bottle.py TEMPLATES:", TEMPLATES
+print "bottle.py DEBUG:", DEBUG
+print "bottle.py MEMFILE_MAX:", MEMFILE_MAX
+print "bottle.py HTTP_CODES:", HTTP_CODES
 
 ERROR_PAGE_TEMPLATE = SimpleTemplate("""
 %try:
@@ -1915,20 +1972,28 @@ ERROR_PAGE_TEMPLATE = SimpleTemplate("""
 %end
 """)
 """ The HTML template used for error messages """
+print "bottle.py ERROR_PAGE_TEMPLATE:", ERROR_PAGE_TEMPLATE
 
 request = Request()
 """ Whenever a page is requested, the :class:`Bottle` WSGI handler stores
 metadata about the current request into this instance of :class:`Request`.
 It is thread-safe and can be accessed from within handler functions. """
+print "bottle.py request:", request
 
 response = Response()
 """ The :class:`Bottle` WSGI handler uses metadata assigned to this instance
 of :class:`Response` to generate the WSGI response. """
+print "bottle.py response:", response
 
 local = threading.local()
 """ Thread-local namespace. Not used by Bottle, but could get handy """
+print "bottle.py local:", local
 
 # Initialize app stack (create first empty Bottle app)
 # BC: 0.6.4 and needed for run()
 app = default_app = AppStack()
+print "bottle.py default_app:", default_app
+print "bottle.py app:", app
 app.push()
+print "bottle.py default_app:", default_app
+print "bottle.py app:", app
