@@ -47,6 +47,9 @@ import urllib
 urlencode = urllib.urlencode
 urlquote = urllib.quote
 urlunquote = urllib.unquote
+print "bottle.py urlencode:", urlencode
+print "bottle.py urlquote:", urlquote
+print "bottle.py urlunquote:", urlunquote
 
 try: from collections import MutableMapping as DictMixin
 except ImportError: # pragma: no cover
@@ -69,6 +72,8 @@ except ImportError: # pragma: no cover
             json_dumps = None
 
 NCTextIOWrapper = None
+print "bottle.py NCTextIOWrapper:", NCTextIOWrapper
+print "bottle.py sys.version_info:", sys.version_info
 if sys.version_info >= (3,0,0): # pragma: no cover
     # See Request.POST
     from io import BytesIO
@@ -116,9 +121,14 @@ def makelist(data):
 class DictProperty(object):
     ''' Property that maps to a key in a local dict-like attribute. '''
     def __init__(self, attr, key=None, read_only=False):
+        print "bottle.py DictProperty __init__ attr:", attr
+        print "bottle.py DictProperty __init__ key:", key
+        print "bottle.py DictProperty __init__ read_only:", read_only
+
         self.attr, self.key, self.read_only = attr, key, read_only
 
     def __call__(self, func):
+        print "bottle.py DictProperty __call__ func:", func
         functools.update_wrapper(self, func, updated=[])
         self.getter, self.key = func, self.key or func.__name__
         return self
@@ -140,11 +150,13 @@ class DictProperty(object):
 def cached_property(func):
     ''' A property that, if accessed, replaces itself with the computed
         value. Subsequent accesses won't call the getter again. '''
+    print "bottle.py cached_property func:", func
     return DictProperty('__dict__')(func)
 
 class lazy_attribute(object): # Does not need configuration -> lower-case name
     ''' A property that caches itself to the class object. '''
     def __init__(self, func):
+        print "bottle.py lazy_attribute __init__ func:", func
         functools.update_wrapper(self, func, updated=[])
         self.getter = func
 
@@ -570,6 +582,14 @@ class Bottle(object):
             Any additional keyword arguments are stored as route-specific
             configuration and passed to plugins (see :meth:`Plugin.apply`).
         """
+        print "bottle.py Bottle route path:", path
+        print "bottle.py Bottle route method:", method
+        print "bottle.py Bottle route callback:", callback
+        print "bottle.py Bottle route name:", name
+        print "bottle.py Bottle route apply:", apply
+        print "bottle.py Bottle route skip:", skip
+        print "bottle.py Bottle route config:", config
+
         if callable(path): path, callback = None, path
 
         plugins = makelist(apply)
@@ -1645,16 +1665,23 @@ def auth_basic(check, realm="private", text="Access denied"):
 
 def make_default_app_wrapper(name):
     ''' Return a callable that relays calls to the current default app. '''
+    print "bottle.py make_default_app_wrapper name:", name
     @functools.wraps(getattr(Bottle, name))
     def wrapper(*a, **ka):
+        print "bottle.py make_default_app_wrapper wrapper a:", a
+        print "bottle.py make_default_app_wrapper wrapper ka:", ka
         return getattr(app(), name)(*a, **ka)
     return wrapper
 
 
+print "bottle.py globals():", globals()
 for name in '''route get post put delete error mount
                hook install uninstall'''.split():
+    print "bottle.py name:", name
     globals()[name] = make_default_app_wrapper(name)
+print "bottle.py globals():", globals()
 url = make_default_app_wrapper('get_url')
+print "bottle.py url:", url
 del name
 
 
@@ -1889,6 +1916,7 @@ server_names = {
     'bjoern' : BjoernServer,
     'auto': AutoServer,
 }
+print "bottle.py server_names:", server_names
 
 
 
@@ -2432,6 +2460,10 @@ mako_template = functools.partial(template, template_adapter=MakoTemplate)
 cheetah_template = functools.partial(template, template_adapter=CheetahTemplate)
 jinja2_template = functools.partial(template, template_adapter=Jinja2Template)
 simpletal_template = functools.partial(template, template_adapter=SimpleTALTemplate)
+print "bottle.py mako_template:", mako_template
+print "bottle.py cheetah_template:", cheetah_template
+print "bottle.py jinja2_template:", jinja2_template
+print "bottle.py simpletal_template:", simpletal_template
 
 
 def view(tpl_name, **defaults):
@@ -2460,7 +2492,10 @@ mako_view = functools.partial(view, template_adapter=MakoTemplate)
 cheetah_view = functools.partial(view, template_adapter=CheetahTemplate)
 jinja2_view = functools.partial(view, template_adapter=Jinja2Template)
 simpletal_view = functools.partial(view, template_adapter=SimpleTALTemplate)
-
+print "bottle.py mako_view:", mako_view
+print "bottle.py cheetah_view:", cheetah_view
+print "bottle.py jinja2_view:", jinja2_view
+print "bottle.py simpletal_view:", simpletal_view
 
 
 
@@ -2475,10 +2510,16 @@ TEMPLATE_PATH = ['./', './views/']
 TEMPLATES = {}
 DEBUG = False
 MEMFILE_MAX = 1024*100
+print "bottle.py TEMPLATE_PATH:", TEMPLATE_PATH
+print "bottle.py TEMPLATES:", TEMPLATES
+print "bottle.py DEBUG:", DEBUG
+print "bottle.py MEMFILE_MAX:", MEMFILE_MAX
 
 #: A dict to map HTTP status codes (e.g. 404) to phrases (e.g. 'Not Found')
 HTTP_CODES = httplib.responses
+print "bottle.py HTTP_CODES:", HTTP_CODES
 HTTP_CODES[418] = "I'm a teapot" # RFC 2324
+print "bottle.py HTTP_CODES:", HTTP_CODES
 
 #: The default template used for error pages. Override with @error()
 ERROR_PAGE_TEMPLATE = """
@@ -2513,21 +2554,30 @@ ERROR_PAGE_TEMPLATE = """
     <b>ImportError:</b> Could not generate the error page. Please add bottle to sys.path
 %end
 """
+print "bottle.py ERROR_PAGE_TEMPLATE:", ERROR_PAGE_TEMPLATE
 
 #: A thread-save instance of :class:`Request` representing the `current` request.
 request = Request()
+print "bottle.py request:", request
 
 #: A thread-save instance of :class:`Response` used to build the HTTP response.
 response = Response()
+print "bottle.py response:", response
 
 #: A thread-save namepsace. Not used by Bottle.
 local = threading.local()
+print "bottle.py local:", local
 
 # Initialize app stack (create first empty Bottle app)
 # BC: 0.6.4 and needed for run()
 app = default_app = AppStack()
+print "bottle.py app:", app
+print "bottle.py default_app:", default_app
 app.push()
+print "bottle.py app:", app
+print "bottle.py default_app:", default_app
 
 #: A virtual package that redirects import statements.
 #: Example: ``import bottle.ext.sqlite`` actually imports `bottle_sqlite`.
 ext = _ImportRedirect(__name__+'.ext', 'bottle_%s').module
+print "bottle.py ext:", ext

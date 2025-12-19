@@ -142,15 +142,15 @@ $
 
 #######################
 
-$ curl http://127.0.0.1:8080/db/counter
-Total hits in this page: 1!
-$
-$ curl http://127.0.0.1:8080/db/counter
-Total hits in this page: 2!
-$
-$ curl http://127.0.0.1:8080/db/counter
-Total hits in this page: 3!
-$
+# $ curl http://127.0.0.1:8080/db/counter
+# Total hits in this page: 1!
+# $
+# $ curl http://127.0.0.1:8080/db/counter
+# Total hits in this page: 2!
+# $
+# $ curl http://127.0.0.1:8080/db/counter
+# Total hits in this page: 3!
+# $
 
 
 ```
