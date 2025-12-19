@@ -209,11 +209,84 @@ class Route(object):
             to refer to this route later (depends on Router)
         """
         self.route = route
+        print "bottle.py Route __init__ self.route:", self.route
+
         self.target = target
         self.name = name
         if static:
             self.route = self.route.replace(':','\\:')
         self._tokens = None
+        print "bottle.py Route __init__ self.target:", self.target
+        print "bottle.py Route __init__ self.name:", self.name
+        print "bottle.py Route __init__ static:", static
+        print "bottle.py Route __init__ self.route:", self.route
+        print "bottle.py Route __init__ self._tokens:", self._tokens
+        """
+        bottle.py Route __init__ self.route:
+        bottle.py Route __init__ self.target: None
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route:
+        bottle.py Route __init__ self._tokens: None
+        bottle.py Route __init__ self.route:
+        bottle.py Route __init__ self.target: {'GET': <function hello_world at 0x7fa31d67d7d0>}
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route:
+        bottle.py Route __init__ self._tokens: None
+
+        bottle.py Route __init__ self.route: hello
+        bottle.py Route __init__ self.target: None
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello
+        bottle.py Route __init__ self._tokens: None
+        bottle.py Route __init__ self.route: hello
+        bottle.py Route __init__ self.target: {'GET': <function hello_get at 0x7fa31d67d8d0>}
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello
+        bottle.py Route __init__ self._tokens: None
+
+        bottle.py Route __init__ self.route: hello_post
+        bottle.py Route __init__ self.target: None
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello_post
+        bottle.py Route __init__ self._tokens: None
+        bottle.py Route __init__ self.route: hello_post
+        bottle.py Route __init__ self.target: {'POST': <function hello_post at 0x7fa31d67dcd0>}
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello_post
+        bottle.py Route __init__ self._tokens: None
+
+        bottle.py Route __init__ self.route: hello/:name
+        bottle.py Route __init__ self.target: None
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello/:name
+        bottle.py Route __init__ self._tokens: None
+        bottle.py Route __init__ self.route: hello/:name
+        bottle.py Route __init__ self.target: {'GET': <function hello_url at 0x7fa31d67ded0>}
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: hello/:name
+        bottle.py Route __init__ self._tokens: None
+
+        bottle.py Route __init__ self.route: validate/:i/:f/:csv
+        bottle.py Route __init__ self.target: None
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: validate/:i/:f/:csv
+        bottle.py Route __init__ self._tokens: None
+        bottle.py Route __init__ self.route: validate/:i/:f/:csv
+        bottle.py Route __init__ self.target: {'GET': <function wrapper at 0x7fa31d255250>}
+        bottle.py Route __init__ self.name: None
+        bottle.py Route __init__ static: False
+        bottle.py Route __init__ self.route: validate/:i/:f/:csv
+        bottle.py Route __init__ self._tokens: None
+        """
 
     def tokens(self):
         """ Return a list of (type, value) tokens. """
@@ -297,6 +370,32 @@ class Router(object):
         """ Add a route->target pair or a :class:`Route` object to the Router.
             Return the Route object. See :class:`Route` for details.
         """
+
+        print "bottle.py Router add route:", route
+        print "bottle.py Router add target:", target
+        print "bottle.py Router add ka:", ka
+        """
+        bottle.py Router add route:
+        bottle.py Router add target: {'GET': <function hello_world at 0x7fa31d67d7d0>}
+        bottle.py Router add ka: {}
+
+        bottle.py Router add route: hello
+        bottle.py Router add target: {'GET': <function hello_get at 0x7fa31d67d8d0>}
+        bottle.py Router add ka: {}
+
+        bottle.py Router add route: hello_post
+        bottle.py Router add target: {'POST': <function hello_post at 0x7fa31d67dcd0>}
+        bottle.py Router add ka: {}
+
+        bottle.py Router add route: hello/:name
+        bottle.py Router add target: {'GET': <function hello_url at 0x7fa31d67ded0>}
+        bottle.py Router add ka: {}
+
+        bottle.py Router add route: validate/:i/:f/:csv
+        bottle.py Router add target: {'GET': <function wrapper at 0x7fa31d255250>}
+        bottle.py Router add ka: {}
+        """
+
         if not isinstance(route, Route):
             route = Route(route, target, **ka)
         if self.get_route(route):
@@ -309,6 +408,47 @@ class Router(object):
             parameters as in :meth:`add` or comparing to an instance of
             :class:`Route`. Note that not all parameters are considered by the
             compare function. '''
+
+        print "bottle.py Router get_route route:", route
+        print "bottle.py Router get_route target:", target
+        print "bottle.py Router get_route ka:", ka
+        """
+        bottle.py Router get_route route:
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        bottle.py Router get_route route: <Route('') />
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+
+        bottle.py Router get_route route: hello
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        bottle.py Router get_route route: <Route('hello') />
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+
+        bottle.py Router get_route route: hello_post
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        bottle.py Router get_route route: <Route('hello_post') />
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+
+        bottle.py Router get_route route: hello/:name
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        bottle.py Router get_route route: <Route('hello/:name') />
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+
+        bottle.py Router get_route route: validate/:i/:f/:csv
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        bottle.py Router get_route route: <Route('validate/:i/:f/:csv') />
+        bottle.py Router get_route target: None
+        bottle.py Router get_route ka: {}
+        """
+
         if not isinstance(route, Route):
             route = Route(route, **ka)
         for known in self.routes:
@@ -341,7 +481,46 @@ class Router(object):
         self.named = {}
         self.static = {}
         self.dynamic = []
+        print "bottle.py Router compile self.routes:", self.routes
+        """
+        bottle.py Router compile self.routes: [<Route('') />]
+        bottle.py Router compile self.routes: [<Route('') />, <Route('hello') />]
+        bottle.py Router compile self.routes: [<Route('') />, <Route('hello') />, <Route('hello_post') />]
+        bottle.py Router compile self.routes: [<Route('') />, <Route('hello') />, <Route('hello_post') />, <Route('hello/:name') />]
+        bottle.py Router compile self.routes: [<Route('') />, <Route('hello') />, <Route('hello_post') />, <Route('hello/:name') />, <Route('validate/:i/:f/:csv') />]
+        """
         for route in self.routes:
+            print "bottle.py Router compile route.name:", route.name
+            print "bottle.py Router compile route.static:", route.static
+            print "bottle.py Router compile route.route:", route.route
+            print "bottle.py Router compile route.target:", route.target
+            """
+            bottle.py Router compile route.name: None
+            bottle.py Router compile route.static: True
+            bottle.py Router compile route.route:
+            bottle.py Router compile route.target: {'GET': <function hello_world at 0x7f76a8d9d7d0>}
+
+            bottle.py Router compile route.name: None
+            bottle.py Router compile route.static: True
+            bottle.py Router compile route.route: hello
+            bottle.py Router compile route.target: {'GET': <function hello_get at 0x7f76a8d9d8d0>}
+
+            bottle.py Router compile route.name: None
+            bottle.py Router compile route.static: True
+            bottle.py Router compile route.route: hello_post
+            bottle.py Router compile route.target: {'POST': <function hello_post at 0x7f76a8d9dcd0>}
+
+            bottle.py Router compile route.name: None
+            bottle.py Router compile route.static: False
+            bottle.py Router compile route.route: hello/:name
+            bottle.py Router compile route.target: {'GET': <function hello_url at 0x7f76a8d9ded0>}
+            
+            bottle.py Router compile route.name: None
+            bottle.py Router compile route.static: False
+            bottle.py Router compile route.route: validate/:i/:f/:csv
+            bottle.py Router compile route.target: {'GET': <function wrapper at 0x7f76a8974250>}
+            """
+
             if route.name:
                 self.named[route.name] = route.format_str()
             if route.static:
@@ -349,6 +528,15 @@ class Router(object):
                 continue
             gpatt = route.group_re()
             fpatt = route.flat_re()
+            print "bottle.py Router compile gpatt:", gpatt
+            print "bottle.py Router compile fpatt:", fpatt
+            """
+            bottle.py Router compile gpatt: hello\/(?P<name>[^/]+)
+            bottle.py Router compile fpatt: hello\/(?:[^/]+)
+
+            bottle.py Router compile gpatt: validate\/(?P<i>[^/]+)\/(?P<f>[^/]+)\/(?P<csv>[^/]+)
+            bottle.py Router compile fpatt: validate\/(?:[^/]+)\/(?:[^/]+)\/(?:[^/]+)
+            """
             try:
                 gregexp = re.compile('^(%s)$' % gpatt) if '(?P' in gpatt else None
                 combined = '%s|(^%s$)' % (self.dynamic[-1][0].pattern, fpatt)
@@ -358,6 +546,33 @@ class Router(object):
                 self.dynamic.append((re.compile('(^%s$)'%fpatt),[(route.target, gregexp)]))
             except re.error, e:
                 raise RouteSyntaxError("Could not add Route: %s (%s)" % (route, e))
+        print "bottle.py Router compile self.named:", self.named
+        print "bottle.py Router compile self.static:", self.static
+        print "bottle.py Router compile self.dynamic:", self.dynamic
+        """
+        bottle.py Router compile self.named: {}
+        bottle.py Router compile self.static: {
+            '': {
+                'GET': <function hello_world at 0x7f76a8d9d7d0>
+            },
+            'hello': {
+                'GET': <function hello_get at 0x7f76a8d9d8d0>
+            },
+            'hello_post': {
+                'POST': <function hello_post at 0x7f76a8d9dcd0>
+            }
+        }
+        bottle.py Router compile self.dynamic:
+        [
+            (
+                <_sre.SRE_Pattern object at 0x7f76a8363940>,
+                [
+                    ({'GET': <function hello_url at 0x7f76a8d9ded0>}, <_sre.SRE_Pattern object at 0x7f76a8d94a80>), 
+                    ({'GET': <function wrapper at 0x7f76a8974250>}, <_sre.SRE_Pattern object at 0x7f76a8a61d20>)
+                ]
+            )
+        ]
+        """
 
     def __eq__(self, other):
         return self.routes == other.routes
@@ -397,6 +612,10 @@ class Bottle(object):
 
     def mount(self, app, script_path):
         ''' Mount a Bottle application to a specific URL prefix '''
+
+        print "bottle.py Bottle mount app:", app
+        print "bottle.py Bottle mount script_path:", script_path
+
         if not isinstance(app, Bottle):
             raise TypeError('Only Bottle instances are supported for now.')
         script_path = '/'.join(filter(None, script_path.split('/')))
@@ -451,6 +670,10 @@ class Bottle(object):
 
     def get_url(self, routename, **kargs):
         """ Return a string that matches a named route """
+
+        print "bottle.py Bottle get_url routename:", routename
+        print "bottle.py Bottle get_url kargs:", kargs
+
         scriptname = request.environ.get('SCRIPT_NAME', '').strip('/') + '/'
         location = self.routes.build(routename, **kargs).lstrip('/')
         return urljoin(urljoin('/', scriptname), location)
@@ -469,19 +692,95 @@ class Bottle(object):
         print "bottle.py Bottle route path:", path
         print "bottle.py Bottle route method:", method
         print "bottle.py Bottle route kargs:", kargs
+        """
+        bottle.py Bottle route path: /
+        bottle.py Bottle route method: GET
+        bottle.py Bottle route kargs: {}
+
+        bottle.py Bottle route path: /hello
+        bottle.py Bottle route method: GET
+        bottle.py Bottle route kargs: {}
+
+        bottle.py Bottle route path: /hello_post
+        bottle.py Bottle route method: POST
+        bottle.py Bottle route kargs: {}
+
+        bottle.py Bottle route path: /validate/:i/:f/:csv
+        bottle.py Bottle route method: GET
+        bottle.py Bottle route kargs: {}
+        """
 
         def wrapper(callback):
             print "bottle.py Bottle route wrapper callback:", callback
+            """
+            bottle.py Bottle route wrapper callback: <function hello_world at 0x7fa31d67d7d0>
+
+            bottle.py Bottle route wrapper callback: <function hello_get at 0x7fa31d67d8d0>
+
+            bottle.py Bottle route wrapper callback: <function hello_post at 0x7fa31d67dcd0>
+
+            bottle.py Bottle route wrapper callback: <function hello_url at 0x7fa31d67ded0>
+
+            bottle.py Bottle route wrapper callback: <function wrapper at 0x7fa31d255250>
+            """
 
             routes = [path] if path else yieldroutes(callback)
-            print "bottle.py Bottle route wrapper routes:", routes
             methods = method.split(';') if isinstance(method, str) else method
+            print "bottle.py Bottle route wrapper routes:", routes
             print "bottle.py Bottle route wrapper methods:", methods
+            """
+            bottle.py Bottle route wrapper routes: ['/']
+            bottle.py Bottle route wrapper methods: ['GET']
+
+            bottle.py Bottle route wrapper routes: ['/hello']
+            bottle.py Bottle route wrapper methods: ['GET']
+
+            bottle.py Bottle route wrapper routes: ['/hello_post']
+            bottle.py Bottle route wrapper methods: ['POST']
+
+            bottle.py Bottle route wrapper routes: ['/hello/:name']
+            bottle.py Bottle route wrapper methods: ['GET']
+
+            bottle.py Bottle route wrapper routes: ['/validate/:i/:f/:csv']
+            bottle.py Bottle route wrapper methods: ['GET']
+            """
 
             for r in routes:
                 for m in methods:
                     r, m = r.strip().lstrip('/'), m.strip().upper()
+                    print "bottle.py Bottle route wrapper r:", r
+                    print "bottle.py Bottle route wrapper m:", m
+                    """
+                    bottle.py Bottle route wrapper r:
+                    bottle.py Bottle route wrapper m: GET
+
+                    bottle.py Bottle route wrapper r: hello
+                    bottle.py Bottle route wrapper m: GET
+
+                    bottle.py Bottle route wrapper r: hello_post
+                    bottle.py Bottle route wrapper m: POST
+
+                    bottle.py Bottle route wrapper r: hello/:name
+                    bottle.py Bottle route wrapper m: GET
+
+                    bottle.py Bottle route wrapper r: validate/:i/:f/:csv
+                    bottle.py Bottle route wrapper m: GET
+                    """
+        
                     old = self.routes.get_route(r, **kargs)
+                    print "bottle.py Bottle route wrapper old:", old
+                    """
+                    bottle.py Bottle route wrapper old: None
+
+                    bottle.py Bottle route wrapper old: None
+
+                    bottle.py Bottle route wrapper old: None
+
+                    bottle.py Bottle route wrapper old: None
+
+                    bottle.py Bottle route wrapper old: None                    
+                    """
+                    
                     if old:
                         old.target[m] = callback
                     else:
@@ -493,26 +792,51 @@ class Bottle(object):
     def get(self, path=None, method='GET', **kargs):
         """ Decorator: Bind a function to a GET request path.
             See :meth:'route' for details. """
+
+        print "bottle.py Bottle get path:", path
+        print "bottle.py Bottle get method:", method
+        print "bottle.py Bottle get kargs:", kargs
+
         return self.route(path, method, **kargs)
 
     def post(self, path=None, method='POST', **kargs):
         """ Decorator: Bind a function to a POST request path.
             See :meth:'route' for details. """
+
+        print "bottle.py Bottle post path:", path
+        print "bottle.py Bottle post method:", method
+        print "bottle.py Bottle post kargs:", kargs
+
         return self.route(path, method, **kargs)
 
     def put(self, path=None, method='PUT', **kargs):
         """ Decorator: Bind a function to a PUT request path.
             See :meth:'route' for details. """
+
+        print "bottle.py Bottle put path:", path
+        print "bottle.py Bottle put method:", method
+        print "bottle.py Bottle put kargs:", kargs
+
         return self.route(path, method, **kargs)
 
     def delete(self, path=None, method='DELETE', **kargs):
         """ Decorator: Bind a function to a DELETE request path.
             See :meth:'route' for details. """
+
+        print "bottle.py Bottle delete path:", path
+        print "bottle.py Bottle delete method:", method
+        print "bottle.py Bottle delete kargs:", kargs
+
         return self.route(path, method, **kargs)
 
     def error(self, code=500):
         """ Decorator: Registrer an output handler for a HTTP error code"""
+
+        print "bottle.py Bottle error code:", code
+
         def wrapper(handler):
+            print "bottle.py Bottle error wrapper handler:", handler
+
             self.error_handler[int(code)] = handler
             return handler
         return wrapper
