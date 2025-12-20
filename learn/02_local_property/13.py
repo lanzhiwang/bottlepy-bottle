@@ -1,0 +1,143 @@
+import threading
+import time
+import random
+
+print("begin1")
+
+
+def _local_property():
+    print("_local_property")
+
+    ls = threading.local()
+
+    def fget(_):
+        print("_local_property fget _:", _)
+        try:
+            print("_local_property fget ls.var:", ls.var)
+            return ls.var
+        except AttributeError:
+            raise RuntimeError("Request context not initialized.")
+
+    def fset(_, value):
+        print("_local_property fset _:", _)
+        print("_local_property fset value:", value)
+        ls.var = value
+
+    def fdel(_):
+        print("_local_property fdel _:", _)
+        del ls.var
+
+    return property(fget, fset, fdel, "Thread-local property")
+
+
+# --- 使用示例 ---
+
+
+class BaseRequest(object):
+    print("BaseRequest")
+
+    def __init__(self, environ=None):
+        print("BaseRequest __init__")
+        self.environ = {} if environ is None else environ
+        self.environ["bottle.request"] = self
+        print("BaseRequest __init__ self.environ:", self.environ)
+
+    def __setattr__(self, name, value):
+        """Define new attributes that are local to the bound request environment."""
+        print("BaseRequest __setattr__ name:", name)
+        print("BaseRequest __setattr__ value:", value)
+
+        if name == "environ":
+            return object.__setattr__(self, name, value)
+        key = "bottle.request.ext.%s" % name
+        if hasattr(self, name):
+            raise AttributeError("Attribute already defined: %s" % name)
+        self.environ[key] = value
+
+
+class LocalRequest(BaseRequest):
+    print("LocalRequest")
+    environ = _local_property()
+
+
+print("begin2")
+
+# 全局共享同一个 context 实例, 但其内部属性是线程隔离的
+request = LocalRequest()
+print("request:", request)
+print("request:", dir(request))
+
+
+def thread_worker(thread_data: str):
+    """
+    线程任务函数
+    """
+    thread_name = threading.current_thread().name
+    print(f"[{thread_name}] 启动...")
+
+    # 1. 验证初始状态: 尝试获取未设置的属性应抛出异常
+    try:
+        _ = request.environ
+    except RuntimeError as e:
+        print(f"[{thread_name}] 预期内的错误: {e}")
+
+    # 2. 设置线程局部变量
+    print(f"[{thread_name}] 设置 user_id 为: {thread_data}")
+    request.environ = thread_data
+
+    # 3. 模拟耗时操作, 期间可能有其他线程在修改该属性
+    # 如果不是线程局部的, 这里的值会被另一个线程覆盖
+    sleep_time = random.uniform(0.5, 1.5)
+    time.sleep(sleep_time)
+
+    # 4. 验证值是否保持不变
+    current_val = request.environ
+    if current_val == thread_data:
+        print(f"[{thread_name}] 验证通过! user_id 依然是: {current_val}")
+    else:
+        print(f"[{thread_name}] 警告! 数据发生污染! 当前值: {current_val}")
+
+    # 5. 清理(可选)
+    del request.environ
+    print(f"[{thread_name}] 已删除 user_id")
+
+
+if __name__ == "__main__":
+    print("--- 开始线程隔离测试 ---")
+
+    # # 创建两个线程, 分别赋予不同的数据
+    # t1 = threading.Thread(target=thread_worker, args=("USER_ALPHA",), name="Thread-A")
+    # # t2 = threading.Thread(target=thread_worker, args=("USER_BETA",), name="Thread-B")
+
+    # t1.start()
+    # # t2.start()
+
+    # t1.join()
+    # # t2.join()
+
+    print("--- 测试结束 ---")
+
+"""
+$ python 13.py
+begin1
+BaseRequest
+LocalRequest
+_local_property
+begin2
+BaseRequest __init__
+BaseRequest __setattr__ name: environ
+BaseRequest __setattr__ value: {}
+_local_property fset _: <__main__.LocalRequest object at 0x7f5902b85c10>
+_local_property fset value: {}
+_local_property fget _: <__main__.LocalRequest object at 0x7f5902b85c10>
+_local_property fget ls.var: {}
+_local_property fget _: <__main__.LocalRequest object at 0x7f5902b85c10>
+_local_property fget ls.var: {'bottle.request': <__main__.LocalRequest object at 0x7f5902b85c10>}
+BaseRequest __init__ self.environ: {'bottle.request': <__main__.LocalRequest object at 0x7f5902b85c10>}
+request: <__main__.LocalRequest object at 0x7f5902b85c10>
+request: ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'environ']
+--- 开始线程隔离测试 ---
+--- 测试结束 ---
+$
+
+"""
