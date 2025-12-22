@@ -27,6 +27,30 @@ Python: Select Interpreter
 
 find . -name __pycache__ -exec rm -rf {} \;
 
+# debug 命令
+$ pwd
+/root/.vscode-server/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/libs/debugpy/launcher
+$ ls -al
+total 48
+drwxr-xr-x 3 root root 4096 Dec 20 09:40 .
+drwxr-xr-x 8 root root 4096 Dec 20 09:40 ..
+-rw-r--r-- 1 root root  925 Dec 17 10:12 __init__.py
+-rw-r--r-- 1 root root 3863 Dec 17 10:12 __main__.py
+drwxr-xr-x 2 root root 4096 Dec 22 10:28 __pycache__
+-rw-r--r-- 1 root root 8689 Dec 17 10:12 debuggee.py
+-rw-r--r-- 1 root root 5728 Dec 17 10:12 handlers.py
+-rw-r--r-- 1 root root 3748 Dec 17 10:12 output.py
+-rw-r--r-- 1 root root 3129 Dec 17 10:12 winapi.py
+$
+
+cd /root/bottle; \
+/usr/bin/env \
+/root/miniconda3/envs/bottle_python_3_12/bin/python \
+/root/.vscode-server/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/libs/debugpy/adapter/../../debugpy/launcher \
+47143 \
+-- \
+/root/bottle/learn/02_local_property/01.py
+
 ####################### 测试用例
 
 python -m unittest discover
