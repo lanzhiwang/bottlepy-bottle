@@ -75,6 +75,10 @@ def _cli_patch(cli_args):  # pragma: no coverage
             eventlet.monkey_patch()
 
 
+"""
+print(__name__)
+bottle
+"""
 if __name__ == "__main__":
     _cli_patch(sys.argv)
 
@@ -97,6 +101,12 @@ except ImportError:
 
 py = sys.version_info
 py3k = py.major > 2
+"""
+print(py)
+sys.version_info(major=3, minor=12, micro=12, releaselevel='final', serial=0)
+print(py3k)
+True
+"""
 
 # Lots of stdlib and builtin differences.
 if py3k:
@@ -181,6 +191,10 @@ def touni(s, enc="utf8", err="strict"):
 
 
 tonat = touni if py3k else tob
+"""
+print(tonat)
+<function touni at 0x7f78b1777100>
+"""
 
 
 def _stderr(*args):
@@ -192,6 +206,9 @@ def _stderr(*args):
 
 # A bug in functools causes it to break if the wrapper is an instance method
 def update_wrapper(wrapper, wrapped, *a, **ka):
+    """
+    update_wrapper(self, func)
+    """
     try:
         functools.update_wrapper(wrapper, wrapped, *a, **ka)
     except AttributeError:
@@ -227,9 +244,65 @@ class DictProperty(object):
     """Property that maps to a key in a local dict-like attribute."""
 
     def __init__(self, attr, key=None, read_only=False):
+        """
+        catchall = DictProperty("config", "catchall")
+        @DictProperty("environ", "bottle.app", read_only=True)
+        @DictProperty("environ", "bottle.route", read_only=True)
+        @DictProperty("environ", "route.url_args", read_only=True)
+        @DictProperty("environ", "bottle.request.headers", read_only=True)
+        @DictProperty("environ", "bottle.request.cookies", read_only=True)
+        @DictProperty("environ", "bottle.request.query", read_only=True)
+        @DictProperty("environ", "bottle.request.forms", read_only=True)
+        @DictProperty("environ", "bottle.request.params", read_only=True)
+        @DictProperty("environ", "bottle.request.files", read_only=True)
+        @DictProperty("environ", "bottle.request.json", read_only=True)
+        @DictProperty("environ", "bottle.request.body", read_only=True)
+        @DictProperty("environ", "bottle.request.post", read_only=True)
+        @DictProperty("environ", "bottle.request.urlparts", read_only=True)
+        """
         self.attr, self.key, self.read_only = attr, key, read_only
 
     def __call__(self, func):
+        """
+        @DictProperty("environ", "bottle.app", read_only=True)
+        def app(self):
+
+        @DictProperty("environ", "bottle.route", read_only=True)
+        def route(self):
+
+        @DictProperty("environ", "route.url_args", read_only=True)
+        def url_args(self):
+
+        @DictProperty("environ", "bottle.request.headers", read_only=True)
+        def headers(self):
+
+        @DictProperty("environ", "bottle.request.cookies", read_only=True)
+        def cookies(self):
+
+        @DictProperty("environ", "bottle.request.query", read_only=True)
+        def query(self):
+
+        @DictProperty("environ", "bottle.request.forms", read_only=True)
+        def forms(self):
+
+        @DictProperty("environ", "bottle.request.params", read_only=True)
+        def params(self):
+
+        @DictProperty("environ", "bottle.request.files", read_only=True)
+        def files(self):
+
+        @DictProperty("environ", "bottle.request.json", read_only=True)
+        def json(self):
+
+        @DictProperty("environ", "bottle.request.body", read_only=True)
+        def _body(self):
+
+        @DictProperty("environ", "bottle.request.post", read_only=True)
+        def POST(self):
+
+        @DictProperty("environ", "bottle.request.urlparts", read_only=True)
+        def urlparts(self):
+        """
         functools.update_wrapper(self, func, updated=[])
         self.getter, self.key = func, self.key or func.__name__
         return self
@@ -259,6 +332,22 @@ class cached_property(object):
     property."""
 
     def __init__(self, func):
+        """
+        @cached_property
+        def call(self):
+
+        @cached_property
+        def _hooks(self):
+
+        @cached_property
+        def filename(self):
+
+        @cached_property
+        def co(self):
+
+        @cached_property
+        def code(self):
+        """
         update_wrapper(self, func)
         self.func = func
 
@@ -273,6 +362,10 @@ class lazy_attribute(object):
     """A property that caches itself to the class object."""
 
     def __init__(self, func):
+        """
+        @lazy_attribute
+        def _global_config(cls):
+        """
         functools.update_wrapper(self, func, updated=[])
         self.getter = func
 
@@ -1766,6 +1859,17 @@ def _hval(value):
 
 class HeaderProperty(object):
     def __init__(self, name, reader=None, writer=None, default=""):
+        """
+        content_type = HeaderProperty("Content-Type")
+        content_length = HeaderProperty("Content-Length", reader=int, default=-1)
+        expires = HeaderProperty(
+            "Expires",
+            reader=lambda x: datetime.fromtimestamp(parse_date(x), UTC),
+            writer=lambda x: http_date(x),
+        )
+        content_type = HeaderProperty("Content-Type")
+        content_length = HeaderProperty("Content-Length", reader=int, default=-1)
+        """
         self.name, self.default = name, default
         self.reader, self.writer = reader, writer
         self.__doc__ = "Current value of the %r header." % name.title()
@@ -2075,6 +2179,14 @@ class BaseResponse(object):
 
 
 def _local_property():
+    """
+    environ = _local_property()
+    _status_line = _local_property()
+    _status_code = _local_property()
+    _cookies = _local_property()
+    _headers = _local_property()
+    body = _local_property()
+    """
     ls = threading.local()
 
     def fget(_):
@@ -2120,6 +2232,12 @@ class LocalResponse(BaseResponse):
 
 Request = BaseRequest
 Response = BaseResponse
+"""
+print(Request)
+<class 'bottle.BaseRequest'>
+print(Response)
+<class 'bottle.BaseResponse'>
+"""
 
 
 class HTTPResponse(Response, BottleException):
@@ -2249,7 +2367,13 @@ class TemplatePlugin(object):
 #: Not a plugin, but part of the plugin API. TODO: Find a better place.
 class _ImportRedirect(object):
     def __init__(self, name, impmask):
-        """Create a virtual package that redirects imports (see PEP 302)."""
+        """Create a virtual package that redirects imports (see PEP 302).
+
+        print(name)
+        bottle.ext
+        print(impmask)
+        bottle_%s
+        """
         self.name = name
         self.impmask = impmask
         self.module = sys.modules.setdefault(name, new_module(name))
@@ -2548,6 +2672,10 @@ class WSGIHeaderDict(DictMixin):
 
 
 _UNSET = object()
+"""
+print(_UNSET)
+<object object at 0x7f2069b66aa0>
+"""
 
 
 class ConfigDict(dict):
@@ -3237,6 +3365,10 @@ def parse_range_header(header, maxlen=0):
 
 #: Header tokenizer used by _parse_http_header()
 _hsplit = re.compile('(?:(?:"((?:[^"\\\\]|\\\\.)*)")|([^;,=]+))([;,=]?)').findall
+"""
+print(_hsplit)
+<built-in method findall of re.Pattern object at 0x7fb97ab845e0>
+"""
 
 
 def _parse_http_header(h):
@@ -4165,6 +4297,10 @@ def load_app(target):
 
 
 _debug = debug
+"""
+print(_debug)
+<function debug at 0x7f1c50862700>
+"""
 
 
 def run(
@@ -4873,16 +5009,38 @@ TEMPLATE_PATH = ["./", "./views/"]
 TEMPLATES = {}
 DEBUG = False
 NORUN = False  # If set, run() does nothing. Used by load_app()
+"""
+print(TEMPLATE_PATH)
+['./', './views/']
+print(TEMPLATES)
+{}
+print(DEBUG)
+False
+print(NORUN)
+False
+"""
 
 #: A dict to map HTTP status codes (e.g. 404) to phrases (e.g. 'Not Found')
 HTTP_CODES = httplib.responses.copy()
+"""
+print(HTTP_CODES)
+{<HTTPStatus.CONTINUE: 100>: 'Continue', <HTTPStatus.SWITCHING_PROTOCOLS: 101>: 'Switching Protocols', <HTTPStatus.PROCESSING: 102>: 'Processing', <HTTPStatus.EARLY_HINTS: 103>: 'Early Hints', <HTTPStatus.OK: 200>: 'OK', <HTTPStatus.CREATED: 201>: 'Created', <HTTPStatus.ACCEPTED: 202>: 'Accepted', <HTTPStatus.NON_AUTHORITATIVE_INFORMATION: 203>: 'Non-Authoritative Information', <HTTPStatus.NO_CONTENT: 204>: 'No Content', <HTTPStatus.RESET_CONTENT: 205>: 'Reset Content', <HTTPStatus.PARTIAL_CONTENT: 206>: 'Partial Content', <HTTPStatus.MULTI_STATUS: 207>: 'Multi-Status', <HTTPStatus.ALREADY_REPORTED: 208>: 'Already Reported', <HTTPStatus.IM_USED: 226>: 'IM Used', <HTTPStatus.MULTIPLE_CHOICES: 300>: 'Multiple Choices', <HTTPStatus.MOVED_PERMANENTLY: 301>: 'Moved Permanently', <HTTPStatus.FOUND: 302>: 'Found', <HTTPStatus.SEE_OTHER: 303>: 'See Other', <HTTPStatus.NOT_MODIFIED: 304>: 'Not Modified', <HTTPStatus.USE_PROXY: 305>: 'Use Proxy', <HTTPStatus.TEMPORARY_REDIRECT: 307>: 'Temporary Redirect', <HTTPStatus.PERMANENT_REDIRECT: 308>: 'Permanent Redirect', <HTTPStatus.BAD_REQUEST: 400>: 'Bad Request', <HTTPStatus.UNAUTHORIZED: 401>: 'Unauthorized', <HTTPStatus.PAYMENT_REQUIRED: 402>: 'Payment Required', <HTTPStatus.FORBIDDEN: 403>: 'Forbidden', <HTTPStatus.NOT_FOUND: 404>: 'Not Found', <HTTPStatus.METHOD_NOT_ALLOWED: 405>: 'Method Not Allowed', <HTTPStatus.NOT_ACCEPTABLE: 406>: 'Not Acceptable', <HTTPStatus.PROXY_AUTHENTICATION_REQUIRED: 407>: 'Proxy Authentication Required', <HTTPStatus.REQUEST_TIMEOUT: 408>: 'Request Timeout', <HTTPStatus.CONFLICT: 409>: 'Conflict', <HTTPStatus.GONE: 410>: 'Gone', <HTTPStatus.LENGTH_REQUIRED: 411>: 'Length Required', <HTTPStatus.PRECONDITION_FAILED: 412>: 'Precondition Failed', <HTTPStatus.REQUEST_ENTITY_TOO_LARGE: 413>: 'Request Entity Too Large', <HTTPStatus.REQUEST_URI_TOO_LONG: 414>: 'Request-URI Too Long', <HTTPStatus.UNSUPPORTED_MEDIA_TYPE: 415>: 'Unsupported Media Type', <HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE: 416>: 'Requested Range Not Satisfiable', <HTTPStatus.EXPECTATION_FAILED: 417>: 'Expectation Failed', <HTTPStatus.IM_A_TEAPOT: 418>: "I'm a Teapot", <HTTPStatus.MISDIRECTED_REQUEST: 421>: 'Misdirected Request', <HTTPStatus.UNPROCESSABLE_ENTITY: 422>: 'Unprocessable Entity', <HTTPStatus.LOCKED: 423>: 'Locked', <HTTPStatus.FAILED_DEPENDENCY: 424>: 'Failed Dependency', <HTTPStatus.TOO_EARLY: 425>: 'Too Early', <HTTPStatus.UPGRADE_REQUIRED: 426>: 'Upgrade Required', <HTTPStatus.PRECONDITION_REQUIRED: 428>: 'Precondition Required', <HTTPStatus.TOO_MANY_REQUESTS: 429>: 'Too Many Requests', <HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE: 431>: 'Request Header Fields Too Large', <HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS: 451>: 'Unavailable For Legal Reasons', <HTTPStatus.INTERNAL_SERVER_ERROR: 500>: 'Internal Server Error', <HTTPStatus.NOT_IMPLEMENTED: 501>: 'Not Implemented', <HTTPStatus.BAD_GATEWAY: 502>: 'Bad Gateway', <HTTPStatus.SERVICE_UNAVAILABLE: 503>: 'Service Unavailable', <HTTPStatus.GATEWAY_TIMEOUT: 504>: 'Gateway Timeout', <HTTPStatus.HTTP_VERSION_NOT_SUPPORTED: 505>: 'HTTP Version Not Supported', <HTTPStatus.VARIANT_ALSO_NEGOTIATES: 506>: 'Variant Also Negotiates', <HTTPStatus.INSUFFICIENT_STORAGE: 507>: 'Insufficient Storage', <HTTPStatus.LOOP_DETECTED: 508>: 'Loop Detected', <HTTPStatus.NOT_EXTENDED: 510>: 'Not Extended', <HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED: 511>: 'Network Authentication Required'}
+"""
 HTTP_CODES[418] = "I'm a teapot"  # RFC 2324
 HTTP_CODES[428] = "Precondition Required"
 HTTP_CODES[429] = "Too Many Requests"
 HTTP_CODES[431] = "Request Header Fields Too Large"
 HTTP_CODES[451] = "Unavailable For Legal Reasons"  # RFC 7725
 HTTP_CODES[511] = "Network Authentication Required"
+"""
+print(HTTP_CODES)
+{<HTTPStatus.CONTINUE: 100>: 'Continue', <HTTPStatus.SWITCHING_PROTOCOLS: 101>: 'Switching Protocols', <HTTPStatus.PROCESSING: 102>: 'Processing', <HTTPStatus.EARLY_HINTS: 103>: 'Early Hints', <HTTPStatus.OK: 200>: 'OK', <HTTPStatus.CREATED: 201>: 'Created', <HTTPStatus.ACCEPTED: 202>: 'Accepted', <HTTPStatus.NON_AUTHORITATIVE_INFORMATION: 203>: 'Non-Authoritative Information', <HTTPStatus.NO_CONTENT: 204>: 'No Content', <HTTPStatus.RESET_CONTENT: 205>: 'Reset Content', <HTTPStatus.PARTIAL_CONTENT: 206>: 'Partial Content', <HTTPStatus.MULTI_STATUS: 207>: 'Multi-Status', <HTTPStatus.ALREADY_REPORTED: 208>: 'Already Reported', <HTTPStatus.IM_USED: 226>: 'IM Used', <HTTPStatus.MULTIPLE_CHOICES: 300>: 'Multiple Choices', <HTTPStatus.MOVED_PERMANENTLY: 301>: 'Moved Permanently', <HTTPStatus.FOUND: 302>: 'Found', <HTTPStatus.SEE_OTHER: 303>: 'See Other', <HTTPStatus.NOT_MODIFIED: 304>: 'Not Modified', <HTTPStatus.USE_PROXY: 305>: 'Use Proxy', <HTTPStatus.TEMPORARY_REDIRECT: 307>: 'Temporary Redirect', <HTTPStatus.PERMANENT_REDIRECT: 308>: 'Permanent Redirect', <HTTPStatus.BAD_REQUEST: 400>: 'Bad Request', <HTTPStatus.UNAUTHORIZED: 401>: 'Unauthorized', <HTTPStatus.PAYMENT_REQUIRED: 402>: 'Payment Required', <HTTPStatus.FORBIDDEN: 403>: 'Forbidden', <HTTPStatus.NOT_FOUND: 404>: 'Not Found', <HTTPStatus.METHOD_NOT_ALLOWED: 405>: 'Method Not Allowed', <HTTPStatus.NOT_ACCEPTABLE: 406>: 'Not Acceptable', <HTTPStatus.PROXY_AUTHENTICATION_REQUIRED: 407>: 'Proxy Authentication Required', <HTTPStatus.REQUEST_TIMEOUT: 408>: 'Request Timeout', <HTTPStatus.CONFLICT: 409>: 'Conflict', <HTTPStatus.GONE: 410>: 'Gone', <HTTPStatus.LENGTH_REQUIRED: 411>: 'Length Required', <HTTPStatus.PRECONDITION_FAILED: 412>: 'Precondition Failed', <HTTPStatus.REQUEST_ENTITY_TOO_LARGE: 413>: 'Request Entity Too Large', <HTTPStatus.REQUEST_URI_TOO_LONG: 414>: 'Request-URI Too Long', <HTTPStatus.UNSUPPORTED_MEDIA_TYPE: 415>: 'Unsupported Media Type', <HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE: 416>: 'Requested Range Not Satisfiable', <HTTPStatus.EXPECTATION_FAILED: 417>: 'Expectation Failed', <HTTPStatus.IM_A_TEAPOT: 418>: "I'm a teapot", <HTTPStatus.MISDIRECTED_REQUEST: 421>: 'Misdirected Request', <HTTPStatus.UNPROCESSABLE_ENTITY: 422>: 'Unprocessable Entity', <HTTPStatus.LOCKED: 423>: 'Locked', <HTTPStatus.FAILED_DEPENDENCY: 424>: 'Failed Dependency', <HTTPStatus.TOO_EARLY: 425>: 'Too Early', <HTTPStatus.UPGRADE_REQUIRED: 426>: 'Upgrade Required', <HTTPStatus.PRECONDITION_REQUIRED: 428>: 'Precondition Required', <HTTPStatus.TOO_MANY_REQUESTS: 429>: 'Too Many Requests', <HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE: 431>: 'Request Header Fields Too Large', <HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS: 451>: 'Unavailable For Legal Reasons', <HTTPStatus.INTERNAL_SERVER_ERROR: 500>: 'Internal Server Error', <HTTPStatus.NOT_IMPLEMENTED: 501>: 'Not Implemented', <HTTPStatus.BAD_GATEWAY: 502>: 'Bad Gateway', <HTTPStatus.SERVICE_UNAVAILABLE: 503>: 'Service Unavailable', <HTTPStatus.GATEWAY_TIMEOUT: 504>: 'Gateway Timeout', <HTTPStatus.HTTP_VERSION_NOT_SUPPORTED: 505>: 'HTTP Version Not Supported', <HTTPStatus.VARIANT_ALSO_NEGOTIATES: 506>: 'Variant Also Negotiates', <HTTPStatus.INSUFFICIENT_STORAGE: 507>: 'Insufficient Storage', <HTTPStatus.LOOP_DETECTED: 508>: 'Loop Detected', <HTTPStatus.NOT_EXTENDED: 510>: 'Not Extended', <HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED: 511>: 'Network Authentication Required'}
+"""
 _HTTP_STATUS_LINES = dict((k, "%d %s" % (k, v)) for (k, v) in HTTP_CODES.items())
+"""
+print(_HTTP_STATUS_LINES)
+{<HTTPStatus.CONTINUE: 100>: '100 Continue', <HTTPStatus.SWITCHING_PROTOCOLS: 101>: '101 Switching Protocols', <HTTPStatus.PROCESSING: 102>: '102 Processing', <HTTPStatus.EARLY_HINTS: 103>: '103 Early Hints', <HTTPStatus.OK: 200>: '200 OK', <HTTPStatus.CREATED: 201>: '201 Created', <HTTPStatus.ACCEPTED: 202>: '202 Accepted', <HTTPStatus.NON_AUTHORITATIVE_INFORMATION: 203>: '203 Non-Authoritative Information', <HTTPStatus.NO_CONTENT: 204>: '204 No Content', <HTTPStatus.RESET_CONTENT: 205>: '205 Reset Content', <HTTPStatus.PARTIAL_CONTENT: 206>: '206 Partial Content', <HTTPStatus.MULTI_STATUS: 207>: '207 Multi-Status', <HTTPStatus.ALREADY_REPORTED: 208>: '208 Already Reported', <HTTPStatus.IM_USED: 226>: '226 IM Used', <HTTPStatus.MULTIPLE_CHOICES: 300>: '300 Multiple Choices', <HTTPStatus.MOVED_PERMANENTLY: 301>: '301 Moved Permanently', <HTTPStatus.FOUND: 302>: '302 Found', <HTTPStatus.SEE_OTHER: 303>: '303 See Other', <HTTPStatus.NOT_MODIFIED: 304>: '304 Not Modified', <HTTPStatus.USE_PROXY: 305>: '305 Use Proxy', <HTTPStatus.TEMPORARY_REDIRECT: 307>: '307 Temporary Redirect', <HTTPStatus.PERMANENT_REDIRECT: 308>: '308 Permanent Redirect', <HTTPStatus.BAD_REQUEST: 400>: '400 Bad Request', <HTTPStatus.UNAUTHORIZED: 401>: '401 Unauthorized', <HTTPStatus.PAYMENT_REQUIRED: 402>: '402 Payment Required', <HTTPStatus.FORBIDDEN: 403>: '403 Forbidden', <HTTPStatus.NOT_FOUND: 404>: '404 Not Found', <HTTPStatus.METHOD_NOT_ALLOWED: 405>: '405 Method Not Allowed', <HTTPStatus.NOT_ACCEPTABLE: 406>: '406 Not Acceptable', <HTTPStatus.PROXY_AUTHENTICATION_REQUIRED: 407>: '407 Proxy Authentication Required', <HTTPStatus.REQUEST_TIMEOUT: 408>: '408 Request Timeout', <HTTPStatus.CONFLICT: 409>: '409 Conflict', <HTTPStatus.GONE: 410>: '410 Gone', <HTTPStatus.LENGTH_REQUIRED: 411>: '411 Length Required', <HTTPStatus.PRECONDITION_FAILED: 412>: '412 Precondition Failed', <HTTPStatus.REQUEST_ENTITY_TOO_LARGE: 413>: '413 Request Entity Too Large', <HTTPStatus.REQUEST_URI_TOO_LONG: 414>: '414 Request-URI Too Long', <HTTPStatus.UNSUPPORTED_MEDIA_TYPE: 415>: '415 Unsupported Media Type', <HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE: 416>: '416 Requested Range Not Satisfiable', <HTTPStatus.EXPECTATION_FAILED: 417>: '417 Expectation Failed', <HTTPStatus.IM_A_TEAPOT: 418>: "418 I'm a teapot", <HTTPStatus.MISDIRECTED_REQUEST: 421>: '421 Misdirected Request', <HTTPStatus.UNPROCESSABLE_ENTITY: 422>: '422 Unprocessable Entity', <HTTPStatus.LOCKED: 423>: '423 Locked', <HTTPStatus.FAILED_DEPENDENCY: 424>: '424 Failed Dependency', <HTTPStatus.TOO_EARLY: 425>: '425 Too Early', <HTTPStatus.UPGRADE_REQUIRED: 426>: '426 Upgrade Required', <HTTPStatus.PRECONDITION_REQUIRED: 428>: '428 Precondition Required', <HTTPStatus.TOO_MANY_REQUESTS: 429>: '429 Too Many Requests', <HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE: 431>: '431 Request Header Fields Too Large', <HTTPStatus.UNAVAILABLE_FOR_LEGAL_REASONS: 451>: '451 Unavailable For Legal Reasons', <HTTPStatus.INTERNAL_SERVER_ERROR: 500>: '500 Internal Server Error', <HTTPStatus.NOT_IMPLEMENTED: 501>: '501 Not Implemented', <HTTPStatus.BAD_GATEWAY: 502>: '502 Bad Gateway', <HTTPStatus.SERVICE_UNAVAILABLE: 503>: '503 Service Unavailable', <HTTPStatus.GATEWAY_TIMEOUT: 504>: '504 Gateway Timeout', <HTTPStatus.HTTP_VERSION_NOT_SUPPORTED: 505>: '505 HTTP Version Not Supported', <HTTPStatus.VARIANT_ALSO_NEGOTIATES: 506>: '506 Variant Also Negotiates', <HTTPStatus.INSUFFICIENT_STORAGE: 507>: '507 Insufficient Storage', <HTTPStatus.LOOP_DETECTED: 508>: '508 Loop Detected', <HTTPStatus.NOT_EXTENDED: 510>: '510 Not Extended', <HTTPStatus.NETWORK_AUTHENTICATION_REQUIRED: 511>: '511 Network Authentication Required'}
+"""
 
 #: The default template used for error pages. Override with @error()
 ERROR_PAGE_TEMPLATE = (
@@ -4927,28 +5085,95 @@ ERROR_PAGE_TEMPLATE = (
 """
     % __name__
 )
+"""
+print(__name__)
+bottle
+print(ERROR_PAGE_TEMPLATE)
+
+%try:
+    %from bottle import DEBUG, request
+    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+    <html>
+        <head>
+            <title>Error: {{e.status}}</title>
+            <style type="text/css">
+              html {background-color: #eee; font-family: sans-serif;}
+              body {background-color: #fff; border: 1px solid #ddd;
+                    padding: 15px; margin: 15px;}
+              pre {background-color: #eee; border: 1px solid #ddd; padding: 5px;}
+            </style>
+        </head>
+        <body>
+            <h1>Error: {{e.status}}</h1>
+            <p>Sorry, the requested URL <tt>{{repr(request.url)}}</tt>
+               caused an error:</p>
+            <pre>{{e.body}}</pre>
+            %if DEBUG and e.exception:
+              <h2>Exception:</h2>
+              %try:
+                %exc = repr(e.exception)
+              %except:
+                %exc = '<unprintable %s object>' % type(e.exception).__name__
+              %end
+              <pre>{{exc}}</pre>
+            %end
+            %if DEBUG and e.traceback:
+              <h2>Traceback:</h2>
+              <pre>{{e.traceback}}</pre>
+            %end
+        </body>
+    </html>
+%except ImportError:
+    <b>ImportError:</b> Could not generate the error page. Please add bottle to
+    the import path.
+%end
+"""
 
 #: A thread-safe instance of :class:`LocalRequest`. If accessed from within a
 #: request callback, this instance always refers to the *current* request
 #: (even on a multi-threaded server).
 request = LocalRequest()
+"""
+print(request)
+<LocalRequest: GET http://127.0.0.1/>
+"""
 
 #: A thread-safe instance of :class:`LocalResponse`. It is used to change the
 #: HTTP response for the *current* request.
 response = LocalResponse()
+"""
+print(response)
+Content-Type: text/html; charset=UTF-8
+"""
 
 #: A thread-safe namespace. Not used by Bottle.
 local = threading.local()
+"""
+print(local)
+<_thread._local object at 0x7f835fea7880>
+"""
 
 # Initialize app stack (create first empty Bottle app now deferred until needed)
 # BC: 0.6.4 and needed for run()
 apps = app = default_app = AppStack()
+"""
+print(apps)
+[<bottle.Bottle object at 0x7f83652a7b60>]
+print(app)
+[<bottle.Bottle object at 0x7f83652a7b60>]
+print(default_app)
+[<bottle.Bottle object at 0x7f83652a7b60>]
+"""
 
 #: A virtual package that redirects import statements.
 #: Example: ``import bottle.ext.sqlite`` actually imports `bottle_sqlite`.
 ext = _ImportRedirect(
     "bottle.ext" if __name__ == "__main__" else __name__ + ".ext", "bottle_%s"
 ).module
+"""
+print(ext)
+<module 'bottle.ext' from '/root/bottle/bottle.py'>
+"""
 
 
 def _main(argv):  # pragma: no coverage
@@ -5011,5 +5236,9 @@ def main():
     _main(sys.argv)
 
 
+"""
+print(__name__)
+bottle
+"""
 if __name__ == "__main__":  # pragma: no coverage
     main()
