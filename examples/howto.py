@@ -6,6 +6,7 @@ from bottle import (
     abort,
     template,
     debug,
+    hook,
 )
 
 print(1, "----------------" * 10)
@@ -14,6 +15,12 @@ debug(True)
 
 
 print(2, "----------------" * 10)
+
+
+@hook("config")
+def on_config_change(key, value):
+    print(f"on_config_change key: {key}")
+    print(f"on_config_change value: {value}")
 
 
 # Lets start with "Hello World!"

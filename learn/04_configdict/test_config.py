@@ -8,16 +8,9 @@ class TestConfDict(unittest.TestCase):
         """ConfigDict should behaves like a normal dict."""
         # It is a dict-subclass, so this kind of pointless, but it doen't hurt.
         d, m = dict(), ConfigDict()
-
-        d["key"] = "value"
-        d["k2"] = "v1"
-        d["k2"] = "v2"
-
-        # m["key"] = "value" 会调用 __setitem__
-        m["key"] = "value"
-        m["k2"] = "v1"
-        m["k2"] = "v2"
-
+        d["key"], m["key"] = "value", "value"
+        d["k2"], m["k2"] = "v1", "v1"
+        d["k2"], m["k2"] = "v2", "v2"
         self.assertEqual(d.keys(), m.keys())
         self.assertEqual(list(d.values()), list(m.values()))
         self.assertEqual(d.get("key"), m.get("key"))
@@ -63,12 +56,10 @@ class TestConfDict(unittest.TestCase):
 
     def test_meta(self):
         c = ConfigDict()
-        print("c:", c)
         c.meta_set("bool", "filter", bool)
         c.meta_set("int", "filter", int)
         c["bool"] = "I am so true!"
         c["int"] = "6"
-        print("c:", c)
         self.assertTrue(c["bool"] is True)
         self.assertEqual(c["int"], 6)
         self.assertRaises(ValueError, lambda: c.update(int="not an int"))
@@ -94,21 +85,16 @@ class TestConfDict(unittest.TestCase):
 
     def test_load_module(self):
         c = ConfigDict()
-        print("c:", c)
-        c.load_module("example_settings", True)
-        print("c:", c)  # c: {'A.B.C': 3}
+        c.load_module("test.example_settings", True)
         self.assertEqual(c["A.B.C"], 3)
 
         c = ConfigDict()
-        print("c:", c)
-        c.load_module("example_settings", False)
-        print("c:", c)  # c: {'A': {'B': {'C': 3}}}
+        c.load_module("test.example_settings", False)
         self.assertEqual(c["A"]["B"]["C"], 3)
 
     def test_overlay(self):
         source = ConfigDict()
         source["key"] = "source"
-        print("source:", source)  # source: {'key': 'source'}
         intermediate = source._make_overlay()
         overlay = intermediate._make_overlay()
 
@@ -185,9 +171,6 @@ class TestINIConfigLoader(unittest.TestCase):
         self.config_file = tempfile.NamedTemporaryFile(
             suffix=".example.ini", delete=True
         )
-        print("self.config_file:", self.config_file)
-        print("self.config_file:", self.config_file.name)
-
         self.config_file.write(
             b"[DEFAULT]\n"
             b"default: 45\n"
@@ -209,21 +192,7 @@ class TestINIConfigLoader(unittest.TestCase):
 
     def test_load_config(self):
         c = ConfigDict()
-        print("c:", c)
         c.load_config(self.config_file.name)
-        print("c:", c)
-        """
-        c:
-        {
-            'port': '8080',
-            'default': '45',
-            'namespace.key': 'test',
-            'namespace.section.sub.namespace.key': 'test2',
-            'namespace.section.default': 'otherDefault',
-            'compression.status': 'single',
-            'compression.default': '45'
-        }
-        """
         self.assertDictEqual(
             {
                 "compression.default": "45",

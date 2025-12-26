@@ -352,9 +352,21 @@ class cached_property(object):
         self.func = func
 
     def __get__(self, obj, cls):
+        """
+        print(self)
+        <bottle.cached_property object at 0x7f3164378590>
+        print(obj)
+        <bottle.Bottle object at 0x7f316491c710>
+        print(cls)
+        <class 'bottle.Bottle'>
+        """
         if obj is None:
             return self
         value = obj.__dict__[self.func.__name__] = self.func(obj)
+        """
+        print(value)
+        {'before_request': [], 'after_request': [], 'app_reset': [], 'config': []}
+        """
         return value
 
 
@@ -370,7 +382,21 @@ class lazy_attribute(object):
         self.getter = func
 
     def __get__(self, obj, cls):
+        """
+        print(self)
+        <bottle.lazy_attribute object at 0x7f06011366c0>
+        print(obj)
+        <bottle.Bottle object at 0x7f06012827e0>
+        print(cls)
+        <class 'bottle.Bottle'>
+        """
         value = self.getter(cls)
+        """
+        print(value)
+        {}
+        print(self.__name__)
+        _global_config
+        """
         setattr(cls, self.__name__, value)
         return value
 
@@ -656,7 +682,7 @@ class Route(object):
         name=None,
         plugins=None,
         skiplist=None,
-        **config
+        **config,
     ):
         #: The application this route is installed to.
         self.app = app
@@ -784,11 +810,23 @@ class Bottle(object):
     @lazy_attribute
     def _global_config(cls):
         cfg = ConfigDict()
+        """
+        print(cfg)
+        {}
+        """
         cfg.meta_set("catchall", "validate", bool)
+        """
+        print(cfg)
+        {}
+        """
         return cfg
 
     def __init__(self, **kwargs):
         #: A :class:`ConfigDict` for app specific configuration.
+
+        print(f"Bottle __init__ kwargs: {kwargs}")
+        # Bottle __init__ kwargs: {}
+
         self.config = self._global_config._make_overlay()
         self.config._add_change_listener(functools.partial(self.trigger_hook, "config"))
 
@@ -812,6 +850,10 @@ class Bottle(object):
                 "configuration. Fix: `app.config['json.enable'] = False`",
             )
             self.config["json.disable"] = True
+        """
+        print(self.config)
+        {'catchall': True}
+        """
 
         self._mounts = []
 
@@ -861,6 +903,19 @@ class Bottle(object):
 
     def trigger_hook(self, __name, *args, **kwargs):
         """Trigger a hook and return a list of results."""
+
+        print(f"Bottle trigger_hook __name: {__name}")
+        print(f"Bottle trigger_hook args: {args}")
+        print(f"Bottle trigger_hook kwargs: {kwargs}")
+        """
+        Bottle trigger_hook __name: config
+        Bottle trigger_hook args: ({}, 'catchall', True)
+        Bottle trigger_hook kwargs: {}
+
+        print(self._hooks)
+        {'before_request': [], 'after_request': [], 'app_reset': [], 'config': []}
+        """
+
         return [hook(*args, **kwargs) for hook in self._hooks[__name][:]]
 
     def hook(self, name):
@@ -868,6 +923,12 @@ class Bottle(object):
         :meth:`add_hook` for details."""
 
         def decorator(func):
+            """
+            print(name)
+            config
+            print(func)
+            <function on_config_change at 0x7fb7588d11c0>
+            """
             self.add_hook(name, func)
             return func
 
@@ -1080,7 +1141,7 @@ class Bottle(object):
         name=None,
         apply=None,
         skip=None,
-        **config
+        **config,
     ):
         """A decorator to bind a function to a request URL. Example::
 
@@ -1126,7 +1187,7 @@ class Bottle(object):
                         name=name,
                         plugins=plugins,
                         skiplist=skiplist,
-                        **config
+                        **config,
                     )
                     self.add_route(route)
             return callback
@@ -1364,6 +1425,12 @@ class Bottle(object):
         default_app.pop()
 
     def __setattr__(self, name, value):
+        """
+        print(name)
+        config
+        print(value)
+        {}
+        """
         if name in self.__dict__:
             raise AttributeError(
                 "Attribute %s already defined. Plugin conflict?" % name
@@ -2704,6 +2771,18 @@ class ConfigDict(dict):
         self._source = None
         #: Keys of values copied from the source (values we do not own)
         self._virtual_keys = set()
+        """
+        print(self._meta)
+        {}
+        print(self._change_listener)
+        []
+        print(self._overlays)
+        []
+        print(self._source)
+        None
+        print(self._virtual_keys)
+        set()
+        """
 
     def load_module(self, name, squash=True):
         """Load values from a Python module.
@@ -2780,6 +2859,13 @@ class ConfigDict(dict):
 
         >>> c = ConfigDict()
         >>> c.update('some.namespace', key='value')
+
+        print(a)
+        ({'catchall': True},)
+        print(ka)
+        {}
+        print(dict(*a, **ka))
+        {'catchall': True}
         """
         prefix = ""
         if a and isinstance(a[0], basestring):
@@ -2794,12 +2880,28 @@ class ConfigDict(dict):
         return self[key]
 
     def __setitem__(self, key, value):
+        """
+        print(key)
+        catchall
+        print(value)
+        True
+        """
         if not isinstance(key, basestring):
             raise TypeError("Key has type %r (not a string)" % type(key))
 
         self._virtual_keys.discard(key)
+        """
+        print(self._virtual_keys)
+        set()
+        """
 
         value = self.meta_get(key, "filter", lambda x: x)(value)
+        """
+        print(value)
+        True
+        print(self)
+        {}
+        """
         if key in self and self[key] is value:
             return
 
@@ -2850,24 +2952,56 @@ class ConfigDict(dict):
             overlay._delete_virtual(key)
 
     def _on_change(self, key, value):
+        """
+        print(key)
+        catchall
+        print(value)
+        True
+
+        print(self._change_listener)
+        [functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7f4d6184fc20>>, 'config')]
+        """
         for cb in self._change_listener:
             if cb(self, key, value):
                 return True
 
     def _add_change_listener(self, func):
         self._change_listener.append(func)
+        """
+        print(self._change_listener)
+        [functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7ff4c8c29700>>, 'config')]
+        """
         return func
 
     def meta_get(self, key, metafield, default=None):
-        """Return the value of a meta field for a key."""
+        """Return the value of a meta field for a key.
+
+        print(key)
+        catchall
+        print(metafield)
+        filter
+        print(default)
+        <function ConfigDict.__setitem__.<locals>.<lambda> at 0x7f55f62ce7a0>
+        """
         return self._meta.get(key, {}).get(metafield, default)
 
     def meta_set(self, key, metafield, value):
         """Set the meta field for a key to a new value.
 
         Meta-fields are shared between all members of an overlay tree.
+
+        print(key)
+        catchall
+        print(metafield)
+        validate
+        print(value)
+        <class 'bool'>
         """
         self._meta.setdefault(key, {})[metafield] = value
+        """
+        print(self._meta)
+        {'catchall': {'validate': <class 'bool'>}}
+        """
 
     def meta_list(self, key):
         """Return an iterable of meta field names defined for a key."""
@@ -2913,12 +3047,24 @@ class ConfigDict(dict):
         Used by Route.config
         """
         # Cleanup dead references
+        """
+        print(self._overlays)
+        []
+        """
         self._overlays[:] = [ref for ref in self._overlays if ref() is not None]
+        """
+        print(self._overlays)
+        []
+        """
 
         overlay = ConfigDict()
         overlay._meta = self._meta
         overlay._source = self
         self._overlays.append(weakref.ref(overlay))
+        """
+        print(self)
+        {}
+        """
         for key in self:
             overlay._set_virtual(key, self[key])
         return overlay
@@ -4314,7 +4460,7 @@ def run(
     plugins=None,
     debug=None,
     config=None,
-    **kargs
+    **kargs,
 ):
     """Start a server instance. This method blocks until the server terminates.
 
