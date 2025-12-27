@@ -3,17 +3,17 @@ run_config_demo conf: {}
 
 --- 步骤 2. 演示 meta_set 和 filter (过滤器) ---
 ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>}}
-ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}}
 
 --- 步骤 3. 演示 _add_change_listener (变更监听) ---
-ConfigDict _add_change_listener self._change_listener: [<function run_config_demo.<locals>.on_config_change at 0x7fc509896200>]
+ConfigDict _add_change_listener self._change_listener: [<function run_config_demo.<locals>.on_config_change at 0x7f6fdc4a6200>]
 
 --- 步骤 4: 演示 load_config (加载 INI 文件) ---
 ConfigDict load_config filename: config.ini
 ConfigDict load_config options: {}
-ConfigDict load_config options: {'allow_no_value': True, 'interpolation': <configparser.ExtendedInterpolation object at 0x7fc5098b7c80>}
-ConfigDict load_config conf: <configparser.ConfigParser object at 0x7fc5098b7c50>
-ConfigDict load_config conf: <configparser.ConfigParser object at 0x7fc5098b7c50>
+ConfigDict load_config options: {'allow_no_value': True, 'interpolation': <configparser.ExtendedInterpolation object at 0x7f6fdc4cbd10>}
+ConfigDict load_config conf: <configparser.ConfigParser object at 0x7f6fdc4cbce0>
+ConfigDict load_config conf: <configparser.ConfigParser object at 0x7f6fdc4cbce0>
 ConfigDict load_config section: bottle
 ConfigDict load_config key: port
 ConfigDict load_config value: 8080
@@ -539,8 +539,8 @@ run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key':
 ConfigDict __setitem__ key: server.port
 ConfigDict __setitem__ value: 9090
 ConfigDict __setitem__ 删除虚拟键
-ConfigDict __setitem__ self._virtual_keys: {'server.default', 'compression.default', 'storage.region', 'database.host', 'namespace.section.sub.namespace.key', 'TIMEOUT', 'default', 'compression.status', 'A.B.C', 'auth.secret', 'database.default', 'DEBUG', 'namespace.key', 'server.debug', 'storage.bucket', 'server.port', 'SQLITE.db', 'port', 'auth.methods', 'MAX_CONN', 'namespace.section.default', 'LOG_LEVEL'}
-ConfigDict __setitem__ self._virtual_keys: {'server.default', 'compression.default', 'storage.region', 'database.host', 'namespace.section.sub.namespace.key', 'TIMEOUT', 'default', 'compression.status', 'A.B.C', 'auth.secret', 'database.default', 'DEBUG', 'namespace.key', 'server.debug', 'storage.bucket', 'SQLITE.db', 'port', 'auth.methods', 'MAX_CONN', 'namespace.section.default', 'LOG_LEVEL'}
+ConfigDict __setitem__ self._virtual_keys: {'namespace.section.default', 'default', 'MAX_CONN', 'auth.secret', 'LOG_LEVEL', 'namespace.section.sub.namespace.key', 'compression.status', 'A.B.C', 'storage.bucket', 'DEBUG', 'database.default', 'namespace.key', 'server.debug', 'SQLITE.db', 'database.host', 'server.default', 'auth.methods', 'port', 'storage.region', 'compression.default', 'TIMEOUT', 'server.port'}
+ConfigDict __setitem__ self._virtual_keys: {'namespace.section.default', 'default', 'MAX_CONN', 'auth.secret', 'LOG_LEVEL', 'namespace.section.sub.namespace.key', 'compression.status', 'A.B.C', 'storage.bucket', 'DEBUG', 'database.default', 'namespace.key', 'server.debug', 'SQLITE.db', 'database.host', 'server.default', 'auth.methods', 'port', 'storage.region', 'compression.default', 'TIMEOUT'}
 ConfigDict __setitem__ meta 过滤
 ConfigDict __setitem__ value: 9090
 ConfigDict __setitem__ value: 9090
@@ -607,8 +607,8 @@ run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key':
 删除子级修改后, 恢复为父级的值: 7070
 
 --- 步骤 12: 元数据操作, 演示 meta_get 和 meta_list ---
-ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
-run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}}
+run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}}
 元数据获取 (help): 监听端口号
 元数据列表: ['filter', 'help']
 
@@ -665,8 +665,31 @@ ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 
 ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val', 'api.limit': 1000}
 ConfigDict __setitem__ 递归更新所有子级叠加层
 ConfigDict __setitem__ overlay: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val'}
-ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制'}}
-ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制'}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}}
+ConfigDict _define key: overlay.api.limit
+ConfigDict _define default: 2000
+ConfigDict _define help: overlay API 调用限制
+ConfigDict _define validate: <class 'float'>
+ConfigDict __setitem__ key: overlay.api.limit
+ConfigDict __setitem__ value: 2000
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: {'namespace.section.default', 'default', 'MAX_CONN', 'auth.secret', 'LOG_LEVEL', 'new_key', 'namespace.section.sub.namespace.key', 'compression.status', 'A.B.C', 'storage.bucket', 'DEBUG', 'database.default', 'namespace.key', 'server.debug', 'SQLITE.db', 'api.limit', 'database.host', 'server.default', 'auth.methods', 'port', 'storage.region', 'compression.default', 'TIMEOUT', 'server.port'}
+ConfigDict __setitem__ self._virtual_keys: {'namespace.section.default', 'default', 'MAX_CONN', 'auth.secret', 'LOG_LEVEL', 'new_key', 'namespace.section.sub.namespace.key', 'compression.status', 'A.B.C', 'storage.bucket', 'DEBUG', 'database.default', 'namespace.key', 'server.debug', 'SQLITE.db', 'api.limit', 'database.host', 'server.default', 'auth.methods', 'port', 'storage.region', 'compression.default', 'TIMEOUT', 'server.port'}
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 2000
+ConfigDict __setitem__ value: 2000
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000}
+ConfigDict __setitem__ 触发变更监听器
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000, 'overlay.api.limit': 2000}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}, 'overlay.api.limit': {'help': 'overlay API 调用限制'}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}, 'overlay.api.limit': {'help': 'overlay API 调用限制', 'validate': <class 'float'>}}
 run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val', 'api.limit': 1000}
-run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000}
-run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000, 'overlay.api.limit': 2000}
+run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}, 'overlay.api.limit': {'help': 'overlay API 调用限制', 'validate': <class 'float'>}}
+run_config_demo overlay_conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7f6fdc4a6160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}, 'overlay.api.limit': {'help': 'overlay API 调用限制', 'validate': <class 'float'>}}

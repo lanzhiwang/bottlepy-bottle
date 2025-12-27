@@ -535,9 +535,11 @@ def run_config_demo():
     print(f"run_config_demo conf: {conf}")
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     conf._define("api.limit", default=1000, help="API 调用限制", validate=int)
+    overlay_conf._define("overlay.api.limit", default=2000, help="overlay API 调用限制", validate=float)
     print(f"run_config_demo conf: {conf}")
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     print(f"run_config_demo conf._meta: {conf._meta}")
+    print(f"run_config_demo overlay_conf._meta: {overlay_conf._meta}")
 
 
 if __name__ == "__main__":
