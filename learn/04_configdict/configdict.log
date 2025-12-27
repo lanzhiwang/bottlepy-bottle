@@ -1,0 +1,672 @@
+--- 步骤 1. 初始化 ---
+run_config_demo conf: {}
+
+--- 步骤 2. 演示 meta_set 和 filter (过滤器) ---
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
+
+--- 步骤 3. 演示 _add_change_listener (变更监听) ---
+ConfigDict _add_change_listener self._change_listener: [<function run_config_demo.<locals>.on_config_change at 0x7fc509896200>]
+
+--- 步骤 4: 演示 load_config (加载 INI 文件) ---
+ConfigDict load_config filename: config.ini
+ConfigDict load_config options: {}
+ConfigDict load_config options: {'allow_no_value': True, 'interpolation': <configparser.ExtendedInterpolation object at 0x7fc5098b7c80>}
+ConfigDict load_config conf: <configparser.ConfigParser object at 0x7fc5098b7c50>
+ConfigDict load_config conf: <configparser.ConfigParser object at 0x7fc5098b7c50>
+ConfigDict load_config section: bottle
+ConfigDict load_config key: port
+ConfigDict load_config value: 8080
+ConfigDict load_config key: port
+ConfigDict __setitem__ key: port
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {}
+ConfigDict __setitem__ self: {}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {}
+run_config_demo on_config_change key: port
+run_config_demo on_config_change value: 8080
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {}
+ConfigDict __setitem__ self: {'port': '8080'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: 45
+ConfigDict load_config key: default
+ConfigDict __setitem__ key: default
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080'}
+ConfigDict __setitem__ self: {'port': '8080'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080'}
+run_config_demo on_config_change key: default
+run_config_demo on_config_change value: 45
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config section: ROOT
+ConfigDict load_config key: namespace.key
+ConfigDict load_config value: test
+ConfigDict load_config key: namespace.key
+ConfigDict __setitem__ key: namespace.key
+ConfigDict __setitem__ value: test
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: test
+ConfigDict __setitem__ value: test
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45'}
+run_config_demo on_config_change key: namespace.key
+run_config_demo on_config_change value: test
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: 45
+ConfigDict load_config key: default
+ConfigDict __setitem__ key: default
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+ConfigDict load_config section: server
+ConfigDict load_config key: port
+ConfigDict load_config value: 8080
+ConfigDict load_config key: server.port
+ConfigDict __setitem__ key: server.port
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ value: 8080
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+run_config_demo on_config_change key: server.port
+run_config_demo on_config_change value: 8080
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: debug
+ConfigDict load_config value: true
+ConfigDict load_config key: server.debug
+ConfigDict __setitem__ key: server.debug
+ConfigDict __setitem__ value: true
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: true
+ConfigDict __setitem__ value: True
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080}
+run_config_demo on_config_change key: server.debug
+run_config_demo on_config_change value: True
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: 45
+ConfigDict load_config key: server.default
+ConfigDict __setitem__ key: server.default
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True}
+run_config_demo on_config_change key: server.default
+run_config_demo on_config_change value: 45
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config section: database
+ConfigDict load_config key: host
+ConfigDict load_config value: localhost
+ConfigDict load_config key: database.host
+ConfigDict __setitem__ key: database.host
+ConfigDict __setitem__ value: localhost
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: localhost
+ConfigDict __setitem__ value: localhost
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45'}
+run_config_demo on_config_change key: database.host
+run_config_demo on_config_change value: localhost
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: 45
+ConfigDict load_config key: database.default
+ConfigDict __setitem__ key: database.default
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost'}
+run_config_demo on_config_change key: database.default
+run_config_demo on_config_change value: 45
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config section: NameSpace.Section
+ConfigDict load_config key: sub.namespace.key
+ConfigDict load_config value: test2
+ConfigDict load_config key: NameSpace.Section.sub.namespace.key
+ConfigDict __setitem__ key: namespace.section.sub.namespace.key
+ConfigDict __setitem__ value: test2
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: test2
+ConfigDict __setitem__ value: test2
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45'}
+run_config_demo on_config_change key: namespace.section.sub.namespace.key
+run_config_demo on_config_change value: test2
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: otherDefault
+ConfigDict load_config key: NameSpace.Section.default
+ConfigDict __setitem__ key: namespace.section.default
+ConfigDict __setitem__ value: otherDefault
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: otherDefault
+ConfigDict __setitem__ value: otherDefault
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2'}
+run_config_demo on_config_change key: namespace.section.default
+run_config_demo on_config_change value: otherDefault
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config section: compression
+ConfigDict load_config key: status
+ConfigDict load_config value: single
+ConfigDict load_config key: compression.status
+ConfigDict __setitem__ key: compression.status
+ConfigDict __setitem__ value: single
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: single
+ConfigDict __setitem__ value: single
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault'}
+run_config_demo on_config_change key: compression.status
+run_config_demo on_config_change value: single
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_config key: default
+ConfigDict load_config value: 45
+ConfigDict load_config key: compression.default
+ConfigDict __setitem__ key: compression.default
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ value: 45
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single'}
+run_config_demo on_config_change key: compression.default
+run_config_demo on_config_change value: 45
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+
+--- 步骤 5: 演示 load_module (加载 Python 模块) ---
+ConfigDict load_module name: app_config
+ConfigDict load_module squash: True
+ConfigDict load_module config_obj: <module 'app_config' from '/root/bottle/learn/04_configdict/app_config.py'>
+ConfigDict load_module config_obj: ['A', 'DEBUG', 'LOG_LEVEL', 'MAX_CONN', 'SQLITE', 'TIMEOUT', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__']
+ConfigDict load_module obj: {'A': {'B': {'C': 3}}, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE': {'db': ':memory:'}, 'TIMEOUT': 30}
+ConfigDict load_dict source: {'A': {'B': {'C': 3}}, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE': {'db': ':memory:'}, 'TIMEOUT': 30}
+ConfigDict load_dict namespace: 
+ConfigDict load_dict source: {'B': {'C': 3}}
+ConfigDict load_dict namespace: A
+ConfigDict load_dict source: {'C': 3}
+ConfigDict load_dict namespace: A.B
+ConfigDict __setitem__ key: A.B.C
+ConfigDict __setitem__ value: 3
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 3
+ConfigDict __setitem__ value: 3
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+run_config_demo on_config_change key: A.B.C
+run_config_demo on_config_change value: 3
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: DEBUG
+ConfigDict __setitem__ value: True
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: True
+ConfigDict __setitem__ value: True
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3}
+run_config_demo on_config_change key: DEBUG
+run_config_demo on_config_change value: True
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: LOG_LEVEL
+ConfigDict __setitem__ value: INFO
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: INFO
+ConfigDict __setitem__ value: INFO
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True}
+run_config_demo on_config_change key: LOG_LEVEL
+run_config_demo on_config_change value: INFO
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: MAX_CONN
+ConfigDict __setitem__ value: 100
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 100
+ConfigDict __setitem__ value: 100
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO'}
+run_config_demo on_config_change key: MAX_CONN
+run_config_demo on_config_change value: 100
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict load_dict source: {'db': ':memory:'}
+ConfigDict load_dict namespace: SQLITE
+ConfigDict __setitem__ key: SQLITE.db
+ConfigDict __setitem__ value: :memory:
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: :memory:
+ConfigDict __setitem__ value: :memory:
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100}
+run_config_demo on_config_change key: SQLITE.db
+run_config_demo on_config_change value: :memory:
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: TIMEOUT
+ConfigDict __setitem__ value: 30
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 30
+ConfigDict __setitem__ value: 30
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:'}
+run_config_demo on_config_change key: TIMEOUT
+run_config_demo on_config_change value: 30
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+
+--- 步骤 6: 演示 load_dict (加载字典并扁平化) ---
+ConfigDict load_dict source: {'auth': {'methods': ['jwt', 'session'], 'secret': 'top-secret'}}
+ConfigDict load_dict namespace: 
+ConfigDict load_dict source: {'methods': ['jwt', 'session'], 'secret': 'top-secret'}
+ConfigDict load_dict namespace: auth
+ConfigDict __setitem__ key: auth.methods
+ConfigDict __setitem__ value: ['jwt', 'session']
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: ['jwt', 'session']
+ConfigDict __setitem__ value: ['jwt', 'session']
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+run_config_demo on_config_change key: auth.methods
+run_config_demo on_config_change value: ['jwt', 'session']
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session']}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: auth.secret
+ConfigDict __setitem__ value: top-secret
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: top-secret
+ConfigDict __setitem__ value: top-secret
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session']}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session']}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session']}
+run_config_demo on_config_change key: auth.secret
+run_config_demo on_config_change value: top-secret
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session']}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+
+--- 步骤 7: 演示 update (带命名空间的更新) ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict update self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict update a: ('storage',)
+ConfigDict update ka: {'bucket': 'my-bucket', 'region': 'us-east-1'}
+ConfigDict update prefix: storage.
+ConfigDict update a: ()
+ConfigDict update dict(*a, **ka): {'bucket': 'my-bucket', 'region': 'us-east-1'}
+ConfigDict __setitem__ key: storage.bucket
+ConfigDict __setitem__ value: my-bucket
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: my-bucket
+ConfigDict __setitem__ value: my-bucket
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+run_config_demo on_config_change key: storage.bucket
+run_config_demo on_config_change value: my-bucket
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ key: storage.region
+ConfigDict __setitem__ value: us-east-1
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: us-east-1
+ConfigDict __setitem__ value: us-east-1
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket'}
+run_config_demo on_config_change key: storage.region
+run_config_demo on_config_change value: us-east-1
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+
+--- 步骤 8: 演示读取 (高性能读取) ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+Port: 8080, Type: <class 'int'>
+Timeout: 30
+
+--- 步骤 9: 演示 _make_overlay (叠加层/继承机制) ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict _make_overlay 清理已失效的弱引用
+ConfigDict _make_overlay self._overlays: []
+ConfigDict _make_overlay self._overlays: []
+ConfigDict _make_overlay 将父级当前的所有值作为虚拟键拷贝到子级
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+子配置读取父级 Port: 8080
+修改子配置的 Port...
+ConfigDict __setitem__ key: server.port
+ConfigDict __setitem__ value: 9090
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: {'server.default', 'compression.default', 'storage.region', 'database.host', 'namespace.section.sub.namespace.key', 'TIMEOUT', 'default', 'compression.status', 'A.B.C', 'auth.secret', 'database.default', 'DEBUG', 'namespace.key', 'server.debug', 'storage.bucket', 'server.port', 'SQLITE.db', 'port', 'auth.methods', 'MAX_CONN', 'namespace.section.default', 'LOG_LEVEL'}
+ConfigDict __setitem__ self._virtual_keys: {'server.default', 'compression.default', 'storage.region', 'database.host', 'namespace.section.sub.namespace.key', 'TIMEOUT', 'default', 'compression.status', 'A.B.C', 'auth.secret', 'database.default', 'DEBUG', 'namespace.key', 'server.debug', 'storage.bucket', 'SQLITE.db', 'port', 'auth.methods', 'MAX_CONN', 'namespace.section.default', 'LOG_LEVEL'}
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 9090
+ConfigDict __setitem__ value: 9090
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 触发变更监听器
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+父配置 Port (保持不变): 8080
+子配置 Port (独立修改): 9090
+
+--- 步骤 10: 演示同步机制 (父变子变) ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ key: database.host
+ConfigDict __setitem__ value: 192.168.1.1
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 192.168.1.1
+ConfigDict __setitem__ value: 192.168.1.1
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo on_config_change key: database.host
+run_config_demo on_config_change value: 192.168.1.1
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ overlay: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': 'localhost', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ key: server.port
+ConfigDict __setitem__ value: 7070
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 7070
+ConfigDict __setitem__ value: 7070
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo on_config_change key: server.port
+run_config_demo on_config_change value: 7070
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 8080, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ overlay: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+
+--- 步骤 11: 演示 __delitem__ 和恢复虚拟键, 删除叠加层的修改, 恢复父级虚拟值 ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 9090, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+删除子级修改后, 恢复为父级的值: 7070
+
+--- 步骤 12: 元数据操作, 演示 meta_get 和 meta_list ---
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
+run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}}
+元数据获取 (help): 监听端口号
+元数据列表: ['filter', 'help']
+
+--- 步骤 13: 演示 setdefault ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070}
+ConfigDict __setitem__ key: new_key
+ConfigDict __setitem__ value: default_val
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: default_val
+ConfigDict __setitem__ value: default_val
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+run_config_demo on_config_change key: new_key
+run_config_demo on_config_change value: default_val
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ overlay: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070}
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val'}
+
+--- 步骤 14: _define 快速定义 ---
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val'}
+ConfigDict _define key: api.limit
+ConfigDict _define default: 1000
+ConfigDict _define help: API 调用限制
+ConfigDict _define validate: <class 'int'>
+ConfigDict __setitem__ key: api.limit
+ConfigDict __setitem__ value: 1000
+ConfigDict __setitem__ 删除虚拟键
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ self._virtual_keys: set()
+ConfigDict __setitem__ meta 过滤
+ConfigDict __setitem__ value: 1000
+ConfigDict __setitem__ value: 1000
+ConfigDict __setitem__ 如果值没变, 则跳过后续逻辑以优化性能
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+ConfigDict __setitem__ 触发变更监听器
+run_config_demo on_config_change config: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+run_config_demo on_config_change key: api.limit
+run_config_demo on_config_change value: 1000
+ConfigDict __setitem__ 调用父类 dict 的设置方法
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val'}
+ConfigDict __setitem__ self: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val', 'api.limit': 1000}
+ConfigDict __setitem__ 递归更新所有子级叠加层
+ConfigDict __setitem__ overlay: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val'}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制'}}
+ConfigDict meta_set self._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}}
+run_config_demo conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.port': 7070, 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'new_key': 'default_val', 'api.limit': 1000}
+run_config_demo overlay_conf: {'port': '8080', 'default': '45', 'namespace.key': 'test', 'server.debug': True, 'server.default': '45', 'database.host': '192.168.1.1', 'database.default': '45', 'namespace.section.sub.namespace.key': 'test2', 'namespace.section.default': 'otherDefault', 'compression.status': 'single', 'compression.default': '45', 'A.B.C': 3, 'DEBUG': True, 'LOG_LEVEL': 'INFO', 'MAX_CONN': 100, 'SQLITE.db': ':memory:', 'TIMEOUT': 30, 'auth.methods': ['jwt', 'session'], 'auth.secret': 'top-secret', 'storage.bucket': 'my-bucket', 'storage.region': 'us-east-1', 'server.port': 7070, 'new_key': 'default_val', 'api.limit': 1000}
+run_config_demo conf._meta: {'server.port': {'filter': <class 'int'>, 'help': '监听端口号'}, 'server.debug': {'filter': <function run_config_demo.<locals>.<lambda> at 0x7fc509896160>}, 'api.limit': {'help': 'API 调用限制', 'validate': <class 'int'>}}
