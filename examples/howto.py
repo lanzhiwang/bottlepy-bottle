@@ -1,14 +1,17 @@
-import time
+import time, re
 import bottle
 from bottle import (
     route,
     run,
     request,
     response,
-    abort,
+    view,
     template,
+    SimpleTemplate,
     hook,
+    static_file,
 )
+
 
 print(1, "----------------" * 10)
 
@@ -81,6 +84,28 @@ def on_config_change(key, value):
 print(3, "----------------" * 10)
 
 
+def list_filter(config):
+    """Matches a comma separated list of numbers."""
+    delimiter = config or ","
+    regexp = r"\d+(%s\d)*" % re.escape(delimiter)
+
+    def to_python(match):
+        return map(int, match.split(delimiter))
+
+    def to_url(numbers):
+        return delimiter.join(map(str, numbers))
+
+    return regexp, to_python, to_url
+
+
+app.router.add_filter("list", list_filter)
+
+
+@app.route("/follow/<ids:list>")
+def follow_users(ids):
+    return ids
+
+
 # Lets start with "Hello World!"
 # Point your Browser to 'http://localhost:8080/' and greet the world :D
 @route("/")
@@ -88,35 +113,67 @@ def hello_world():
     return "Hello World!"
 
 
-# Receiving GET parameter (/hello?name=Tim) is as easy as using a dict.
-# @route("/hello")
-# def hello_get():
-#     name = request.GET["name"]
-#     return "Hello %s!" % name
+@route("/hello")
+def hello():
+    return "Hello World!"
+
+
+@route("/")
+@route("/hello/<name>")
+def greet(name="Stranger"):
+    return template("Hello {{name}}, how are you?", name=name)
+
+
+@route("/wiki/<pagename>")  # matches /wiki/Learning_Python
+def show_wiki_page(pagename):
+    return pagename
+
+
+@route("/<action>/<user>")  # matches /follow/defnull
+def user_api(action, user):
+    return {"action": action, "user": user}
+
+
+@route("/object/<id:int>")
+def callback(id):
+    assert isinstance(id, int)
+
+
+@route("/show/<name:re:[a-z]+>")
+def callback(name):
+    assert name.isalpha()
+
+
+@route("/static/<path:path>")
+def callback(path):
+    return static_file(path, ...)
 
 
 # This example handles POST requests to '/hello_post'
-# @route("/hello_post", method="POST")
-# def hello_post():
-#     name = request.POST["name"]
-#     return "Hello %s!" % name
-
-
-# URL-parameter are a useful tool and generate nice looking URLs
-# This handles requests such as '/hello/Tim' or '/hello/Jane'
-# @route("/hello/<name>")
-# def hello_url(name):
-#     return "Hello %s!" % name
-
-
-# Throwing an error using abort()
-# @route("/private")
-# def private():
-#     if request.GET.get("password", "") != "secret":
-#         abort(401, "Go away!")
-#     return "Welcome!"
+@route("/hello_post", method="POST")
+def hello_post():
+    name = request.POST["name"]
+    return "Hello %s!" % name
 
 
 print(4, "----------------" * 10)
+
+tpl = SimpleTemplate("Hello {{name}}!")
+print(tpl.render(name="World"))
+
+print(template("Hello {{name}}!", name="World"))
+
+my_dict = {"number": "123", "street": "Fake St.", "city": "Fakeville"}
+print(template("I live at {{number}} {{street}}, {{city}}", **my_dict))
+
+
+@route("/hello")
+@route("/hello/<name>")
+@view("hello_template")
+def hello(name="World"):
+    return dict(name=name)
+
+
+print(5, "----------------" * 10)
 
 run(host="localhost", port=8080)
