@@ -1,3 +1,4 @@
+import bottle
 from bottle import (
     route,
     run,
@@ -5,22 +6,66 @@ from bottle import (
     response,
     abort,
     template,
-    debug,
     hook,
 )
 
 print(1, "----------------" * 10)
 
-debug(True)
-
+bottle.debug(True)
 
 print(2, "----------------" * 10)
+
+
+class SomePlugin(object):
+    def setup(self, app):
+        app.config.meta_set("some.int", "filter", int)
+        app.config.meta_set("some.list", "filter", lambda val: str(val).split(";"))
+        app.config.meta_set("some.list", "help", "A semicolon separated list.")
+
+    def apply(self, callback, route):
+        pass
+
+
+app = bottle.default_app()  # or bottle.Bottle() if you prefer
+
+app.install(SomePlugin())
+
+
+app.config["autojson"] = False  # Turns off the "autojson" feature
+app.config["sqlite.db"] = ":memory:"  # Tells the sqlite plugin which db to use
+app.config["myapp.param"] = "value"  # Example for a custom config value.
+app.config["myapp.admin_user"] = "admin"
+
+# Change many values at once
+app.config.update({"autojson": False, "sqlite.db": ":memory:", "myapp.param": "value"})
+
+app.config["some.list"] = "a;b;c"  # Actually stores ['a', 'b', 'c']
+# app.config["some.int"] = "not an int"  # raises ValueError
+app.config["some.int"] = "3"  # raises ValueError
+
+# Add default values
+app.config.setdefault("myapp.param2", "some default")
+
+# Receive values
+param = app.config["myapp.param"]
+param2 = app.config.get("myapp.param2", "fallback value")
+
+
+# An example route using configuration values
+@app.route("/about", view="about.rst")
+def about():
+    email = app.config.get("my.email", "nomail@example.com")
+    admin_user = request.app.config["myapp.admin_user"]
+    return {"admin_user": admin_user, "email": email}
 
 
 @hook("config")
 def on_config_change(key, value):
     print(f"on_config_change key: {key}")
     print(f"on_config_change value: {value}")
+
+
+print(3, "----------------" * 10)
 
 
 # Lets start with "Hello World!"
@@ -59,6 +104,6 @@ def hello_world():
 #     return "Welcome!"
 
 
-print(3, "----------------" * 10)
+print(4, "----------------" * 10)
 
 run(host="localhost", port=8080)
