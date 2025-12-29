@@ -1,3 +1,4 @@
+import time
 import bottle
 from bottle import (
     route,
@@ -26,9 +27,21 @@ class SomePlugin(object):
         pass
 
 
+def stopwatch(callback):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = callback(*args, **kwargs)
+        end = time.time()
+        response.headers["X-Exec-Time"] = str(end - start)
+        return result
+
+    return wrapper
+
+
 app = bottle.default_app()  # or bottle.Bottle() if you prefer
 
 app.install(SomePlugin())
+app.install(stopwatch)
 
 
 app.config["autojson"] = False  # Turns off the "autojson" feature
