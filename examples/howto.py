@@ -43,10 +43,6 @@ def stopwatch(callback):
 
 app = bottle.default_app()  # or bottle.Bottle() if you prefer
 
-app.install(SomePlugin())
-app.install(stopwatch)
-
-
 app.config["autojson"] = False  # Turns off the "autojson" feature
 app.config["sqlite.db"] = ":memory:"  # Tells the sqlite plugin which db to use
 app.config["myapp.param"] = "value"  # Example for a custom config value.
@@ -55,24 +51,179 @@ app.config["myapp.admin_user"] = "admin"
 # Change many values at once
 app.config.update({"autojson": False, "sqlite.db": ":memory:", "myapp.param": "value"})
 
-app.config["some.list"] = "a;b;c"  # Actually stores ['a', 'b', 'c']
-# app.config["some.int"] = "not an int"  # raises ValueError
-app.config["some.int"] = "3"  # raises ValueError
 
 # Add default values
 app.config.setdefault("myapp.param2", "some default")
+"""
+print(app._global_config)
+{}
+print(app._global_config._meta)
+{
+    'catchall': {
+        'validate': <class 'bool'>
+    },
+    'json.enable': {
+        'help': 'Enable or disable automatic dict->json filter.',
+        'validate': <class 'bool'>
+    },
+    'json.ascii': {
+        'help': 'Use only 7-bit ASCII characters in output.',
+        'validate': <class 'bool'>
+    },
+    'json.indent': {
+        'help': 'Add whitespace to make json more readable.',
+        'validate': <class 'bool'>
+    },
+    'json.dump_func': {
+        'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+    }
+}
+print(app._global_config._change_listener)
+[]
+print(app._global_config._overlays)
+[<weakref at 0x7fa24c379170; to 'ConfigDict' at 0x7fa24c332d50>]
+print(app._global_config._source)
+None
+print(app._global_config._virtual_keys)
+set()
+
+print(app.config)
+{
+    'catchall': True,
+    'json.enable': True,
+    'json.ascii': False,
+    'json.indent': True,
+    'json.dump_func': None,
+    'autojson': False,
+    'sqlite.db': ':memory:',
+    'myapp.param': 'value',
+    'myapp.admin_user': 'admin',
+    'myapp.param2': 'some default'
+}
+print(app.config._meta)
+{
+    'catchall': {
+        'validate': <class 'bool'>
+    },
+    'json.enable': {
+        'help': 'Enable or disable automatic dict->json filter.',
+        'validate': <class 'bool'>
+    },
+    'json.ascii': {
+        'help': 'Use only 7-bit ASCII characters in output.',
+        'validate': <class 'bool'>
+    },
+    'json.indent': {
+        'help': 'Add whitespace to make json more readable.',
+        'validate': <class 'bool'>
+    },
+    'json.dump_func': {
+        'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+    }
+}
+print(app.config._change_listener)
+[functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7fa24e507920>>, 'config')]
+print(app.config._overlays)
+[]
+print(app.config._source)
+{}
+print(app.config._virtual_keys)
+set()
+"""
 
 # Receive values
 param = app.config["myapp.param"]
 param2 = app.config.get("myapp.param2", "fallback value")
+print(f"param: {param}")
+print(f"param2: {param2}")
 
+app.install(SomePlugin())
+app.install(stopwatch)
+"""
+print(app._global_config)
+{}
+print(app._global_config._meta)
+{
+    'catchall': {
+        'validate': <class 'bool'>
+    },
+    'json.enable': {
+        'help': 'Enable or disable automatic dict->json filter.',
+        'validate': <class 'bool'>
+    },
+    'json.ascii': {
+        'help': 'Use only 7-bit ASCII characters in output.',
+        'validate': <class 'bool'>
+    },
+    'json.indent': {
+        'help': 'Add whitespace to make json more readable.',
+        'validate': <class 'bool'>
+    },
+    'json.dump_func': {
+        'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+    },
+    'some.int': {
+        'filter': <class 'int'>
+    },
+    'some.list': {
+        'filter': <function SomePlugin.setup.<locals>.<lambda> at 0x7fe73899d8a0>,
+        'help': 'A semicolon separated list.'
+    }
+}
+print(app._global_config._change_listener)
+[]
+print(app._global_config._overlays)
+[<weakref at 0x7fe73270d030; to 'ConfigDict' at 0x7fe7326c2d50>]
+print(app._global_config._source)
+None
+print(app._global_config._virtual_keys)
+set()
 
-# An example route using configuration values
-@app.route("/about", view="about.rst")
-def about():
-    email = app.config.get("my.email", "nomail@example.com")
-    admin_user = request.app.config["myapp.admin_user"]
-    return {"admin_user": admin_user, "email": email}
+print(app.config)
+{'catchall': True, 'json.enable': True, 'json.ascii': False, 'json.indent': True, 'json.dump_func': None, 'autojson': False, 'sqlite.db': ':memory:', 'myapp.param': 'value', 'myapp.admin_user': 'admin', 'myapp.param2': 'some default'}
+print(app.config._meta)
+{
+    'catchall': {
+        'validate': <class 'bool'>
+    },
+    'json.enable': {
+        'help': 'Enable or disable automatic dict->json filter.',
+        'validate': <class 'bool'>
+    },
+    'json.ascii': {
+        'help': 'Use only 7-bit ASCII characters in output.',
+        'validate': <class 'bool'>
+    },
+    'json.indent': {
+        'help': 'Add whitespace to make json more readable.',
+        'validate': <class 'bool'>
+    },
+    'json.dump_func': {
+        'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+    },
+    'some.int': {
+        'filter': <class 'int'>
+    },
+    'some.list': {
+        'filter': <function SomePlugin.setup.<locals>.<lambda> at 0x7fe73899d8a0>,
+        'help': 'A semicolon separated list.'
+    }
+}
+print(app.config._change_listener)
+[functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7fe738bdb9b0>>, 'config')]
+print(app.config._overlays)
+[]
+print(app.config._source)
+{}
+print(app.config._virtual_keys)
+set()
+"""
+
+app.config["some.list"] = "a;b;c"  # Actually stores ['a', 'b', 'c']
+# app.config["some.int"] = "not an int"  # raises ValueError
+app.config["some.int"] = "3"  # raises ValueError
+
+print(3, "----------------" * 10)
 
 
 @hook("config")
@@ -81,7 +232,15 @@ def on_config_change(key, value):
     print(f"on_config_change value: {value}")
 
 
-print(3, "----------------" * 10)
+print(4, "----------------" * 10)
+
+
+# An example route using configuration values
+@app.route("/about", view="about.rst")
+def about():
+    email = app.config.get("my.email", "nomail@example.com")
+    admin_user = request.app.config["myapp.admin_user"]
+    return {"admin_user": admin_user, "email": email}
 
 
 def list_filter(config):
@@ -106,13 +265,6 @@ def follow_users(ids):
     return ids
 
 
-# Lets start with "Hello World!"
-# Point your Browser to 'http://localhost:8080/' and greet the world :D
-@route("/")
-def hello_world():
-    return "Hello World!"
-
-
 @route("/hello")
 def hello():
     return "Hello World!"
@@ -126,12 +278,12 @@ def greet(name="Stranger"):
 
 @route("/wiki/<pagename>")  # matches /wiki/Learning_Python
 def show_wiki_page(pagename):
-    return pagename
+    pass
 
 
 @route("/<action>/<user>")  # matches /follow/defnull
 def user_api(action, user):
-    return {"action": action, "user": user}
+    pass
 
 
 @route("/object/<id:int>")
@@ -156,7 +308,8 @@ def hello_post():
     return "Hello %s!" % name
 
 
-print(4, "----------------" * 10)
+print(5, "----------------" * 10)
+
 
 tpl = SimpleTemplate("Hello {{name}}!")
 print(tpl.render(name="World"))
@@ -174,6 +327,7 @@ def hello(name="World"):
     return dict(name=name)
 
 
-print(5, "----------------" * 10)
+print(6, "----------------" * 10)
+
 
 run(host="localhost", port=8080)

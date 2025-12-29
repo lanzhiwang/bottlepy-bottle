@@ -703,6 +703,14 @@ class Route(object):
         #: plugin configuration and meta-data.
         self.config = app.config._make_overlay()
         self.config.load_dict(config)
+        print(f"Route __init__ self.app: {self.app}")
+        print(f"Route __init__ self.rule: {self.rule}")
+        print(f"Route __init__ self.method: {self.method}")
+        print(f"Route __init__ self.callback: {self.callback}")
+        print(f"Route __init__ self.name: {self.name}")
+        print(f"Route __init__ self.plugins: {self.plugins}")
+        print(f"Route __init__ self.skiplist: {self.skiplist}")
+        print(f"Route __init__ self.config: {self.config}")
 
     @cached_property
     def call(self):
@@ -828,6 +836,20 @@ class Bottle(object):
         # Bottle __init__ kwargs: {}
 
         self.config = self._global_config._make_overlay()
+        """
+        print(self._global_config)
+        {}
+        print(self._global_config._meta)
+        {'catchall': {'validate': <class 'bool'>}}
+        print(self._global_config._change_listener)
+        []
+        print(self._global_config._overlays)
+        [<weakref at 0x7fccf03e1800; to 'ConfigDict' at 0x7fccf039bd50>]
+        print(self._global_config._source)
+        None
+        print(self._global_config._virtual_keys)
+        set()
+        """
         self.config._add_change_listener(functools.partial(self.trigger_hook, "config"))
 
         self.config.update({"catchall": True})
@@ -853,6 +875,16 @@ class Bottle(object):
         """
         print(self.config)
         {'catchall': True}
+        print(self.config._meta)
+        {'catchall': {'validate': <class 'bool'>}}
+        print(self.config._change_listener)
+        [functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7f6c36ed3c80>>, 'config')]
+        print(self.config._overlays)
+        []
+        print(self.config._source)
+        {}
+        print(self.config._virtual_keys)
+        set()
         """
 
         self._mounts = []
@@ -868,6 +900,81 @@ class Bottle(object):
         self.plugins = []  # List of installed plugins.
         self.install(JSONPlugin())
         self.install(TemplatePlugin())
+        """
+        print(self._global_config)
+        {}
+        print(self._global_config._meta)
+        {
+            'catchall': {
+                'validate': <class 'bool'>
+            },
+            'json.enable': {
+                'help': 'Enable or disable automatic dict->json filter.',
+                'validate': <class 'bool'>
+            },
+            'json.ascii': {
+                'help': 'Use only 7-bit ASCII characters in output.',
+                'validate': <class 'bool'>
+            },
+            'json.indent': {
+                'help': 'Add whitespace to make json more readable.',
+                'validate': <class 'bool'>
+            },
+            'json.dump_func': {
+                'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+            }
+        }
+        print(self._global_config._change_listener)
+        []
+        print(self._global_config._overlays)
+        [<weakref at 0x7f356db1d670; to 'ConfigDict' at 0x7f356dad7b50>]
+        print(self._global_config._source)
+        None
+        print(self._global_config._virtual_keys)
+        set()
+
+        print(self.config)
+        {
+            'catchall': True,
+            'json.enable': True,
+            'json.ascii': False,
+            'json.indent': True,
+            'json.dump_func': None
+        }
+        print(self.config._meta)
+        {
+            'catchall': {
+                'validate': <class 'bool'>
+            },
+            'json.enable': {
+                'help': 'Enable or disable automatic dict->json filter.',
+                'validate': <class 'bool'>
+            },
+            'json.ascii': {
+                'help': 'Use only 7-bit ASCII characters in output.',
+                'validate': <class 'bool'>
+            },
+            'json.indent': {
+                'help': 'Add whitespace to make json more readable.',
+                'validate': <class 'bool'>
+            },
+            'json.dump_func': {
+                'help': 'If defined, use this function to transform dict into json. The other options no longer apply.'
+            }
+        }
+        print(self.config._change_listener)
+        [functools.partial(<bound method Bottle.trigger_hook of <bottle.Bottle object at 0x7f14c6057bc0>>, 'config')]
+        print(self.config._overlays)
+        []
+        print(self.config._source)
+        {}
+        print(self.config._virtual_keys)
+        set()
+
+        self.plugins
+        [<bottle.JSONPlugin object at 0x7f14c5fd3470>, <bottle.TemplatePlugin object at 0x7f14c6e8bc50>]
+
+        """
 
     #: If true, most exceptions are caught and returned as :exc:`HTTPError`
     catchall = DictProperty("config", "catchall")
@@ -889,11 +996,22 @@ class Bottle(object):
             Executed once after each request regardless of its outcome.
         app_reset
             Called whenever :meth:`Bottle.reset` is called.
+
+        print(name)
+        config
+        print(func)
+        <function on_config_change at 0x7ffa101d0900>
+        print(self._hooks)
+        {'before_request': [], 'after_request': [], 'app_reset': [], 'config': []}
         """
         if name in self.__hook_reversed:
             self._hooks[name].insert(0, func)
         else:
             self._hooks[name].append(func)
+        """
+        print(self._hooks)
+        {'before_request': [], 'after_request': [], 'app_reset': [], 'config': [<function on_config_change at 0x7ffa101d0900>]}
+        """
 
     def remove_hook(self, name, func):
         """Remove a callback from a hook."""
@@ -1168,16 +1286,46 @@ class Bottle(object):
         Any additional keyword arguments are stored as route-specific
         configuration and passed to plugins (see :meth:`Plugin.apply`).
         """
+
+        print(f"Bottle route path: {path}")
+        print(f"Bottle route method: {method}")
+        print(f"Bottle route callback: {callback}")
+        print(f"Bottle route name: {name}")
+        print(f"Bottle route apply: {apply}")
+        print(f"Bottle route skip: {skip}")
+        print(f"Bottle route config: {config}")
+
+        print(f"Bottle route callable(path): {callable(path)}")
         if callable(path):
             path, callback = None, path
+        print(f"Bottle route path: {path}")
+        print(f"Bottle route callback: {callback}")
+
         plugins = makelist(apply)
         skiplist = makelist(skip)
+        print(f"Bottle route plugins: {plugins}")
+        print(f"Bottle route skiplist: {skiplist}")
 
         def decorator(callback):
+            print(f"Bottle route callback: {callback}")
+
+            print(
+                f"Bottle route isinstance(callback, basestring): {isinstance(callback, basestring)}"
+            )
             if isinstance(callback, basestring):
                 callback = load(callback)
+            print(f"Bottle route callback: {callback}")
+
+            print(f"Bottle route makelist(path): {makelist(path)}")
+            print(f"Bottle route yieldroutes(callback): {yieldroutes(callback)}")
+            print(
+                f"Bottle route makelist(path) or yieldroutes(callback): {makelist(path) or yieldroutes(callback)}"
+            )
+
             for rule in makelist(path) or yieldroutes(callback):
+                print(f"Bottle route rule: {rule}")
                 for verb in makelist(method):
+                    print(f"Bottle route verb: {verb}")
                     verb = verb.upper()
                     route = Route(
                         self,
