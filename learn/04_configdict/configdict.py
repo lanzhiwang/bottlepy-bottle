@@ -328,7 +328,9 @@ class ConfigDict(dict):
             print(f"  [监听器] 配置项 '{key}' 已变更为: {value} (类型: {type(value)})")
         """
         self._change_listener.append(func)
-        print(f"ConfigDict _add_change_listener self._change_listener: {self._change_listener}")
+        print(
+            f"ConfigDict _add_change_listener self._change_listener: {self._change_listener}"
+        )
         return func
 
     def meta_get(self, key, metafield, default=None):
@@ -440,12 +442,14 @@ def run_config_demo():
 
     # 3. 演示 _add_change_listener (变更监听)
     print("--- 步骤 3. 演示 _add_change_listener (变更监听) ---")
+
     @conf._add_change_listener
     def on_config_change(config, key, value):
         print(f"run_config_demo on_config_change config: {config}")
         print(f"run_config_demo on_config_change key: {key}")
         print(f"run_config_demo on_config_change value: {value}")
         return False
+
     print()
 
     # 4. 演示 load_config (加载 INI 文件)
@@ -506,7 +510,9 @@ def run_config_demo():
     print()
 
     # 11. 演示 __delitem__ 和恢复虚拟键
-    print("--- 步骤 11: 演示 __delitem__ 和恢复虚拟键, 删除叠加层的修改, 恢复父级虚拟值 ---")
+    print(
+        "--- 步骤 11: 演示 __delitem__ 和恢复虚拟键, 删除叠加层的修改, 恢复父级虚拟值 ---"
+    )
     print(f"run_config_demo conf: {conf}")
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     del overlay_conf["server.port"]
@@ -535,7 +541,9 @@ def run_config_demo():
     print(f"run_config_demo conf: {conf}")
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     conf._define("api.limit", default=1000, help="API 调用限制", validate=int)
-    overlay_conf._define("overlay.api.limit", default=2000, help="overlay API 调用限制", validate=float)
+    overlay_conf._define(
+        "overlay.api.limit", default=2000, help="overlay API 调用限制", validate=float
+    )
     print(f"run_config_demo conf: {conf}")
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     print(f"run_config_demo conf._meta: {conf._meta}")
@@ -544,56 +552,3 @@ def run_config_demo():
 
 if __name__ == "__main__":
     run_config_demo()
-
-# if __name__ == "__main__":
-#     global_config = ConfigDict()
-#     global_config.meta_set("catchall", "validate", bool)
-#     global_config["myapp.param"] = "default.myapp.param"
-#     print(f"global_config: {global_config}")
-#     # global_config: {}
-
-#     config = global_config._make_overlay()
-#     # config._add_change_listener(functools.partial(self.trigger_hook, "config"))
-
-#     config.update({"catchall": True})
-#     print(f"config: {config}")
-#     # config: {'catchall': True}
-
-#     config["autojson"] = False  # Turns off the "autojson" feature
-#     config["sqlite.db"] = ":memory:"  # Tells the sqlite plugin which db to use
-#     config["myapp.param"] = "value"  # Example for a custom config value.
-
-#     # Change many values at once
-#     config.update({"autojson": False, "sqlite.db": ":memory:", "myapp.param": "value"})
-
-#     # Add default values
-#     config.setdefault("myapp.param2", "some default")
-#     print(f"config: {config}")
-#     # config:
-#     # {
-#     #     'catchall': True,
-#     #     'autojson': False,
-#     #     'sqlite.db': ':memory:',
-#     #     'myapp.param': 'value',
-#     #     'myapp.param2': 'some default'
-#     # }
-
-#     # Receive values
-#     param = config["myapp.param"]
-#     param2 = config.get("myapp.param2", "fallback value")
-#     email = config.get("my.email", "nomail@example.com")
-
-#     print(f"param: {param}")
-#     print(f"param2: {param2}")
-#     print(f"email: {email}")
-
-#     config.load_module("example_settings", True)
-#     config.load_module("example_settings", False)
-
-#     config.load_dict(
-#         {
-#             "autojson": False,
-#             "sqlite": {"db": ":memory:"},
-#             "myapp": {"param": "value", "param2": "value2"},
-#         }
-#     )

@@ -232,6 +232,11 @@ def on_config_change(key, value):
     print(f"on_config_change value: {value}")
 
 
+"""
+print(app._hooks)
+{'before_request': [], 'after_request': [], 'app_reset': [], 'config': [<function on_config_change at 0x7f87246977e0>]}
+"""
+
 print(4, "----------------" * 10)
 
 
@@ -265,47 +270,59 @@ def follow_users(ids):
     return ids
 
 
-@route("/hello")
+@app.route("/hello")
 def hello():
     return "Hello World!"
 
 
-@route("/")
-@route("/hello/<name>")
+@app.route("/")
+@app.route("/hello/<name>")
 def greet(name="Stranger"):
     return template("Hello {{name}}, how are you?", name=name)
 
 
-@route("/wiki/<pagename>")  # matches /wiki/Learning_Python
+@app.route("/wiki/<pagename>")  # matches /wiki/Learning_Python
 def show_wiki_page(pagename):
     pass
 
 
-@route("/<action>/<user>")  # matches /follow/defnull
+@app.route("/<action>/<user>")  # matches /follow/defnull
 def user_api(action, user):
     pass
 
 
-@route("/object/<id:int>")
+@app.route("/object/<id:int>")
 def callback(id):
     assert isinstance(id, int)
 
 
-@route("/show/<name:re:[a-z]+>")
+@app.route("/show/<name:re:[a-z]+>")
 def callback(name):
     assert name.isalpha()
 
 
-@route("/static/<path:path>")
+@app.route("/static/<path:path>")
 def callback(path):
     return static_file(path, ...)
 
 
 # This example handles POST requests to '/hello_post'
-@route("/hello_post", method="POST")
+@app.route("/hello_post", method="POST")
 def hello_post():
     name = request.POST["name"]
     return "Hello %s!" % name
+
+
+print(f"app.routes: {app.routes}")
+print(f"app.router: {app.router}")
+print(f"app.router.rules: {app.router.rules}")
+print(f"app.router._groups: {app.router._groups}")
+print(f"app.router.builder: {app.router.builder}")
+print(f"app.router.static: {app.router.static}")
+print(f"app.router.dyna_routes: {app.router.dyna_routes}")
+print(f"app.router.dyna_regexes: {app.router.dyna_regexes}")
+print(f"app.router.strict_order: {app.router.strict_order}")
+print(f"app.router.filters: {app.router.filters}")
 
 
 print(5, "----------------" * 10)

@@ -1,0 +1,92 @@
+/root/bottle/learn/08_Router/router.py:279: DeprecationWarning: Warning: Use of deprecated feature or API. (Deprecated in Bottle-0.13)
+Cause: Use of old route syntax.
+Fix: Use <name> instead of :name in routes.
+
+  r.add(rule, method, target, **ka)
+<__main__.Router object at 0x7f2829b7d730>
+assertMatches rule: /static
+assertMatches url: /static
+assertMatches method: GET
+assertMatches args: {}
+    add rule: /static
+    add target: /static
+    add method: GET
+    add ka: {}
+        Router add rule: /static
+        Router add method: GET
+        Router add target: /static
+        Router add name: None
+            Router _itertokens rule: /static
+            Router _itertokens self.rule_syntax.finditer(rule): <callable_iterator object at 0x7f2829b0ae00>
+        Router add key: /static
+        Router add mode: None
+        Router add conf: None
+    match url: /static
+    match method: GET
+    match env: {'PATH_INFO': '/static', 'REQUEST_METHOD': 'GET'}
+    match result: ('/static', {})
+assertMatches target: /static
+assertMatches urlargs: {}
+--------------------------------------------------------------------------------
+assertMatches rule: /\:its/:#.+#/:test/:name#[a-z]+#/
+assertMatches url: /:its/a/cruel/world/
+assertMatches method: GET
+assertMatches args: {'test': 'cruel', 'name': 'world'}
+    add rule: /\:its/:#.+#/:test/:name#[a-z]+#/
+    add target: /\:its/:#.+#/:test/:name#[a-z]+#/
+    add method: GET
+    add ka: {}
+        Router add rule: /\:its/:#.+#/:test/:name#[a-z]+#/
+        Router add method: GET
+        Router add target: /\:its/:#.+#/:test/:name#[a-z]+#/
+        Router add name: None
+            Router _itertokens rule: /\:its/:#.+#/:test/:name#[a-z]+#/
+            Router _itertokens self.rule_syntax.finditer(rule): <callable_iterator object at 0x7f2829b0b370>
+            Router _itertokens match: <re.Match object; span=(1, 6), match='\\:its'>
+            Router _itertokens match.start(): 1
+            Router _itertokens match.groups(): ('\\', 'its', '', None, None, None, None)
+            Router _itertokens prefix: /
+            Router _itertokens g: ('\\', 'its', '', None, None, None, None)
+            Router _itertokens match: <re.Match object; span=(7, 12), match=':#.+#'>
+            Router _itertokens match.start(): 7
+            Router _itertokens match.groups(): ('', None, '', '.+', None, None, None)
+            Router _itertokens prefix: /:its/
+            Router _itertokens g: ('', None, '', '.+', None, None, None)
+        Router add key: /:its/
+        Router add mode: None
+        Router add conf: None
+        Router add key: None
+        Router add mode: default
+        Router add conf: .+
+            Router _itertokens match: <re.Match object; span=(13, 18), match=':test'>
+            Router _itertokens match.start(): 13
+            Router _itertokens match.groups(): ('', 'test', '', None, None, None, None)
+            Router _itertokens prefix: /
+            Router _itertokens g: ('', 'test', '', None, None, None, None)
+        Router add key: /
+        Router add mode: None
+        Router add conf: None
+        Router add key: test
+        Router add mode: default
+        Router add conf: None
+            Router _itertokens match: <re.Match object; span=(19, 32), match=':name#[a-z]+#'>
+            Router _itertokens match.start(): 19
+            Router _itertokens match.groups(): ('', 'name', '', '[a-z]+', None, None, None)
+            Router _itertokens prefix: /
+            Router _itertokens g: ('', 'name', '', '[a-z]+', None, None, None)
+        Router add key: /
+        Router add mode: None
+        Router add conf: None
+        Router add key: name
+        Router add mode: default
+        Router add conf: [a-z]+
+        Router add key: /
+        Router add mode: None
+        Router add conf: None
+    match url: /:its/a/cruel/world/
+    match method: GET
+    match env: {'PATH_INFO': '/:its/a/cruel/world/', 'REQUEST_METHOD': 'GET'}
+    match result: ('/\\:its/:#.+#/:test/:name#[a-z]+#/', {'test': 'cruel', 'name': 'world'})
+assertMatches target: /\:its/:#.+#/:test/:name#[a-z]+#/
+assertMatches urlargs: {'test': 'cruel', 'name': 'world'}
+--------------------------------------------------------------------------------

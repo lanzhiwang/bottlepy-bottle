@@ -703,14 +703,6 @@ class Route(object):
         #: plugin configuration and meta-data.
         self.config = app.config._make_overlay()
         self.config.load_dict(config)
-        print(f"Route __init__ self.app: {self.app}")
-        print(f"Route __init__ self.rule: {self.rule}")
-        print(f"Route __init__ self.method: {self.method}")
-        print(f"Route __init__ self.callback: {self.callback}")
-        print(f"Route __init__ self.name: {self.name}")
-        print(f"Route __init__ self.plugins: {self.plugins}")
-        print(f"Route __init__ self.skiplist: {self.skiplist}")
-        print(f"Route __init__ self.config: {self.config}")
 
     @cached_property
     def call(self):
@@ -1246,7 +1238,11 @@ class Bottle(object):
     def add_route(self, route):
         """Add a route object, but do not change the :data:`Route.app`
         attribute."""
+
+        print(f"Bottle add_route self.routes: {self.routes}")
         self.routes.append(route)
+        print(f"Bottle add_route self.routes: {self.routes}")
+
         self.router.add(route.rule, route.method, route, name=route.name)
         if DEBUG:
             route.prepare()
@@ -1307,25 +1303,27 @@ class Bottle(object):
         print(f"Bottle route skiplist: {skiplist}")
 
         def decorator(callback):
-            print(f"Bottle route callback: {callback}")
+            print(f"Bottle route decorator callback: {callback}")
 
             print(
-                f"Bottle route isinstance(callback, basestring): {isinstance(callback, basestring)}"
+                f"Bottle route decorator isinstance(callback, basestring): {isinstance(callback, basestring)}"
             )
             if isinstance(callback, basestring):
                 callback = load(callback)
-            print(f"Bottle route callback: {callback}")
+            print(f"Bottle route decorator callback: {callback}")
 
-            print(f"Bottle route makelist(path): {makelist(path)}")
-            print(f"Bottle route yieldroutes(callback): {yieldroutes(callback)}")
+            print(f"Bottle route decorator makelist(path): {makelist(path)}")
             print(
-                f"Bottle route makelist(path) or yieldroutes(callback): {makelist(path) or yieldroutes(callback)}"
+                f"Bottle route decorator yieldroutes(callback): {yieldroutes(callback)}"
+            )
+            print(
+                f"Bottle route decorator makelist(path) or yieldroutes(callback): {makelist(path) or yieldroutes(callback)}"
             )
 
             for rule in makelist(path) or yieldroutes(callback):
-                print(f"Bottle route rule: {rule}")
+                print(f"Bottle route decorator rule: {rule}")
                 for verb in makelist(method):
-                    print(f"Bottle route verb: {verb}")
+                    print(f"Bottle route decorator verb: {verb}")
                     verb = verb.upper()
                     route = Route(
                         self,
@@ -1337,6 +1335,7 @@ class Bottle(object):
                         skiplist=skiplist,
                         **config,
                     )
+                    print(f"Bottle route decorator route: {route}")
                     self.add_route(route)
             return callback
 
