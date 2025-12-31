@@ -550,6 +550,7 @@ class Router(object):
         """
         迭代器: 将字符串规则拆分为 (变量名, 过滤器名, 过滤配置) 的标记流
         """
+        print(f"    拆分路由规则")
         print(f"    Router _itertokens rule: {rule}")
 
         offset, prefix = 0, ""
@@ -599,6 +600,7 @@ class Router(object):
         添加一个新路由.
         核心逻辑: 将路径规则转换为正则表达式
         """
+        print(f"添加一个新路由")
         print(f"Router add rule: {rule}")
         print(f"Router add method: {method}")
         print(f"Router add target: {target}")
@@ -622,11 +624,13 @@ class Router(object):
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
+            print(f"路由拆分完成")
             print(f"Router add key: {key}")
             print(f"Router add mode: {mode}")
             print(f"Router add conf: {conf}")
 
             if mode:  # 这是一个动态通配符部分
+                print(f"这是一个动态通配符部分")
                 is_static = False
                 if mode == "default":
                     mode = self.default_filter
@@ -646,6 +650,7 @@ class Router(object):
                     filters.append((key, in_filter))
                 builder.append((key, out_filter or str))
             elif key:  # 这是一个静态路径字符串部分
+                print(f"这是一个静态路径字符串部分")
                 pattern += re.escape(key)
                 builder.append((None, key))
             print(f"Router add pattern: {pattern}")
@@ -696,7 +701,9 @@ class Router(object):
         # 将路由信息存入动态路由表
         flatpat = _re_flatten(pattern)
         whole_rule = (rule, flatpat, target, getargs)
+        print(f"Router add whole_rule: {whole_rule}")
 
+        print(f"Router add self._groups: {self._groups}")
         if (flatpat, method) in self._groups:
             if DEBUG:
                 msg = "Route <%s %s> overwrites a previously defined route"
@@ -706,6 +713,8 @@ class Router(object):
         else:
             self.dyna_routes.setdefault(method, []).append(whole_rule)
             self._groups[flatpat, method] = len(self.dyna_routes[method]) - 1
+        print(f"Router add self.dyna_routes: {self.dyna_routes}")
+        print(f"Router add self._groups: {self._groups}")
 
         # 增量编译: 将当前的动态路由列表重新编译成合并后的正则表达式块
         self._compile(method)
@@ -724,9 +733,18 @@ class Router(object):
         当路径为 /user/123 时, 正则表达式匹配成功. 由于它是第一个分支, match.lastindex 为 1. 程序立刻知道应该调用 rules[0] 对应的目标函数.
         这种方式避开了 Python for 循环逐个匹配的开销, 将匹配压力交给了经过 C 语言优化的 re 引擎.
         """
+        print(f"将多个路由的正则表达式合并为一个")
+        print(f"Router _compile method: {method}")
+
+        print(f"Router _compile self.dyna_routes: {self.dyna_routes}")
+        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
+
         all_rules = self.dyna_routes[method]
         comborules = self.dyna_regexes[method] = []
         maxgroups = self._MAX_GROUPS_PER_PATTERN
+        print(f"Router _compile all_rules: {all_rules}")
+        print(f"Router _compile comborules: {comborules}")
+        print(f"Router _compile maxgroups: {maxgroups}")
 
         # 按 99 个一组进行分块处理
         for x in range(0, len(all_rules), maxgroups):
@@ -734,12 +752,15 @@ class Router(object):
             # 合并正则分支
             combined = (flatpat for (_, flatpat, _, _) in some)
             combined = "|".join("(^%s$)" % flatpat for flatpat in combined)
+            print(f"Router _compile combined: {combined}")
             combined = re.compile(combined).match
             rules = [(target, getargs) for (_, _, target, getargs) in some]
             comborules.append((combined, rules))
+        print(f"Router _compile comborules: {comborules}")
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
+        print(f"反向解析")
         print(f"Router build _name: {_name}")
         print(f"Router build anons: {anons}")
         print(f"Router build query: {query}")
@@ -778,6 +799,7 @@ class Router(object):
             # 检查 query 字典是否为空
             if not query:
                 # 如果没有剩余参数, 直接返回生成的路径部分
+                print(f"Router build url: {url}")
                 return url
             else:
                 # 如果还有剩余参数, 将它们编码为 URL 查询字符串(例如: key1=val1&key2=val2)
@@ -785,6 +807,7 @@ class Router(object):
 
                 # 将编码后的字符串追加到路径后面, 用 "?" 分隔
                 full_url = url + "?" + query_string
+                print(f"Router build url: {full_url}")
                 return full_url
 
         except KeyError as E:
@@ -798,6 +821,7 @@ class Router(object):
         2. 依次检查动态路由合并块.
         """
 
+        print(f"请求匹配")
         print(f"Router match environ: {environ}")
 
         verb = environ["REQUEST_METHOD"].upper()
@@ -813,6 +837,8 @@ class Router(object):
         print(f"Router match path: {path}")
         print(f"Router match methods: {methods}")
 
+        print(f"Router match self.static: {self.static}")
+        print(f"Router match self.dyna_regexes: {self.dyna_regexes}")
         for method in methods:
             # A. 快速尝试静态匹配
             if method in self.static and path in self.static[method]:
