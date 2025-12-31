@@ -1,316 +1,131 @@
-import re, warnings
-from urllib.parse import urlencode
-
-DEBUG = True
+from bottle import Router, HTTPError
 
 
-def depr(major, minor, cause, fix, stacklevel=3):
-    text = (
-        "Warning: Use of deprecated feature or API. (Deprecated in Bottle-%d.%d)\n"
-        "Cause: %s\n"
-        "Fix: %s\n" % (major, minor, cause, fix)
-    )
-    if DEBUG == "strict":
-        raise DeprecationWarning(text)
-    warnings.warn(text, DeprecationWarning, stacklevel=stacklevel)
-    return DeprecationWarning(text)
+# 1. 基础场景: 静态路由与 O(1) 查找
+# 静态路由是最简单的场景, Router 会将其存入 self.static 字典, 实现极速查找.
+router = Router()
+
+# 添加静态路由
+router.add("/index", "GET", "index_handler")
+print("---" * 10)
+router.add("/contact", "GET", "contact_handler")
+print("---" * 10)
+
+# 模拟请求匹配
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/index"}))
+# 输出: ('index_handler', {})
+print("---" * 10)
+
+# 2. 核心场景: 动态通配符与过滤器
+# 演示 int、float 和 path 过滤器的使用, 以及它们如何自动转换 Python 类型.
+
+# router = Router()
+
+# 1. 整数过滤器: 匹配 /user/123
+router.add("/user/<id:int>", "GET", "user_detail")
+print("---" * 10)
+
+# 2. 浮点数过滤器: 匹配 /item/19.99
+router.add("/item/<price:float>", "GET", "item_price")
+print("---" * 10)
+
+# 3. 路径过滤器: 匹配 /static/css/style.css（允许斜杠）
+router.add("/static/<file:path>", "GET", "static_file")
+print("---" * 10)
+
+router.add("/hello/<name>", "GET", "hello_detail")
+print("---" * 10)
+
+router.add("/<action>/<user>", "GET", "action_handler1")
+print("---" * 10)
+
+router.add("/action2/<action>/<user>", "GET", "action_handler2")
+print("---" * 10)
+
+router.add("/show/<name:re:[a-z]+>", "GET", "show_handler")
+print("---" * 10)
+
+# 匹配测试
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/user/123"}))
+# 输出: ('user_detail', {'id': 123})  <-- 注意: 123 是 int 类型
+
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/item/19.99"}))
+# 输出: ('item_price', {'price': 19.99})
+
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/static/img/logo.png"}))
+# 输出: ('static_file', {'file': 'img/logo.png'})
+print("---" * 10)
+
+# 3. 高级场景: 自定义过滤器与匿名通配符
+# 演示如何添加自定义正则过滤器, 以及使用不带名字的通配符.
+# router = Router()
+
+# 添加自定义过滤器: 匹配 4 位年份, 并转为 int
+router.add_filter("year", lambda conf: (r"\d{4}", int, str))
+
+router.add("/archive/<y:year>", "GET", "archive_handler")
+
+# 匿名通配符: 不关心变量名, 只关心格式
+# < :int > 会被自动命名为 anon0, anon1...
+router.add("/page/<:int>", "GET", "page_handler")
+
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/archive/2024"}))
+# 输出: ('archive_handler', {'y': 2024})
+
+# print(router.match({'REQUEST_METHOD': 'GET', 'PATH_INFO': '/page/5'}))
+# 输出: ('page_handler', {'anon0': 5})
+
+# 4. 反向解析: URL 生成（URL Builder）
+# 演示如何根据路由规则或名称, 反向生成完整的 URL 字符串.
+# router = Router()
+router.add("/blog/<id:int>", "GET", "view_post", name="blog_post")
+
+# 使用规则名生成
+url1 = router.build("/blog/<id:int>", id=100)
+print(url1)  # 输出: /blog/100
+
+# 使用自定义名称生成, 并添加查询参数
+url2 = router.build("blog_post", id=100, section="comments")
+print(url2)  # 输出: /blog/100?section=comments
+
+# 5. 错误处理: 404 与 405 (Method Not Allowed)
+# 演示路由匹配失败时的逻辑.
+
+# router = Router()
+router.add("/api/data", "POST", "post_handler")
+router.add("/api/data", "GET", "get_handler")
+
+# 1. 404 错误: 路径不存在
+try:
+    router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/missing"})
+except HTTPError as e:
+    print(e)  # 404 Not found: '/missing'
+
+# 2. 405 错误: 路径存在但方法不支持
+try:
+    router.match({"REQUEST_METHOD": "DELETE", "PATH_INFO": "/api/data"})
+except HTTPError as e:
+    print(f"{e} Allow: {e.headers['Allow']}")
+    # 输出: 405 Method not allowed. Allow: GET,POST
 
 
-def _re_flatten(p):
-    """Turn all capturing groups in a regular expression pattern into
-    non-capturing groups."""
-    if "(" not in p:
-        return p
-    return re.sub(
-        r"(\\*)(\(\?P<[^>]+>|\((?!\?))",
-        lambda m: m.group(0) if len(m.group(1)) % 2 else m.group(1) + "(?:",
-        p,
-    )
+# 6. 核心性能演示: 正则合并 (Merged Regex)
+# 说明 _compile 逻辑是如何将多个动态路由合并成一个正则, 并通过 lastindex 区分的.
+# router = Router()
+# 连续添加多个动态路由, 超过 99 个会触发分块
+router.add("/alpha/<v1>", "GET", "target1")
+router.add("/beta/<v2>", "GET", "target2")
+router.add("/gamma/<v3>", "GET", "target3")
 
-
-class BottleException(Exception):
-    """A base class for exceptions used by bottle."""
-
+# 我们可以观察内部结构（演示用）
+method_regexes = router.dyna_regexes["GET"]
+for combined, rules in method_regexes:
+    # 这里 combined 是一个编译好的正则 match 函数
+    # 它内部类似于 ( ^/alpha/(?P<v1>[^/]+)$ ) | ( ^/beta/(?P<v2>[^/]+)$ ) | ...
     pass
 
-
-class RouteError(BottleException):
-    """This is a base class for all routing related exceptions"""
-
-
-class RouteSyntaxError(RouteError):
-    """The route parser found something not supported by this router."""
-
-
-class Router(object):
-    """A Router is an ordered collection of route->target pairs. It is used to
-    efficiently match WSGI requests against a number of routes and return
-    the first target that satisfies the request. The target may be anything,
-    usually a string, ID or callable object. A route consists of a path-rule
-    and a HTTP method.
-
-    The path-rule is either a static path (e.g. `/contact`) or a dynamic
-    path that contains wildcards (e.g. `/wiki/<page>`). The wildcard syntax
-    and details on the matching order are described in docs:`routing`.
-    """
-
-    default_pattern = "[^/]+"
-    default_filter = "re"
-
-    #: The current CPython regexp implementation does not allow more
-    #: than 99 matching groups per regular expression.
-    _MAX_GROUPS_PER_PATTERN = 99
-
-    def __init__(self, strict=False):
-        self.rules = []  # All rules in order
-        self._groups = {}  # index of regexes to find them in dyna_routes
-        self.builder = {}  # Data structure for the url builder
-        self.static = {}  # Search structure for static routes
-        self.dyna_routes = {}
-        self.dyna_regexes = {}  # Search structure for dynamic routes
-        #: If true, static routes are no longer checked first.
-        self.strict_order = strict
-        self.filters = {
-            "re": lambda conf: (_re_flatten(conf or self.default_pattern), None, None),
-            "int": lambda conf: (r"-?\d+", int, lambda x: str(int(x))),
-            "float": lambda conf: (r"-?[\d.]+", float, lambda x: str(float(x))),
-            "path": lambda conf: (r".+?", None, None),
-        }
-
-    def add_filter(self, name, func):
-        """Add a filter. The provided function is called with the configuration
-        string as parameter and must return a (regexp, to_python, to_url) tuple.
-        The first element is a string, the last two are callables or None."""
-        self.filters[name] = func
-
-    rule_syntax = re.compile(
-        "(\\\\*)"
-        "(?:(?::([a-zA-Z_][a-zA-Z_0-9]*)?()(?:#(.*?)#)?)"
-        "|(?:<([a-zA-Z_][a-zA-Z_0-9]*)?(?::([a-zA-Z_]*)"
-        "(?::((?:\\\\.|[^\\\\>])+)?)?)?>))"
-    )
-
-    def _itertokens(self, rule):
-        print(f"Router _itertokens rule: {rule}")
-
-        offset, prefix = 0, ""
-        for match in self.rule_syntax.finditer(rule):
-            print(f"Router _itertokens 动态路由")
-            print(f"Router _itertokens match: {match}")
-
-            print(f"Router _itertokens match.start(): {match.start()}")
-            print(f"Router _itertokens match.groups(): {match.groups()}")
-            prefix += rule[offset : match.start()]
-            g = match.groups()
-            print(f"Router _itertokens prefix: {prefix}")
-            print(f"Router _itertokens g: {g}")
-
-            if g[2] is not None:
-                depr(
-                    0,
-                    13,
-                    "Use of old route syntax.",
-                    "Use <name> instead of :name in routes.",
-                    stacklevel=4,
-                )
-
-            if len(g[0]) % 2:  # Escaped wildcard
-                prefix += match.group(0)[len(g[0]) :]
-                offset = match.end()
-                continue
-            if prefix:
-                yield prefix, None, None
-            name, filtr, conf = g[4:7] if g[2] is None else g[1:4]
-            yield name, filtr or "default", conf or None
-            offset, prefix = match.end(), ""
-
-        if offset <= len(rule) or prefix:
-            yield prefix + rule[offset:], None, None
-
-    def add(self, rule, method, target, name=None):
-        """Add a new rule or replace the target for an existing rule."""
-
-        print(f"Router add rule: {rule}")
-        print(f"Router add method: {method}")
-        print(f"Router add target: {target}")
-        print(f"Router add name: {name}")
-
-        anons = 0  # Number of anonymous wildcards found
-        keys = []  # Names of keys
-        pattern = ""  # Regular expression pattern with named groups
-        filters = []  # Lists of wildcard input filters
-        builder = []  # Data structure for the URL builder
-        is_static = True
-
-        for key, mode, conf in self._itertokens(rule):
-            print(f"Router add key: {key}")
-            print(f"Router add mode: {mode}")
-            print(f"Router add conf: {conf}")
-
-            """
-            如果 mode 是 None, 说明匹配的是 url 中的静态部分
-            如果 mode 不是 None, 说明匹配的是 url 中的动态部分, 也就是 filtr
-            """
-
-            if mode:
-                is_static = False
-                if mode == "default":
-                    mode = self.default_filter
-                mask, in_filter, out_filter = self.filters[mode](conf)
-                if not key:
-                    pattern += "(?:%s)" % mask
-                    key = "anon%d" % anons
-                    anons += 1
-                else:
-                    pattern += "(?P<%s>%s)" % (key, mask)
-                    keys.append(key)
-                if in_filter:
-                    filters.append((key, in_filter))
-                builder.append((key, out_filter or str))
-            elif key:
-                pattern += re.escape(key)
-                builder.append((None, key))
-            print(f"Router add pattern: {pattern}")
-            print(f"Router add builder: {builder}")
-
-        self.builder[rule] = builder
-        if name:
-            self.builder[name] = builder
-        print(f"Router add self.builder: {self.builder}")
-
-        if is_static and not self.strict_order:
-            self.static.setdefault(method, {})
-            self.static[method][self.build(rule)] = (target, None)
-            print(f"Router add self.static: {self.static}")
-            return
-
-        try:
-            re_pattern = re.compile("^(%s)$" % pattern)
-            re_match = re_pattern.match
-        except re.error as e:
-            raise RouteSyntaxError("Could not add Route: %s (%s)" % (rule, e))
-
-        if filters:
-
-            def getargs(path):
-                url_args = re_match(path).groupdict()
-                for name, wildcard_filter in filters:
-                    try:
-                        url_args[name] = wildcard_filter(url_args[name])
-                    except ValueError:
-                        raise HTTPError(400, "Path has wrong format.")
-                return url_args
-
-        elif re_pattern.groupindex:
-
-            def getargs(path):
-                return re_match(path).groupdict()
-
-        else:
-            getargs = None
-
-        flatpat = _re_flatten(pattern)
-        whole_rule = (rule, flatpat, target, getargs)
-
-        if (flatpat, method) in self._groups:
-            if DEBUG:
-                msg = "Route <%s %s> overwrites a previously defined route"
-                warnings.warn(msg % (method, rule), RuntimeWarning, stacklevel=3)
-            self.dyna_routes[method][self._groups[flatpat, method]] = whole_rule
-        else:
-            self.dyna_routes.setdefault(method, []).append(whole_rule)
-            self._groups[flatpat, method] = len(self.dyna_routes[method]) - 1
-
-        self._compile(method)
-
-    def _compile(self, method):
-        all_rules = self.dyna_routes[method]
-        comborules = self.dyna_regexes[method] = []
-        maxgroups = self._MAX_GROUPS_PER_PATTERN
-        for x in range(0, len(all_rules), maxgroups):
-            some = all_rules[x : x + maxgroups]
-            combined = (flatpat for (_, flatpat, _, _) in some)
-            combined = "|".join("(^%s$)" % flatpat for flatpat in combined)
-            combined = re.compile(combined).match
-            rules = [(target, getargs) for (_, _, target, getargs) in some]
-            comborules.append((combined, rules))
-
-    def build(self, _name, *anons, **query):
-        """Build an URL by filling the wildcards in a rule."""
-
-        print(f"Router build _name: {_name}")
-        print(f"Router build anons: {anons}")
-        print(f"Router build query: {query}")
-
-        print(f"Router build self.builder: {self.builder}")
-        builder = self.builder.get(_name)
-        print(f"Router build builder: {builder}")
-
-        if not builder:
-            raise RouteBuildError("No route with that name.", _name)
-        try:
-            for i, value in enumerate(anons):
-                query["anon%d" % i] = value
-            url = "".join([f(query.pop(n)) if n else f for (n, f) in builder])
-            return url if not query else url + "?" + urlencode(query)
-        except KeyError as E:
-            raise RouteBuildError("Missing URL argument: %r" % E.args[0])
-
-    def match(self, environ):
-        """Return a (target, url_args) tuple or raise HTTPError(400/404/405)."""
-        verb = environ["REQUEST_METHOD"].upper()
-        path = environ["PATH_INFO"] or "/"
-
-        methods = (
-            ("PROXY", "HEAD", "GET", "ANY")
-            if verb == "HEAD"
-            else ("PROXY", verb, "ANY")
-        )
-
-        for method in methods:
-            if method in self.static and path in self.static[method]:
-                target, getargs = self.static[method][path]
-                return target, getargs(path) if getargs else {}
-            elif method in self.dyna_regexes:
-                for combined, rules in self.dyna_regexes[method]:
-                    match = combined(path)
-                    if match:
-                        target, getargs = rules[match.lastindex - 1]
-                        return target, getargs(path) if getargs else {}
-
-        # No matching route found. Collect alternative methods for 405 response
-        allowed = set([])
-        nocheck = set(methods)
-        for method in set(self.static) - nocheck:
-            if path in self.static[method]:
-                allowed.add(method)
-        for method in set(self.dyna_regexes) - allowed - nocheck:
-            for combined, rules in self.dyna_regexes[method]:
-                match = combined(path)
-                if match:
-                    allowed.add(method)
-        if allowed:
-            allow_header = ",".join(sorted(allowed))
-            raise HTTPError(405, "Method not allowed.", Allow=allow_header)
-
-        # No matching route and no alternative method found. We give up
-        raise HTTPError(404, "Not found: " + repr(path))
-
-
-if __name__ == "__main__":
-    r = Router()
-    # add(self, rule, method, target, name=None):
-    rules = [
-        "/",
-        "/hello",
-        "/hello/<name>",
-        "/<action>/<user>",
-        "/object/<id:int>",
-        "/show/<name:re:[a-z]+>",
-        "/static/<path:path>",
-    ]
-    methods = ["GET", "POST", "PUT", "GET", "POST", "PUT", "GET"]
-    name = None
-    for i in range(len(rules)):
-        r.add(rules[i], methods[i], "target", f"name_{i}")
-        print("-----" * 10)
+# 当访问 /beta/hello 时
+# 正则引擎一次扫描发现第二个分组匹配成功, lastindex = 2
+# 对应 rules[2-1] 即 'target2'
+print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/beta/hello"}))
+# 输出: ('target2', {'v2': 'hello'})

@@ -1,192 +1,696 @@
-Router add rule: /
+Router add rule: /index
 Router add method: GET
-Router add target: target
-Router add name: name_0
-Router _itertokens rule: /
-Router add key: /
+Router add target: index_handler
+Router add name: None
+    Router _itertokens rule: /index
+    Router _itertokens self.rule_syntax.finditer(rule): []
+Router add key: /index
 Router add mode: None
 Router add conf: None
-Router add pattern: /
-Router add builder: [(None, '/')]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')]}
-Router build _name: /
+Router add pattern: /index
+Router add builder: [(None, '/index')]
+Router add key: /index
+Router add keys: []
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')]}
+Router build _name: /index
 Router build anons: ()
 Router build query: {}
-Router build self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')]}
-Router build builder: [(None, '/')]
-Router add self.static: {'GET': {'/': ('target', None)}}
---------------------------------------------------
-Router add rule: /hello
-Router add method: POST
-Router add target: target
-Router add name: name_1
-Router _itertokens rule: /hello
-Router add key: /hello
+Router build builder: [(None, '/index')]
+Router add self.static: {'GET': {'/index': ('index_handler', None)}}
+------------------------------
+Router add rule: /contact
+Router add method: GET
+Router add target: contact_handler
+Router add name: None
+    Router _itertokens rule: /contact
+    Router _itertokens self.rule_syntax.finditer(rule): []
+Router add key: /contact
 Router add mode: None
 Router add conf: None
-Router add pattern: /hello
-Router add builder: [(None, '/hello')]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')]}
-Router build _name: /hello
+Router add pattern: /contact
+Router add builder: [(None, '/contact')]
+Router add key: /contact
+Router add keys: []
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')]}
+Router build _name: /contact
 Router build anons: ()
 Router build query: {}
-Router build self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')]}
-Router build builder: [(None, '/hello')]
-Router add self.static: {'GET': {'/': ('target', None)}, 'POST': {'/hello': ('target', None)}}
---------------------------------------------------
-Router add rule: /hello/<name>
-Router add method: PUT
-Router add target: target
-Router add name: name_2
-Router _itertokens rule: /hello/<name>
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(7, 13), match='<name>'>
-Router _itertokens match.start(): 7
-Router _itertokens match.groups(): ('', None, None, None, 'name', None, None)
-Router _itertokens prefix: /hello/
-Router _itertokens g: ('', None, None, None, 'name', None, None)
-Router add key: /hello/
-Router add mode: None
-Router add conf: None
-Router add pattern: /hello/
-Router add builder: [(None, '/hello/')]
-Router add key: name
-Router add mode: default
-Router add conf: None
-Router add pattern: /hello/(?P<name>[^/]+)
-Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /hello/(?P<name>[^/]+)
-Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)]}
---------------------------------------------------
-Router add rule: /<action>/<user>
+Router build builder: [(None, '/contact')]
+Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
+------------------------------
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/index'}
+Router match verb: GET
+Router match path: /index
+Router match methods: ('PROXY', 'GET', 'ANY')
+('index_handler', {})
+------------------------------
+Router add rule: /user/<id:int>
 Router add method: GET
-Router add target: target
-Router add name: name_3
-Router _itertokens rule: /<action>/<user>
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(1, 9), match='<action>'>
-Router _itertokens match.start(): 1
-Router _itertokens match.groups(): ('', None, None, None, 'action', None, None)
-Router _itertokens prefix: /
-Router _itertokens g: ('', None, None, None, 'action', None, None)
-Router add key: /
+Router add target: user_detail
+Router add name: None
+    Router _itertokens rule: /user/<id:int>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 14), match='<id:int>'>]
+    Router _itertokens prefix: /user/
+    Router _itertokens g: ('', None, None, None, 'id', 'int', None)
+Router add key: /user/
 Router add mode: None
 Router add conf: None
-Router add pattern: /
-Router add builder: [(None, '/')]
-Router add key: action
-Router add mode: default
-Router add conf: None
-Router add pattern: /(?P<action>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>)]
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(10, 16), match='<user>'>
-Router _itertokens match.start(): 10
-Router _itertokens match.groups(): ('', None, None, None, 'user', None, None)
-Router _itertokens prefix: /
-Router _itertokens g: ('', None, None, None, 'user', None, None)
-Router add key: /
-Router add mode: None
-Router add conf: None
-Router add pattern: /(?P<action>[^/]+)/
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/')]
-Router add key: user
-Router add mode: default
-Router add conf: None
-Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
---------------------------------------------------
-Router add rule: /object/<id:int>
-Router add method: POST
-Router add target: target
-Router add name: name_4
-Router _itertokens rule: /object/<id:int>
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(8, 16), match='<id:int>'>
-Router _itertokens match.start(): 8
-Router _itertokens match.groups(): ('', None, None, None, 'id', 'int', None)
-Router _itertokens prefix: /object/
-Router _itertokens g: ('', None, None, None, 'id', 'int', None)
-Router add key: /object/
-Router add mode: None
-Router add conf: None
-Router add pattern: /object/
-Router add builder: [(None, '/object/')]
+Router add pattern: /user/
+Router add builder: [(None, '/user/')]
+Router add key: /user/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: id
+    Router _itertokens filtr: int
+    Router _itertokens conf: None
 Router add key: id
 Router add mode: int
 Router add conf: None
-Router add pattern: /object/(?P<id>-?\d+)
-Router add builder: [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]
+Router add mask: -?\d+
+Router add in_filter: <class 'int'>
+Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>
+Router add pattern: /user/(?P<id>-?\d+)
+Router add builder: [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)]
+Router add key: id
+Router add keys: ['id']
+Router add filters: [('id', <class 'int'>)]
 Router add key: 
 Router add mode: None
 Router add conf: None
-Router add pattern: /object/(?P<id>-?\d+)
-Router add builder: [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]}
---------------------------------------------------
-Router add rule: /show/<name:re:[a-z]+>
-Router add method: PUT
-Router add target: target
-Router add name: name_5
-Router _itertokens rule: /show/<name:re:[a-z]+>
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(6, 22), match='<name:re:[a-z]+>'>
-Router _itertokens match.start(): 6
-Router _itertokens match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
-Router _itertokens prefix: /show/
-Router _itertokens g: ('', None, None, None, 'name', 're', '[a-z]+')
-Router add key: /show/
-Router add mode: None
-Router add conf: None
-Router add pattern: /show/
-Router add builder: [(None, '/show/')]
-Router add key: name
-Router add mode: re
-Router add conf: [a-z]+
-Router add pattern: /show/(?P<name>[a-z]+)
-Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
+Router add pattern: /user/(?P<id>-?\d+)
+Router add builder: [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)]
 Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /show/(?P<name>[a-z]+)
-Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], 'name_5': [(None, '/show/'), ('name', <class 'str'>)]}
---------------------------------------------------
-Router add rule: /static/<path:path>
+Router add keys: ['id']
+Router add filters: [('id', <class 'int'>)]
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)]}
+------------------------------
+Router add rule: /item/<price:float>
 Router add method: GET
-Router add target: target
-Router add name: name_6
-Router _itertokens rule: /static/<path:path>
-Router _itertokens 动态路由
-Router _itertokens match: <re.Match object; span=(8, 19), match='<path:path>'>
-Router _itertokens match.start(): 8
-Router _itertokens match.groups(): ('', None, None, None, 'path', 'path', None)
-Router _itertokens prefix: /static/
-Router _itertokens g: ('', None, None, None, 'path', 'path', None)
+Router add target: item_price
+Router add name: None
+    Router _itertokens rule: /item/<price:float>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 19), match='<price:float>'>]
+    Router _itertokens prefix: /item/
+    Router _itertokens g: ('', None, None, None, 'price', 'float', None)
+Router add key: /item/
+Router add mode: None
+Router add conf: None
+Router add pattern: /item/
+Router add builder: [(None, '/item/')]
+Router add key: /item/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: price
+    Router _itertokens filtr: float
+    Router _itertokens conf: None
+Router add key: price
+Router add mode: float
+Router add conf: None
+Router add mask: -?[\d.]+
+Router add in_filter: <class 'float'>
+Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>
+Router add pattern: /item/(?P<price>-?[\d.]+)
+Router add builder: [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)]
+Router add key: price
+Router add keys: ['price']
+Router add filters: [('price', <class 'float'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /item/(?P<price>-?[\d.]+)
+Router add builder: [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)]
+Router add key: 
+Router add keys: ['price']
+Router add filters: [('price', <class 'float'>)]
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)]}
+------------------------------
+Router add rule: /static/<file:path>
+Router add method: GET
+Router add target: static_file
+Router add name: None
+    Router _itertokens rule: /static/<file:path>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(8, 19), match='<file:path>'>]
+    Router _itertokens prefix: /static/
+    Router _itertokens g: ('', None, None, None, 'file', 'path', None)
 Router add key: /static/
 Router add mode: None
 Router add conf: None
 Router add pattern: /static/
 Router add builder: [(None, '/static/')]
-Router add key: path
+Router add key: /static/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: file
+    Router _itertokens filtr: path
+    Router _itertokens conf: None
+Router add key: file
 Router add mode: path
 Router add conf: None
-Router add pattern: /static/(?P<path>.+?)
-Router add builder: [(None, '/static/'), ('path', <class 'str'>)]
+Router add mask: .+?
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /static/(?P<file>.+?)
+Router add builder: [(None, '/static/'), ('file', <class 'str'>)]
+Router add key: file
+Router add keys: ['file']
+Router add filters: []
 Router add key: 
 Router add mode: None
 Router add conf: None
-Router add pattern: /static/(?P<path>.+?)
-Router add builder: [(None, '/static/'), ('path', <class 'str'>)]
-Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], 'name_5': [(None, '/show/'), ('name', <class 'str'>)], '/static/<path:path>': [(None, '/static/'), ('path', <class 'str'>)], 'name_6': [(None, '/static/'), ('path', <class 'str'>)]}
---------------------------------------------------
+Router add pattern: /static/(?P<file>.+?)
+Router add builder: [(None, '/static/'), ('file', <class 'str'>)]
+Router add key: 
+Router add keys: ['file']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)]}
+------------------------------
+Router add rule: /hello/<name>
+Router add method: GET
+Router add target: hello_detail
+Router add name: None
+    Router _itertokens rule: /hello/<name>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 13), match='<name>'>]
+    Router _itertokens prefix: /hello/
+    Router _itertokens g: ('', None, None, None, 'name', None, None)
+Router add key: /hello/
+Router add mode: None
+Router add conf: None
+Router add pattern: /hello/
+Router add builder: [(None, '/hello/')]
+Router add key: /hello/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: name
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: name
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /hello/(?P<name>[^/]+)
+Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
+Router add key: name
+Router add keys: ['name']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /hello/(?P<name>[^/]+)
+Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
+Router add key: 
+Router add keys: ['name']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)]}
+------------------------------
+Router add rule: /<action>/<user>
+Router add method: GET
+Router add target: action_handler1
+Router add name: None
+    Router _itertokens rule: /<action>/<user>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(1, 9), match='<action>'>, <re.Match object; span=(10, 16), match='<user>'>]
+    Router _itertokens prefix: /
+    Router _itertokens g: ('', None, None, None, 'action', None, None)
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /
+Router add builder: [(None, '/')]
+Router add key: /
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: action
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: action
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /(?P<action>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>)]
+Router add key: action
+Router add keys: ['action']
+Router add filters: []
+    Router _itertokens prefix: /
+    Router _itertokens g: ('', None, None, None, 'user', None, None)
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)/
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/')]
+Router add key: /
+Router add keys: ['action']
+Router add filters: []
+    Router _itertokens name: user
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: user
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add key: user
+Router add keys: ['action', 'user']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add key: 
+Router add keys: ['action', 'user']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
+------------------------------
+Router add rule: /action2/<action>/<user>
+Router add method: GET
+Router add target: action_handler2
+Router add name: None
+    Router _itertokens rule: /action2/<action>/<user>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(9, 17), match='<action>'>, <re.Match object; span=(18, 24), match='<user>'>]
+    Router _itertokens prefix: /action2/
+    Router _itertokens g: ('', None, None, None, 'action', None, None)
+Router add key: /action2/
+Router add mode: None
+Router add conf: None
+Router add pattern: /action2/
+Router add builder: [(None, '/action2/')]
+Router add key: /action2/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: action
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: action
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /action2/(?P<action>[^/]+)
+Router add builder: [(None, '/action2/'), ('action', <class 'str'>)]
+Router add key: action
+Router add keys: ['action']
+Router add filters: []
+    Router _itertokens prefix: /
+    Router _itertokens g: ('', None, None, None, 'user', None, None)
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /action2/(?P<action>[^/]+)/
+Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/')]
+Router add key: /
+Router add keys: ['action']
+Router add filters: []
+    Router _itertokens name: user
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: user
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /action2/(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add key: user
+Router add keys: ['action', 'user']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /action2/(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add key: 
+Router add keys: ['action', 'user']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
+------------------------------
+Router add rule: /show/<name:re:[a-z]+>
+Router add method: GET
+Router add target: show_handler
+Router add name: None
+    Router _itertokens rule: /show/<name:re:[a-z]+>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 22), match='<name:re:[a-z]+>'>]
+    Router _itertokens prefix: /show/
+    Router _itertokens g: ('', None, None, None, 'name', 're', '[a-z]+')
+Router add key: /show/
+Router add mode: None
+Router add conf: None
+Router add pattern: /show/
+Router add builder: [(None, '/show/')]
+Router add key: /show/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: name
+    Router _itertokens filtr: re
+    Router _itertokens conf: [a-z]+
+Router add key: name
+Router add mode: re
+Router add conf: [a-z]+
+Router add mask: [a-z]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /show/(?P<name>[a-z]+)
+Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
+Router add key: name
+Router add keys: ['name']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /show/(?P<name>[a-z]+)
+Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
+Router add key: 
+Router add keys: ['name']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)]}
+------------------------------
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/user/123'}
+Router match verb: GET
+Router match path: /user/123
+Router match methods: ('PROXY', 'GET', 'ANY')
+('user_detail', {'id': 123})
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/item/19.99'}
+Router match verb: GET
+Router match path: /item/19.99
+Router match methods: ('PROXY', 'GET', 'ANY')
+('item_price', {'price': 19.99})
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/static/img/logo.png'}
+Router match verb: GET
+Router match path: /static/img/logo.png
+Router match methods: ('PROXY', 'GET', 'ANY')
+('static_file', {'file': 'img/logo.png'})
+------------------------------
+Router add rule: /archive/<y:year>
+Router add method: GET
+Router add target: archive_handler
+Router add name: None
+    Router _itertokens rule: /archive/<y:year>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(9, 17), match='<y:year>'>]
+    Router _itertokens prefix: /archive/
+    Router _itertokens g: ('', None, None, None, 'y', 'year', None)
+Router add key: /archive/
+Router add mode: None
+Router add conf: None
+Router add pattern: /archive/
+Router add builder: [(None, '/archive/')]
+Router add key: /archive/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: y
+    Router _itertokens filtr: year
+    Router _itertokens conf: None
+Router add key: y
+Router add mode: year
+Router add conf: None
+Router add mask: \d{4}
+Router add in_filter: <class 'int'>
+Router add out_filter: <class 'str'>
+Router add pattern: /archive/(?P<y>\d{4})
+Router add builder: [(None, '/archive/'), ('y', <class 'str'>)]
+Router add key: y
+Router add keys: ['y']
+Router add filters: [('y', <class 'int'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /archive/(?P<y>\d{4})
+Router add builder: [(None, '/archive/'), ('y', <class 'str'>)]
+Router add key: 
+Router add keys: ['y']
+Router add filters: [('y', <class 'int'>)]
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)]}
+Router add rule: /page/<:int>
+Router add method: GET
+Router add target: page_handler
+Router add name: None
+    Router _itertokens rule: /page/<:int>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 12), match='<:int>'>]
+    Router _itertokens prefix: /page/
+    Router _itertokens g: ('', None, None, None, None, 'int', None)
+Router add key: /page/
+Router add mode: None
+Router add conf: None
+Router add pattern: /page/
+Router add builder: [(None, '/page/')]
+Router add key: /page/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: None
+    Router _itertokens filtr: int
+    Router _itertokens conf: None
+Router add key: None
+Router add mode: int
+Router add conf: None
+Router add mask: -?\d+
+Router add in_filter: <class 'int'>
+Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>
+Router add pattern: /page/(?:-?\d+)
+Router add builder: [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)]
+Router add key: anon0
+Router add keys: []
+Router add filters: [('anon0', <class 'int'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /page/(?:-?\d+)
+Router add builder: [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)]
+Router add key: 
+Router add keys: []
+Router add filters: [('anon0', <class 'int'>)]
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)]}
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/archive/2024'}
+Router match verb: GET
+Router match path: /archive/2024
+Router match methods: ('PROXY', 'GET', 'ANY')
+('action_handler1', {'action': 'archive', 'user': '2024'})
+Router add rule: /blog/<id:int>
+Router add method: GET
+Router add target: view_post
+Router add name: blog_post
+    Router _itertokens rule: /blog/<id:int>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 14), match='<id:int>'>]
+    Router _itertokens prefix: /blog/
+    Router _itertokens g: ('', None, None, None, 'id', 'int', None)
+Router add key: /blog/
+Router add mode: None
+Router add conf: None
+Router add pattern: /blog/
+Router add builder: [(None, '/blog/')]
+Router add key: /blog/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: id
+    Router _itertokens filtr: int
+    Router _itertokens conf: None
+Router add key: id
+Router add mode: int
+Router add conf: None
+Router add mask: -?\d+
+Router add in_filter: <class 'int'>
+Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>
+Router add pattern: /blog/(?P<id>-?\d+)
+Router add builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)]
+Router add key: id
+Router add keys: ['id']
+Router add filters: [('id', <class 'int'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /blog/(?P<id>-?\d+)
+Router add builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)]
+Router add key: 
+Router add keys: ['id']
+Router add filters: [('id', <class 'int'>)]
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)]}
+Router build _name: /blog/<id:int>
+Router build anons: ()
+Router build query: {'id': 100}
+Router build builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)]
+/blog/100
+Router build _name: blog_post
+Router build anons: ()
+Router build query: {'id': 100, 'section': 'comments'}
+Router build builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)]
+/blog/100?section=comments
+Router add rule: /api/data
+Router add method: POST
+Router add target: post_handler
+Router add name: None
+    Router _itertokens rule: /api/data
+    Router _itertokens self.rule_syntax.finditer(rule): []
+Router add key: /api/data
+Router add mode: None
+Router add conf: None
+Router add pattern: /api/data
+Router add builder: [(None, '/api/data')]
+Router add key: /api/data
+Router add keys: []
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], '/api/data': [(None, '/api/data')]}
+Router build _name: /api/data
+Router build anons: ()
+Router build query: {}
+Router build builder: [(None, '/api/data')]
+Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
+Router add rule: /api/data
+Router add method: GET
+Router add target: get_handler
+Router add name: None
+    Router _itertokens rule: /api/data
+    Router _itertokens self.rule_syntax.finditer(rule): []
+Router add key: /api/data
+Router add mode: None
+Router add conf: None
+Router add pattern: /api/data
+Router add builder: [(None, '/api/data')]
+Router add key: /api/data
+Router add keys: []
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], '/api/data': [(None, '/api/data')]}
+Router build _name: /api/data
+Router build anons: ()
+Router build query: {}
+Router build builder: [(None, '/api/data')]
+Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None), '/api/data': ('get_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/missing'}
+Router match verb: GET
+Router match path: /missing
+Router match methods: ('PROXY', 'GET', 'ANY')
+(404, "Not found: '/missing'")
+Router match environ: {'REQUEST_METHOD': 'DELETE', 'PATH_INFO': '/api/data'}
+Router match verb: DELETE
+Router match path: /api/data
+Router match methods: ('PROXY', 'DELETE', 'ANY')
+(405, 'Method not allowed.') Allow: GET,POST
+Router add rule: /alpha/<v1>
+Router add method: GET
+Router add target: target1
+Router add name: None
+    Router _itertokens rule: /alpha/<v1>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 11), match='<v1>'>]
+    Router _itertokens prefix: /alpha/
+    Router _itertokens g: ('', None, None, None, 'v1', None, None)
+Router add key: /alpha/
+Router add mode: None
+Router add conf: None
+Router add pattern: /alpha/
+Router add builder: [(None, '/alpha/')]
+Router add key: /alpha/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: v1
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: v1
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /alpha/(?P<v1>[^/]+)
+Router add builder: [(None, '/alpha/'), ('v1', <class 'str'>)]
+Router add key: v1
+Router add keys: ['v1']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /alpha/(?P<v1>[^/]+)
+Router add builder: [(None, '/alpha/'), ('v1', <class 'str'>)]
+Router add key: 
+Router add keys: ['v1']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)]}
+Router add rule: /beta/<v2>
+Router add method: GET
+Router add target: target2
+Router add name: None
+    Router _itertokens rule: /beta/<v2>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 10), match='<v2>'>]
+    Router _itertokens prefix: /beta/
+    Router _itertokens g: ('', None, None, None, 'v2', None, None)
+Router add key: /beta/
+Router add mode: None
+Router add conf: None
+Router add pattern: /beta/
+Router add builder: [(None, '/beta/')]
+Router add key: /beta/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: v2
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: v2
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /beta/(?P<v2>[^/]+)
+Router add builder: [(None, '/beta/'), ('v2', <class 'str'>)]
+Router add key: v2
+Router add keys: ['v2']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /beta/(?P<v2>[^/]+)
+Router add builder: [(None, '/beta/'), ('v2', <class 'str'>)]
+Router add key: 
+Router add keys: ['v2']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)], '/beta/<v2>': [(None, '/beta/'), ('v2', <class 'str'>)]}
+Router add rule: /gamma/<v3>
+Router add method: GET
+Router add target: target3
+Router add name: None
+    Router _itertokens rule: /gamma/<v3>
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 11), match='<v3>'>]
+    Router _itertokens prefix: /gamma/
+    Router _itertokens g: ('', None, None, None, 'v3', None, None)
+Router add key: /gamma/
+Router add mode: None
+Router add conf: None
+Router add pattern: /gamma/
+Router add builder: [(None, '/gamma/')]
+Router add key: /gamma/
+Router add keys: []
+Router add filters: []
+    Router _itertokens name: v3
+    Router _itertokens filtr: None
+    Router _itertokens conf: None
+Router add key: v3
+Router add mode: default
+Router add conf: None
+Router add mask: [^/]+
+Router add in_filter: None
+Router add out_filter: None
+Router add pattern: /gamma/(?P<v3>[^/]+)
+Router add builder: [(None, '/gamma/'), ('v3', <class 'str'>)]
+Router add key: v3
+Router add keys: ['v3']
+Router add filters: []
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /gamma/(?P<v3>[^/]+)
+Router add builder: [(None, '/gamma/'), ('v3', <class 'str'>)]
+Router add key: 
+Router add keys: ['v3']
+Router add filters: []
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7afc0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b1a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b6a0>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f3460a7b7e0>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)], '/beta/<v2>': [(None, '/beta/'), ('v2', <class 'str'>)], '/gamma/<v3>': [(None, '/gamma/'), ('v3', <class 'str'>)]}
+Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/beta/hello'}
+Router match verb: GET
+Router match path: /beta/hello
+Router match methods: ('PROXY', 'GET', 'ANY')
+('action_handler1', {'action': 'beta', 'user': 'hello'})

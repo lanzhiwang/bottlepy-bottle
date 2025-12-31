@@ -461,24 +461,60 @@ class Router(object):
     The path-rule is either a static path (e.g. `/contact`) or a dynamic
     path that contains wildcards (e.g. `/wiki/<page>`). The wildcard syntax
     and details on the matching order are described in docs:`routing`.
+
+    Router 类是 Bottle 框架的核心组件. 它不仅是一个简单的 URL 到函数的映射器, 更是一个经过高度优化的高性能路由引擎.
+    它巧妙地利用了正则表达式的"合并不确定有限自动机"(NFA)特性, 将路由匹配的时间复杂度从 O(N) 降低到了接近 O(1) 的量级.
+
+    核心设计思想: 为什么要这样写?
+    1. 静态与动态路由分离: 大部分 Web 应用的路由是静态的(如 /index). 代码优先检查 self.static 字典(O(1)), 只有匹配失败才会去跑复杂的正则.
+    2. 正则合并优化(Merged Regex): 这是 Bottle 路由最精才的部分.
+       如果我有 100 条动态路由, 通常做法是循环 100 次 re.match. Bottle 将它们合并成一个巨大的正则表达式: (^/user/(?P<id>\\d+)$)|(^/wiki/(?P<page>.+)$)|....
+       通过一次正则扫描就能找到匹配项, 利用 match.lastindex 确定是第几个路由.
+    3. 正则分组限制处理: Python 的 re 模块限制一个正则表达式最多只能有 99 个分组. Bottle 通过 _MAX_GROUPS_PER_PATTERN 将路由分块(Chunks), 每 99 个一组, 平衡了性能与限制.
+    4. 双向映射: 不仅支持"路径 -> 目标", 还支持通过 build 方法实现"路由名/规则 -> 路径"的反向生成.
     """
 
+    # 默认通配符匹配模式: 匹配非斜杠的任意字符
     default_pattern = "[^/]+"
     default_filter = "re"
 
     #: The current CPython regexp implementation does not allow more
     #: than 99 matching groups per regular expression.
+    # CPython 正则限制: 一个表达式中不能有超过 99 个匹配分组
+    # _MAX_GROUPS_PER_PATTERN 的必要性
+    # CPython 的 re 模块在内部解析时, 为每个括号分组分配编号. 由于历史原因和内存布局限制, 一旦分组超过 99 个, 编译就会报错.
+    # Bottle 通过将 1000 条路由拆分成 11 个合并正则块(10个满载, 1个残余), 在不违反 Python 限制的前提下, 依然获得了极致的性能.
     _MAX_GROUPS_PER_PATTERN = 99
 
     def __init__(self, strict=False):
-        self.rules = []  # All rules in order
-        self._groups = {}  # index of regexes to find them in dyna_routes
-        self.builder = {}  # Data structure for the url builder
-        self.static = {}  # Search structure for static routes
+        # All rules in order
+        # 按顺序存储所有规则
+        self.rules = []
+
+        # index of regexes to find them in dyna_routes
+        # 快速定位正则在 dyna_routes 中的索引
+        self._groups = {}
+
+        # Data structure for the url builder
+        # 用于反向生成 URL 的数据结构
+        self.builder = {}
+
+        # Search structure for static routes
+        # 静态路由搜索树 {method: {path: target}}
+        self.static = {}
+
+        # 动态路由原始数据
         self.dyna_routes = {}
-        self.dyna_regexes = {}  # Search structure for dynamic routes
+
+        # Search structure for dynamic routes
+        # 编译后的合并正则表达式块
+        self.dyna_regexes = {}
+
         #: If true, static routes are no longer checked first.
+        # 如果为 True, 静态路由也将按照添加顺序与动态路由混合匹配
         self.strict_order = strict
+
+        # 过滤器定义: 将路径通配符映射为 (正则表达式, 转换函数, 反向转换函数)
         self.filters = {
             "re": lambda conf: (_re_flatten(conf or self.default_pattern), None, None),
             "int": lambda conf: (r"-?\d+", int, lambda x: str(int(x))),
@@ -487,23 +523,46 @@ class Router(object):
         }
 
     def add_filter(self, name, func):
-        """Add a filter. The provided function is called with the configuration
+        """
+        Add a filter. The provided function is called with the configuration
         string as parameter and must return a (regexp, to_python, to_url) tuple.
-        The first element is a string, the last two are callables or None."""
+        The first element is a string, the last two are callables or None.
+
+        add_filter 允许开发者自定义类型转换. 比如:
+
+        router.add_filter('user_id', lambda conf: (r'u_\\d+', lambda x: int(x[2:]), None))
+
+        # 路由定义: /profile/<uid:user_id>
+        # 路径输入: /profile/u_123
+        # 结果输出: {'uid': 123}
+        """
         self.filters[name] = func
 
+    # 用于解析路由语法的正则表达式: 支持 :name, :name#re#, <name>, <name:filter>, <name:filter:conf>
     rule_syntax = re.compile(
-        "(\\\\*)"
-        "(?:(?::([a-zA-Z_][a-zA-Z_0-9]*)?()(?:#(.*?)#)?)"
-        "|(?:<([a-zA-Z_][a-zA-Z_0-9]*)?(?::([a-zA-Z_]*)"
+        "(\\\\*)"  # 匹配转义斜杠
+        "(?:(?::([a-zA-Z_][a-zA-Z_0-9]*)?()(?:#(.*?)#)?)"  # 兼容旧语法 :name#re#
+        "|(?:<([a-zA-Z_][a-zA-Z_0-9]*)?(?::([a-zA-Z_]*)"  # 新语法 <name:filter:conf>
         "(?::((?:\\\\.|[^\\\\>])+)?)?)?>))"
     )
 
     def _itertokens(self, rule):
+        """
+        迭代器: 将字符串规则拆分为 (变量名, 过滤器名, 过滤配置) 的标记流
+        """
+        print(f"    Router _itertokens rule: {rule}")
+
         offset, prefix = 0, ""
+        print(
+            f"    Router _itertokens self.rule_syntax.finditer(rule): {list(self.rule_syntax.finditer(rule))}"
+        )
         for match in self.rule_syntax.finditer(rule):
             prefix += rule[offset : match.start()]
             g = match.groups()
+            print(f"    Router _itertokens prefix: {prefix}")
+            print(f"    Router _itertokens g: {g}")
+
+            # 处理旧语法警告(:name)
             if g[2] is not None:
                 depr(
                     0,
@@ -512,62 +571,109 @@ class Router(object):
                     "Use <name> instead of :name in routes.",
                     stacklevel=4,
                 )
-            if len(g[0]) % 2:  # Escaped wildcard
+
+            # Escaped wildcard
+            # 处理转义: 如果通配符前有奇数个反斜杠, 说明它是被转义的普通字符
+            if len(g[0]) % 2:
                 prefix += match.group(0)[len(g[0]) :]
                 offset = match.end()
                 continue
+
+            # 返回静态部分
             if prefix:
                 yield prefix, None, None
+
+            # 提取通配符名称、过滤器类型和配置
             name, filtr, conf = g[4:7] if g[2] is None else g[1:4]
+            print(f"    Router _itertokens name: {name}")
+            print(f"    Router _itertokens filtr: {filtr}")
+            print(f"    Router _itertokens conf: {conf}")
             yield name, filtr or "default", conf or None
             offset, prefix = match.end(), ""
         if offset <= len(rule) or prefix:
             yield prefix + rule[offset:], None, None
 
     def add(self, rule, method, target, name=None):
-        """Add a new rule or replace the target for an existing rule."""
-        anons = 0  # Number of anonymous wildcards found
-        keys = []  # Names of keys
-        pattern = ""  # Regular expression pattern with named groups
-        filters = []  # Lists of wildcard input filters
-        builder = []  # Data structure for the URL builder
+        """
+        Add a new rule or replace the target for an existing rule.
+        添加一个新路由.
+        核心逻辑: 将路径规则转换为正则表达式
+        """
+        print(f"Router add rule: {rule}")
+        print(f"Router add method: {method}")
+        print(f"Router add target: {target}")
+        print(f"Router add name: {name}")
+
+        # Number of anonymous wildcards found
+        # 匿名通配符计数
+        anons = 0
+        # Names of keys
+        # 变量名列表
+        keys = []
+        # Regular expression pattern with named groups
+        # 逐步构建的正则表达式
+        pattern = ""
+        # Lists of wildcard input filters
+        # 输入转换过滤器
+        filters = []
+        # Data structure for the URL builder
+        # 用于反向构建 URL 的结构
+        builder = []
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
-            if mode:
+            print(f"Router add key: {key}")
+            print(f"Router add mode: {mode}")
+            print(f"Router add conf: {conf}")
+
+            if mode:  # 这是一个动态通配符部分
                 is_static = False
                 if mode == "default":
                     mode = self.default_filter
+                # 获取该过滤器的正则掩码和转换器
                 mask, in_filter, out_filter = self.filters[mode](conf)
-                if not key:
+                print(f"Router add mask: {mask}")
+                print(f"Router add in_filter: {in_filter}")
+                print(f"Router add out_filter: {out_filter}")
+                if not key:  # 匿名通配符 < :int >
                     pattern += "(?:%s)" % mask
                     key = "anon%d" % anons
                     anons += 1
-                else:
+                else:  # 有名通配符 <id:int> -> (?P<id>-?\d+)
                     pattern += "(?P<%s>%s)" % (key, mask)
                     keys.append(key)
                 if in_filter:
                     filters.append((key, in_filter))
                 builder.append((key, out_filter or str))
-            elif key:
+            elif key:  # 这是一个静态路径字符串部分
                 pattern += re.escape(key)
                 builder.append((None, key))
+            print(f"Router add pattern: {pattern}")
+            print(f"Router add builder: {builder}")
+            print(f"Router add key: {key}")
+            print(f"Router add keys: {keys}")
+            print(f"Router add filters: {filters}")
 
-        self.builder[rule] = builder
+        self.builder[rule] = builder  # 存储以便反向生成
         if name:
             self.builder[name] = builder
+        print(f"Router add self.builder: {self.builder}")
 
+        # 优化: 如果是纯静态路由且非严格顺序模式, 存入静态字典以实现 O(1) 查询
         if is_static and not self.strict_order:
             self.static.setdefault(method, {})
             self.static[method][self.build(rule)] = (target, None)
+            print(f"Router add self.static: {self.static}")
             return
 
+        # 编译并测试生成的正则表达式是否合法
         try:
             re_pattern = re.compile("^(%s)$" % pattern)
             re_match = re_pattern.match
         except re.error as e:
             raise RouteSyntaxError("Could not add Route: %s (%s)" % (rule, e))
 
+        # 生成参数获取逻辑 (getargs): 负责将正则匹配到的字符串转换为 Python 类型(如 int)
         if filters:
 
             def getargs(path):
@@ -587,6 +693,7 @@ class Router(object):
         else:
             getargs = None
 
+        # 将路由信息存入动态路由表
         flatpat = _re_flatten(pattern)
         whole_rule = (rule, flatpat, target, getargs)
 
@@ -594,19 +701,37 @@ class Router(object):
             if DEBUG:
                 msg = "Route <%s %s> overwrites a previously defined route"
                 warnings.warn(msg % (method, rule), RuntimeWarning, stacklevel=3)
+            # 如果定义了重复的规则, 则覆盖旧的
             self.dyna_routes[method][self._groups[flatpat, method]] = whole_rule
         else:
             self.dyna_routes.setdefault(method, []).append(whole_rule)
             self._groups[flatpat, method] = len(self.dyna_routes[method]) - 1
 
+        # 增量编译: 将当前的动态路由列表重新编译成合并后的正则表达式块
         self._compile(method)
 
     def _compile(self, method):
+        """
+        性能核心: 将多个路由的正则表达式合并为一个.
+        例如: Route1: ^/a$, Route2: ^/b$ -> 合并为 (^/a$)|(^/b$)
+
+        _compile 中的正则合并逻辑
+        如果你有如下路由:
+        /user/<id:int> -> ^/user/(?P<id>-?\\d+)$
+        /static/<file:path> -> ^/static/(?P<file>.+?)$
+        Bottle 会将其编译为:
+        (^/user/(?P<id>-?\\d+)$)|(^/static/(?P<file>.+?)$)
+        当路径为 /user/123 时, 正则表达式匹配成功. 由于它是第一个分支, match.lastindex 为 1. 程序立刻知道应该调用 rules[0] 对应的目标函数.
+        这种方式避开了 Python for 循环逐个匹配的开销, 将匹配压力交给了经过 C 语言优化的 re 引擎.
+        """
         all_rules = self.dyna_routes[method]
         comborules = self.dyna_regexes[method] = []
         maxgroups = self._MAX_GROUPS_PER_PATTERN
+
+        # 按 99 个一组进行分块处理
         for x in range(0, len(all_rules), maxgroups):
             some = all_rules[x : x + maxgroups]
+            # 合并正则分支
             combined = (flatpat for (_, flatpat, _, _) in some)
             combined = "|".join("(^%s$)" % flatpat for flatpat in combined)
             combined = re.compile(combined).match
@@ -615,40 +740,101 @@ class Router(object):
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
+        print(f"Router build _name: {_name}")
+        print(f"Router build anons: {anons}")
+        print(f"Router build query: {query}")
+
         builder = self.builder.get(_name)
+        print(f"Router build builder: {builder}")
+
         if not builder:
             raise RouteBuildError("No route with that name.", _name)
         try:
             for i, value in enumerate(anons):
                 query["anon%d" % i] = value
-            url = "".join([f(query.pop(n)) if n else f for (n, f) in builder])
-            return url if not query else url + "?" + urlencode(query)
+
+            # url = "".join([f(query.pop(n)) if n else f for (n, f) in builder])
+            # return url if not query else url + "?" + urlencode(query)
+
+            parts = []  # 用于存储 URL 的各个片段
+            for name, filter_or_static in builder:
+                if name:
+                    # 这是一个动态部分(通配符)
+                    # name 是变量名(如 'id'), filter_or_static 是转换函数(如 str 或 lambda)
+
+                    # 从用户传入的 query 字典中取出对应的值并删除(pop)
+                    raw_value = query.pop(name)
+
+                    # 调用转换函数(比如将 int 转为 str), 并将结果添加到列表中
+                    processed_value = filter_or_static(raw_value)
+                    parts.append(processed_value)
+                else:
+                    # 这是一个静态部分(普通的字符串路径)
+                    # 此时 name 为 None, filter_or_static 就是路径字符串本身
+                    parts.append(filter_or_static)
+            # 最后将所有片段拼接成完整的 URL 路径
+            url = "".join(parts)
+
+            # 检查 query 字典是否为空
+            if not query:
+                # 如果没有剩余参数, 直接返回生成的路径部分
+                return url
+            else:
+                # 如果还有剩余参数, 将它们编码为 URL 查询字符串(例如: key1=val1&key2=val2)
+                query_string = urlencode(query)
+
+                # 将编码后的字符串追加到路径后面, 用 "?" 分隔
+                full_url = url + "?" + query_string
+                return full_url
+
         except KeyError as E:
             raise RouteBuildError("Missing URL argument: %r" % E.args[0])
 
     def match(self, environ):
-        """Return a (target, url_args) tuple or raise HTTPError(400/404/405)."""
+        """
+        Return a (target, url_args) tuple or raise HTTPError(400/404/405).
+        路由匹配核心逻辑:
+        1. 检查静态路由字典.
+        2. 依次检查动态路由合并块.
+        """
+
+        print(f"Router match environ: {environ}")
+
         verb = environ["REQUEST_METHOD"].upper()
         path = environ["PATH_INFO"] or "/"
 
+        # 兼容 HEAD 请求(通常映射到 GET)和 PROXY 模式
         methods = (
             ("PROXY", "HEAD", "GET", "ANY")
             if verb == "HEAD"
             else ("PROXY", verb, "ANY")
         )
+        print(f"Router match verb: {verb}")
+        print(f"Router match path: {path}")
+        print(f"Router match methods: {methods}")
 
         for method in methods:
+            # A. 快速尝试静态匹配
             if method in self.static and path in self.static[method]:
                 target, getargs = self.static[method][path]
                 return target, getargs(path) if getargs else {}
+            # B. 尝试合并正则匹配
             elif method in self.dyna_regexes:
                 for combined, rules in self.dyna_regexes[method]:
                     match = combined(path)
                     if match:
+                        """
+                        重点: match.lastindex 指示了合并正则中哪一个分支(即哪一个路由)匹配成功
+                        在合并正则中, 每个路由都被包裹在 (^...$) 括号内.
+                        如果第一个路由匹配, lastindex = 1
+                        如果第二个路由匹配, lastindex = 2
+                        这是 Bottle 能够瞬间定位目标函数的秘密武器.
+                        """
                         target, getargs = rules[match.lastindex - 1]
                         return target, getargs(path) if getargs else {}
 
         # No matching route found. Collect alternative methods for 405 response
+        # C. 处理 405 Method Not Allowed 或 404
         allowed = set([])
         nocheck = set(methods)
         for method in set(self.static) - nocheck:
@@ -4632,7 +4818,7 @@ def load(target, **namespace):
     expression. Keyword arguments passed to this function are available as
     local variables. Example: ``import_string('re:compile(x)', x='[a-z]')``
 
-    load 函数是 Python 动态编程的一个典型缩影，常见于 Bottle 框架的内部工具集。它的核心任务是将字符串转换为活生生的 Python 对象。这在插件系统、动态路由或配置驱动的开发中极其有用。
+    load 函数是 Python 动态编程的一个典型缩影, 常见于 Bottle 框架的内部工具集. 它的核心任务是将字符串转换为活生生的 Python 对象. 这在插件系统、动态路由或配置驱动的开发中极其有用.
 
     """
     print(f"load target: {target}")
@@ -4718,6 +4904,8 @@ def run(
 
     :param app: WSGI application or target string supported by
            :func:`load_app`. (default: :func:`default_app`)
+    WSGI 应用对象, 或者是字符串形式的导入路径(如 'myapp:app')
+
     :param server: Server adapter to use. See :data:`server_names` keys
            for valid names or pass a :class:`ServerAdapter` subclass.
            (default: `wsgiref`)
@@ -4729,45 +4917,102 @@ def run(
     :param interval: Auto-reloader interval in seconds (default: 1)
     :param quiet: Suppress output to stdout and stderr? (default: False)
     :param options: Options passed to the server adapter.
+
+    这段 run 函数是 Bottle 框架的核心入口. 它不仅仅是启动一个 Web 服务器, 还巧妙地实现了热重载(Auto-reloading)、插件集成、多种服务器适配器支持等工业级特性.
+    1. 核心设计架构: 主从进程模型 (Master-Worker Model)
+    这段代码最精彩的部分在于它对 reloader=True 的处理. 它采用了"父进程监控, 子进程运行"的模式:
+    主进程 (Master): 不运行 Web 应用, 只负责通过 subprocess 启动子进程. 它循环监控子进程的返回状态.
+    子进程 (Worker/Child): 真正加载应用代码并运行服务器. 它内部开启一个线程监控文件变化, 一旦代码改变, 子进程退出并返回特殊状态码(3), 告诉父进程"请重启我".
+    为什么要这么写?
+    彻底刷新状态: 在同一个进程内热重载会导致单例对象、全局变量、已加载的 C 扩展模块难以完全重置. 通过重启整个进程, 可以确保代码在一个"干净"的环境下重新加载.
+    稳定性: 子进程崩溃不会导致整个服务无法通过热重载恢复.
     """
+
+    print(f"run app: {app}")
+    print(f"run server: {server}")
+    print(f"run host: {host}")
+    print(f"run port: {port}")
+    print(f"run interval: {interval}")
+    print(f"run reloader: {reloader}")
+    print(f"run quiet: {quiet}")
+    print(f"run plugins: {plugins}")
+    print(f"run debug: {debug}")
+    print(f"run config: {config}")
+    print(f"run kargs: {kargs}")
+
+    # 如果全局变量 NORUN 为 True, 则直接退出(通常用于单元测试或特定环境)
+    print(f"run NORUN: {NORUN}")
     if NORUN:
         return
+
+    # --- 阶段 1: 热重载 - 主进程 (Master Process) 逻辑 ---
+    # 如果开启了 reloader, 且当前不是子进程(即这是第一次运行)
+    print(f'run os.environ.get("BOTTLE_CHILD"): {os.environ.get("BOTTLE_CHILD")}')
     if reloader and not os.environ.get("BOTTLE_CHILD"):
         import subprocess
 
+        # 创建一个临时锁文件, 用于父子进程间的"存活信号"通信
         fd, lockfile = tempfile.mkstemp(prefix="bottle.", suffix=".lock")
         environ = os.environ.copy()
-        environ["BOTTLE_CHILD"] = "true"
-        environ["BOTTLE_LOCKFILE"] = lockfile
+        environ["BOTTLE_CHILD"] = "true"  # 标记下一个进程为子进程
+        environ["BOTTLE_LOCKFILE"] = lockfile  # 告诉子进程锁文件的位置
+
+        # 构造重启命令: [当前python解释器, 脚本名, 原始参数...]
         args = [sys.executable] + sys.argv
+        """
+        print(sys.executable)
+        /root/miniconda3/envs/bottle_python_3_12/bin/python
+        print(sys.argv)
+        ['/root/bottle/examples/howto.py']
+        print(args)
+        ['/root/miniconda3/envs/bottle_python_3_12/bin/python', '/root/bottle/examples/howto.py']
+        """
+
         # If a package was loaded with `python -m`, then `sys.argv` needs to be
         # restored to the original value, or imports might break. See #1336
+        # 兼容性处理: 如果脚本是通过 `python -m pkg` 启动的, 需要还原 -m 参数
+        # 否则重启后导入路径可能会出错
+        """
+        print(sys.modules.get("__main__"))
+        <module '__main__' from '/root/bottle/examples/howto.py'>
+        getattr(sys.modules.get("__main__"), "__package__", None)
+        ''
+        """
         if getattr(sys.modules.get("__main__"), "__package__", None):
             args[1:1] = ["-m", sys.modules["__main__"].__package__]
 
         try:
-            os.close(fd)  # We never write to this file
-            while os.path.exists(lockfile):
-                p = subprocess.Popen(args, env=environ)
-                while p.poll() is None:
-                    os.utime(lockfile, None)  # Tell child we are still alive
+            # We never write to this file 锁文件只需存在即可, 父进程不写入内容
+            os.close(fd)
+            while os.path.exists(lockfile):  # 只要锁文件存在, 就持续运行/重启子进程
+                p = subprocess.Popen(args, env=environ)  # 启动子进程
+                while p.poll() is None:  # 子进程运行期间
+                    # Tell child we are still alive 更新锁文件的修改时间(mtime), 告诉子进程"父进程还活着"
+                    os.utime(lockfile, None)
                     time.sleep(interval)
-                if p.returncode == 3:  # Child wants to be restarted
+                # Child wants to be restarted 关键: 如果子进程退出状态码是 3, 表示代码发生了变动, 需要重启
+                if p.returncode == 3:
                     continue
+                # 如果是其他状态码(如 0 或错误), 则彻底退出
                 sys.exit(p.returncode)
         except KeyboardInterrupt:
+            # 捕获 Ctrl+C, 优雅退出
             pass
         finally:
+            # 清理锁文件
             if os.path.exists(lockfile):
                 os.unlink(lockfile)
         return
 
+    # --- 阶段 2: 服务器启动 - 子进程 (Child Process) 或普通模式逻辑 ---
     try:
+        # 设置调试模式
         if debug is not None:
             _debug(debug)
+        # 1. 准备 WSGI App
         app = app or default_app()
         if isinstance(app, basestring):
-            app = load_app(app)
+            app = load_app(app)  # 支持字符串加载, 如 'myapp:app'
         if not callable(app):
             raise ValueError("Application is not callable: %r" % app)
 
@@ -4801,21 +5046,29 @@ def run(
             _stderr("Hit Ctrl-C to quit.\n")
 
         if reloader:
+            # 如果是子进程运行, 开启文件检查线程
             lockfile = os.environ.get("BOTTLE_LOCKFILE")
             bgcheck = FileCheckerThread(lockfile, interval)
-            with bgcheck:
+            with bgcheck:  # 使用上下文管理器启动线程
                 server.run(app)
+            # 如果 bgcheck 发现文件改变, 设置状态为 reload
             if bgcheck.status == "reload":
-                sys.exit(3)
+                sys.exit(3)  # 退出并返回 3, 触发父进程重启
         else:
             server.run(app)
+
+    # --- 阶段 3: 异常处理 ---
     except KeyboardInterrupt:
         pass
     except (SystemExit, MemoryError):
+        # 关键系统错误或主动退出, 直接向上抛出
         raise
     except:
+        # 在非热重载模式下, 抛出异常
         if not reloader:
             raise
+        # 在热重载模式下, 如果发生崩溃, 打印错误并强制重启进程
+        # 这保证了即使代码有语法错误, 你修改并保存后, 服务器依然能自动恢复
         if not getattr(server, "quiet", quiet):
             print_exc()
         time.sleep(interval)

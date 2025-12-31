@@ -300,17 +300,7 @@ print(5, "----------------" * 10)
 # my_dict = {"number": "123", "street": "Fake St.", "city": "Fakeville"}
 # print(template("I live at {{number}} {{street}}, {{city}}", **my_dict))
 
-
-# @route("/hello")
-# @route("/hello/<name>")
-# @view("hello_template")
-# def hello(name="World"):
-#     return dict(name=name)
-
-
 print(6, "----------------" * 10)
 
 
-run(host="localhost", port=8080)
-
-print(7, "----------------" * 10)
+run(host="127.0.0.1", port=8080, reloader=True)
