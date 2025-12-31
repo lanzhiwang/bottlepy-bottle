@@ -12,7 +12,7 @@ def load(target, **namespace):
     expression. Keyword arguments passed to this function are available as
     local variables. Example: ``import_string('re:compile(x)', x='[a-z]')``
 
-    load 函数是 Python 动态编程的一个典型缩影，常见于 Bottle 框架的内部工具集。它的核心任务是将字符串转换为活生生的 Python 对象。这在插件系统、动态路由或配置驱动的开发中极其有用。
+    load 函数是 Python 动态编程的一个典型缩影, 常见于 Bottle 框架的内部工具集. 它的核心任务是将字符串转换为活生生的 Python 对象. 这在插件系统、动态路由或配置驱动的开发中极其有用.
 
     """
     print(f"load target: {target}")
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     print("-------" * 10)
 
-    # 动态编译正则表达式，x 是通过关键字参数传入 eval 命名空间的
+    # 动态编译正则表达式, x 是通过关键字参数传入 eval 命名空间的
     regex = load("re:compile(x)", x="^[0-9]+$")
     print(regex.match("12345"))  # <re.Match object; ...>
 

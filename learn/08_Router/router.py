@@ -1,4 +1,5 @@
 import re, warnings
+from urllib.parse import urlencode
 
 DEBUG = True
 
@@ -25,6 +26,20 @@ def _re_flatten(p):
         lambda m: m.group(0) if len(m.group(1)) % 2 else m.group(1) + "(?:",
         p,
     )
+
+
+class BottleException(Exception):
+    """A base class for exceptions used by bottle."""
+
+    pass
+
+
+class RouteError(BottleException):
+    """This is a base class for all routing related exceptions"""
+
+
+class RouteSyntaxError(RouteError):
+    """The route parser found something not supported by this router."""
 
 
 class Router(object):
@@ -76,21 +91,20 @@ class Router(object):
     )
 
     def _itertokens(self, rule):
-        print(f"            Router _itertokens rule: {rule}")
+        print(f"Router _itertokens rule: {rule}")
 
-        print(
-            f"            Router _itertokens self.rule_syntax.finditer(rule): {self.rule_syntax.finditer(rule)}"
-        )
         offset, prefix = 0, ""
         for match in self.rule_syntax.finditer(rule):
-            print(f"            Router _itertokens match: {match}")
-            print(f"            Router _itertokens match.start(): {match.start()}")
-            print(f"            Router _itertokens match.groups(): {match.groups()}")
+            print(f"Router _itertokens 动态路由")
+            print(f"Router _itertokens match: {match}")
 
+            print(f"Router _itertokens match.start(): {match.start()}")
+            print(f"Router _itertokens match.groups(): {match.groups()}")
             prefix += rule[offset : match.start()]
             g = match.groups()
-            print(f"            Router _itertokens prefix: {prefix}")
-            print(f"            Router _itertokens g: {g}")
+            print(f"Router _itertokens prefix: {prefix}")
+            print(f"Router _itertokens g: {g}")
+
             if g[2] is not None:
                 depr(
                     0,
@@ -99,6 +113,7 @@ class Router(object):
                     "Use <name> instead of :name in routes.",
                     stacklevel=4,
                 )
+
             if len(g[0]) % 2:  # Escaped wildcard
                 prefix += match.group(0)[len(g[0]) :]
                 offset = match.end()
@@ -108,16 +123,17 @@ class Router(object):
             name, filtr, conf = g[4:7] if g[2] is None else g[1:4]
             yield name, filtr or "default", conf or None
             offset, prefix = match.end(), ""
+
         if offset <= len(rule) or prefix:
             yield prefix + rule[offset:], None, None
 
     def add(self, rule, method, target, name=None):
         """Add a new rule or replace the target for an existing rule."""
 
-        print(f"        Router add rule: {rule}")
-        print(f"        Router add method: {method}")
-        print(f"        Router add target: {target}")  # target 就是 route 对象本身
-        print(f"        Router add name: {name}")
+        print(f"Router add rule: {rule}")
+        print(f"Router add method: {method}")
+        print(f"Router add target: {target}")
+        print(f"Router add name: {name}")
 
         anons = 0  # Number of anonymous wildcards found
         keys = []  # Names of keys
@@ -127,9 +143,15 @@ class Router(object):
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
-            print(f"        Router add key: {key}")
-            print(f"        Router add mode: {mode}")
-            print(f"        Router add conf: {conf}")
+            print(f"Router add key: {key}")
+            print(f"Router add mode: {mode}")
+            print(f"Router add conf: {conf}")
+
+            """
+            如果 mode 是 None, 说明匹配的是 url 中的静态部分
+            如果 mode 不是 None, 说明匹配的是 url 中的动态部分, 也就是 filtr
+            """
+
             if mode:
                 is_static = False
                 if mode == "default":
@@ -148,14 +170,18 @@ class Router(object):
             elif key:
                 pattern += re.escape(key)
                 builder.append((None, key))
+            print(f"Router add pattern: {pattern}")
+            print(f"Router add builder: {builder}")
 
         self.builder[rule] = builder
         if name:
             self.builder[name] = builder
+        print(f"Router add self.builder: {self.builder}")
 
         if is_static and not self.strict_order:
             self.static.setdefault(method, {})
             self.static[method][self.build(rule)] = (target, None)
+            print(f"Router add self.static: {self.static}")
             return
 
         try:
@@ -211,7 +237,15 @@ class Router(object):
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
+
+        print(f"Router build _name: {_name}")
+        print(f"Router build anons: {anons}")
+        print(f"Router build query: {query}")
+
+        print(f"Router build self.builder: {self.builder}")
         builder = self.builder.get(_name)
+        print(f"Router build builder: {builder}")
+
         if not builder:
             raise RouteBuildError("No route with that name.", _name)
         try:
@@ -263,85 +297,20 @@ class Router(object):
         raise HTTPError(404, "Not found: " + repr(path))
 
 
-r = Router()
-
-
-def add(rule, target, method="GET", **ka):
-    print(f"    add rule: {rule}")
-    # target 就是 route 对象本身
-    # 这里直接使用 rule 字符串代替
-    print(f"    add target: {target}")
-    print(f"    add method: {method}")
-    print(f"    add ka: {ka}")
-
-    # router.add(route.rule, route.method, route, name=route.name)
-    # target 就是 route 对象本身
-    r.add(rule, method, target, **ka)
-
-
-def match(url, method="GET"):
-    print(f"    match url: {url}")
-    print(f"    match method: {method}")
-
-    env = {"PATH_INFO": url, "REQUEST_METHOD": method}
-    print(f"    match env: {env}")
-    result = r.match(env)
-    print(f"    match result: {result}")
-    return result
-
-
-def assertMatches(rule, url, method="GET", **args):
-    print(f"assertMatches rule: {rule}")
-    print(f"assertMatches url: {url}")
-    print(f"assertMatches method: {method}")
-    print(f"assertMatches args: {args}")
-
-    add(rule, rule, method)
-    target, urlargs = match(url, method)
-
-    print(f"assertMatches target: {target}")
-    print(f"assertMatches urlargs: {urlargs}")
-
-
 if __name__ == "__main__":
-    print(r)
-    assertMatches("/static", "/static")
-    print("--------" * 10)
-    assertMatches(
-        "/\\:its/:#.+#/:test/:name#[a-z]+#/",
-        "/:its/a/cruel/world/",
-        test="cruel",
-        name="world",
-    )
-    print("--------" * 10)
-    # assertMatches("/:test", "/test", test="test")  # No tail
-    # assertMatches(":test/", "test/", test="test")  # No head
-    # assertMatches("/:test/", "/test/", test="test")  # Middle
-    # assertMatches(":test", "test", test="test")  # Full wildcard
-    # assertMatches("/:#anon#/match", "/anon/match")  # Anon wildcards
-    # assertMatches("/static", "/static")
-    # assertMatches(
-    #     "/\\<its>/<:re:.+>/<test>/<name:re:[a-z]+>/",
-    #     "/<its>/a/cruel/world/",
-    #     test="cruel",
-    #     name="world",
-    # )
-    # assertMatches("/<test>", "/test", test="test")  # No tail
-    # assertMatches("<test>/", "test/", test="test")  # No head
-    # assertMatches("/<test>/", "/test/", test="test")  # Middle
-    # assertMatches("<test>", "test", test="test")  # Full wildcard
-    # assertMatches("/<:re:anon>/match", "/anon/match")  # Anon wildcards
-    # assertMatches("/uni/<x>", "/uni/瓶", x="瓶")
-    # assertMatches("/object/<id:int>", "/object/567", id=567)
-
-    # assertMatches("/object/<id:float>", "/object/1", id=1)
-    # assertMatches("/object/<id:float>", "/object/1.1", id=1.1)
-    # assertMatches("/object/<id:float>", "/object/.1", id=0.1)
-    # assertMatches("/object/<id:float>", "/object/1.", id=1)
-    # assertMatches("/<id:path>/:f", "/a/b", id="a", f="b")
-    # assertMatches("/<id:path>", "/a", id="a")
-    # assertMatches("/alpha/:abc", "/alpha/alpha", abc="alpha")
-    # assertMatches("/alnum/:md5", "/alnum/sha1", md5="sha1")
-    # assertMatches("/func(:param)", "/func(foo)", param="foo")
-    # assertMatches("/func2(:param#(foo|bar)#)", "/func2(foo)", param="foo")
-    # assertMatches("/func2(:param#(foo|bar)#)", "/func2(bar)", param="bar")
+    r = Router()
+    # add(self, rule, method, target, name=None):
+    rules = [
+        "/",
+        "/hello",
+        "/hello/<name>",
+        "/<action>/<user>",
+        "/object/<id:int>",
+        "/show/<name:re:[a-z]+>",
+        "/static/<path:path>",
+    ]
+    methods = ["GET", "POST", "PUT", "GET", "POST", "PUT", "GET"]
+    name = None
+    for i in range(len(rules)):
+        r.add(rules[i], methods[i], "target", f"name_{i}")
+        print("-----" * 10)

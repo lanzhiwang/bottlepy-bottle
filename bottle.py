@@ -1561,6 +1561,8 @@ class Bottle(object):
 
     def __call__(self, environ, start_response):
         """Each instance of :class:'Bottle' is a WSGI application."""
+        print(f"Bottle __call__ environ: {environ}")
+        print(f"Bottle __call__ start_response: {start_response}")
         return self.wsgi(environ, start_response)
 
     def __enter__(self):

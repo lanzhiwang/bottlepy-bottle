@@ -137,8 +137,8 @@ param2 = app.config.get("myapp.param2", "fallback value")
 print(f"param: {param}")
 print(f"param2: {param2}")
 
-app.install(SomePlugin())
-app.install(stopwatch)
+# app.install(SomePlugin())
+# app.install(stopwatch)
 """
 print(app._global_config)
 {}
@@ -240,14 +240,6 @@ print(app._hooks)
 print(4, "----------------" * 10)
 
 
-# An example route using configuration values
-@app.route("/about", view="about.rst")
-def about():
-    email = app.config.get("my.email", "nomail@example.com")
-    admin_user = request.app.config["myapp.admin_user"]
-    return {"admin_user": admin_user, "email": email}
-
-
 def list_filter(config):
     """Matches a comma separated list of numbers."""
     delimiter = config or ","
@@ -265,45 +257,9 @@ def list_filter(config):
 app.router.add_filter("list", list_filter)
 
 
-@app.route("/follow/<ids:list>")
-def follow_users(ids):
-    return ids
-
-
 @app.route("/hello")
 def hello():
     return "Hello World!"
-
-
-@app.route("/")
-@app.route("/hello/<name>")
-def greet(name="Stranger"):
-    return template("Hello {{name}}, how are you?", name=name)
-
-
-@app.route("/wiki/<pagename>")  # matches /wiki/Learning_Python
-def show_wiki_page(pagename):
-    pass
-
-
-@app.route("/<action>/<user>")  # matches /follow/defnull
-def user_api(action, user):
-    pass
-
-
-@app.route("/object/<id:int>")
-def callback(id):
-    assert isinstance(id, int)
-
-
-@app.route("/show/<name:re:[a-z]+>")
-def callback(name):
-    assert name.isalpha()
-
-
-@app.route("/static/<path:path>")
-def callback(path):
-    return static_file(path, ...)
 
 
 # This example handles POST requests to '/hello_post'
@@ -311,6 +267,14 @@ def callback(path):
 def hello_post():
     name = request.POST["name"]
     return "Hello %s!" % name
+
+
+# An example route using configuration values
+@app.route("/about", view="about.rst")
+def about():
+    email = app.config.get("my.email", "nomail@example.com")
+    admin_user = request.app.config["myapp.admin_user"]
+    return {"admin_user": admin_user, "email": email}
 
 
 print(f"app.routes: {app.routes}")
@@ -328,23 +292,25 @@ print(f"app.router.filters: {app.router.filters}")
 print(5, "----------------" * 10)
 
 
-tpl = SimpleTemplate("Hello {{name}}!")
-print(tpl.render(name="World"))
+# tpl = SimpleTemplate("Hello {{name}}!")
+# print(tpl.render(name="World"))
 
-print(template("Hello {{name}}!", name="World"))
+# print(template("Hello {{name}}!", name="World"))
 
-my_dict = {"number": "123", "street": "Fake St.", "city": "Fakeville"}
-print(template("I live at {{number}} {{street}}, {{city}}", **my_dict))
+# my_dict = {"number": "123", "street": "Fake St.", "city": "Fakeville"}
+# print(template("I live at {{number}} {{street}}, {{city}}", **my_dict))
 
 
-@route("/hello")
-@route("/hello/<name>")
-@view("hello_template")
-def hello(name="World"):
-    return dict(name=name)
+# @route("/hello")
+# @route("/hello/<name>")
+# @view("hello_template")
+# def hello(name="World"):
+#     return dict(name=name)
 
 
 print(6, "----------------" * 10)
 
 
 run(host="localhost", port=8080)
+
+print(7, "----------------" * 10)

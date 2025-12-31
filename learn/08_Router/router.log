@@ -1,92 +1,192 @@
-/root/bottle/learn/08_Router/router.py:279: DeprecationWarning: Warning: Use of deprecated feature or API. (Deprecated in Bottle-0.13)
-Cause: Use of old route syntax.
-Fix: Use <name> instead of :name in routes.
-
-  r.add(rule, method, target, **ka)
-<__main__.Router object at 0x7f2829b7d730>
-assertMatches rule: /static
-assertMatches url: /static
-assertMatches method: GET
-assertMatches args: {}
-    add rule: /static
-    add target: /static
-    add method: GET
-    add ka: {}
-        Router add rule: /static
-        Router add method: GET
-        Router add target: /static
-        Router add name: None
-            Router _itertokens rule: /static
-            Router _itertokens self.rule_syntax.finditer(rule): <callable_iterator object at 0x7f2829b0ae00>
-        Router add key: /static
-        Router add mode: None
-        Router add conf: None
-    match url: /static
-    match method: GET
-    match env: {'PATH_INFO': '/static', 'REQUEST_METHOD': 'GET'}
-    match result: ('/static', {})
-assertMatches target: /static
-assertMatches urlargs: {}
---------------------------------------------------------------------------------
-assertMatches rule: /\:its/:#.+#/:test/:name#[a-z]+#/
-assertMatches url: /:its/a/cruel/world/
-assertMatches method: GET
-assertMatches args: {'test': 'cruel', 'name': 'world'}
-    add rule: /\:its/:#.+#/:test/:name#[a-z]+#/
-    add target: /\:its/:#.+#/:test/:name#[a-z]+#/
-    add method: GET
-    add ka: {}
-        Router add rule: /\:its/:#.+#/:test/:name#[a-z]+#/
-        Router add method: GET
-        Router add target: /\:its/:#.+#/:test/:name#[a-z]+#/
-        Router add name: None
-            Router _itertokens rule: /\:its/:#.+#/:test/:name#[a-z]+#/
-            Router _itertokens self.rule_syntax.finditer(rule): <callable_iterator object at 0x7f2829b0b370>
-            Router _itertokens match: <re.Match object; span=(1, 6), match='\\:its'>
-            Router _itertokens match.start(): 1
-            Router _itertokens match.groups(): ('\\', 'its', '', None, None, None, None)
-            Router _itertokens prefix: /
-            Router _itertokens g: ('\\', 'its', '', None, None, None, None)
-            Router _itertokens match: <re.Match object; span=(7, 12), match=':#.+#'>
-            Router _itertokens match.start(): 7
-            Router _itertokens match.groups(): ('', None, '', '.+', None, None, None)
-            Router _itertokens prefix: /:its/
-            Router _itertokens g: ('', None, '', '.+', None, None, None)
-        Router add key: /:its/
-        Router add mode: None
-        Router add conf: None
-        Router add key: None
-        Router add mode: default
-        Router add conf: .+
-            Router _itertokens match: <re.Match object; span=(13, 18), match=':test'>
-            Router _itertokens match.start(): 13
-            Router _itertokens match.groups(): ('', 'test', '', None, None, None, None)
-            Router _itertokens prefix: /
-            Router _itertokens g: ('', 'test', '', None, None, None, None)
-        Router add key: /
-        Router add mode: None
-        Router add conf: None
-        Router add key: test
-        Router add mode: default
-        Router add conf: None
-            Router _itertokens match: <re.Match object; span=(19, 32), match=':name#[a-z]+#'>
-            Router _itertokens match.start(): 19
-            Router _itertokens match.groups(): ('', 'name', '', '[a-z]+', None, None, None)
-            Router _itertokens prefix: /
-            Router _itertokens g: ('', 'name', '', '[a-z]+', None, None, None)
-        Router add key: /
-        Router add mode: None
-        Router add conf: None
-        Router add key: name
-        Router add mode: default
-        Router add conf: [a-z]+
-        Router add key: /
-        Router add mode: None
-        Router add conf: None
-    match url: /:its/a/cruel/world/
-    match method: GET
-    match env: {'PATH_INFO': '/:its/a/cruel/world/', 'REQUEST_METHOD': 'GET'}
-    match result: ('/\\:its/:#.+#/:test/:name#[a-z]+#/', {'test': 'cruel', 'name': 'world'})
-assertMatches target: /\:its/:#.+#/:test/:name#[a-z]+#/
-assertMatches urlargs: {'test': 'cruel', 'name': 'world'}
---------------------------------------------------------------------------------
+Router add rule: /
+Router add method: GET
+Router add target: target
+Router add name: name_0
+Router _itertokens rule: /
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /
+Router add builder: [(None, '/')]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')]}
+Router build _name: /
+Router build anons: ()
+Router build query: {}
+Router build self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')]}
+Router build builder: [(None, '/')]
+Router add self.static: {'GET': {'/': ('target', None)}}
+--------------------------------------------------
+Router add rule: /hello
+Router add method: POST
+Router add target: target
+Router add name: name_1
+Router _itertokens rule: /hello
+Router add key: /hello
+Router add mode: None
+Router add conf: None
+Router add pattern: /hello
+Router add builder: [(None, '/hello')]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')]}
+Router build _name: /hello
+Router build anons: ()
+Router build query: {}
+Router build self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')]}
+Router build builder: [(None, '/hello')]
+Router add self.static: {'GET': {'/': ('target', None)}, 'POST': {'/hello': ('target', None)}}
+--------------------------------------------------
+Router add rule: /hello/<name>
+Router add method: PUT
+Router add target: target
+Router add name: name_2
+Router _itertokens rule: /hello/<name>
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(7, 13), match='<name>'>
+Router _itertokens match.start(): 7
+Router _itertokens match.groups(): ('', None, None, None, 'name', None, None)
+Router _itertokens prefix: /hello/
+Router _itertokens g: ('', None, None, None, 'name', None, None)
+Router add key: /hello/
+Router add mode: None
+Router add conf: None
+Router add pattern: /hello/
+Router add builder: [(None, '/hello/')]
+Router add key: name
+Router add mode: default
+Router add conf: None
+Router add pattern: /hello/(?P<name>[^/]+)
+Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /hello/(?P<name>[^/]+)
+Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)]}
+--------------------------------------------------
+Router add rule: /<action>/<user>
+Router add method: GET
+Router add target: target
+Router add name: name_3
+Router _itertokens rule: /<action>/<user>
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(1, 9), match='<action>'>
+Router _itertokens match.start(): 1
+Router _itertokens match.groups(): ('', None, None, None, 'action', None, None)
+Router _itertokens prefix: /
+Router _itertokens g: ('', None, None, None, 'action', None, None)
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /
+Router add builder: [(None, '/')]
+Router add key: action
+Router add mode: default
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>)]
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(10, 16), match='<user>'>
+Router _itertokens match.start(): 10
+Router _itertokens match.groups(): ('', None, None, None, 'user', None, None)
+Router _itertokens prefix: /
+Router _itertokens g: ('', None, None, None, 'user', None, None)
+Router add key: /
+Router add mode: None
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)/
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/')]
+Router add key: user
+Router add mode: default
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
+Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
+--------------------------------------------------
+Router add rule: /object/<id:int>
+Router add method: POST
+Router add target: target
+Router add name: name_4
+Router _itertokens rule: /object/<id:int>
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(8, 16), match='<id:int>'>
+Router _itertokens match.start(): 8
+Router _itertokens match.groups(): ('', None, None, None, 'id', 'int', None)
+Router _itertokens prefix: /object/
+Router _itertokens g: ('', None, None, None, 'id', 'int', None)
+Router add key: /object/
+Router add mode: None
+Router add conf: None
+Router add pattern: /object/
+Router add builder: [(None, '/object/')]
+Router add key: id
+Router add mode: int
+Router add conf: None
+Router add pattern: /object/(?P<id>-?\d+)
+Router add builder: [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /object/(?P<id>-?\d+)
+Router add builder: [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)]}
+--------------------------------------------------
+Router add rule: /show/<name:re:[a-z]+>
+Router add method: PUT
+Router add target: target
+Router add name: name_5
+Router _itertokens rule: /show/<name:re:[a-z]+>
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(6, 22), match='<name:re:[a-z]+>'>
+Router _itertokens match.start(): 6
+Router _itertokens match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+Router _itertokens prefix: /show/
+Router _itertokens g: ('', None, None, None, 'name', 're', '[a-z]+')
+Router add key: /show/
+Router add mode: None
+Router add conf: None
+Router add pattern: /show/
+Router add builder: [(None, '/show/')]
+Router add key: name
+Router add mode: re
+Router add conf: [a-z]+
+Router add pattern: /show/(?P<name>[a-z]+)
+Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /show/(?P<name>[a-z]+)
+Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], 'name_5': [(None, '/show/'), ('name', <class 'str'>)]}
+--------------------------------------------------
+Router add rule: /static/<path:path>
+Router add method: GET
+Router add target: target
+Router add name: name_6
+Router _itertokens rule: /static/<path:path>
+Router _itertokens 动态路由
+Router _itertokens match: <re.Match object; span=(8, 19), match='<path:path>'>
+Router _itertokens match.start(): 8
+Router _itertokens match.groups(): ('', None, None, None, 'path', 'path', None)
+Router _itertokens prefix: /static/
+Router _itertokens g: ('', None, None, None, 'path', 'path', None)
+Router add key: /static/
+Router add mode: None
+Router add conf: None
+Router add pattern: /static/
+Router add builder: [(None, '/static/')]
+Router add key: path
+Router add mode: path
+Router add conf: None
+Router add pattern: /static/(?P<path>.+?)
+Router add builder: [(None, '/static/'), ('path', <class 'str'>)]
+Router add key: 
+Router add mode: None
+Router add conf: None
+Router add pattern: /static/(?P<path>.+?)
+Router add builder: [(None, '/static/'), ('path', <class 'str'>)]
+Router add self.builder: {'/': [(None, '/')], 'name_0': [(None, '/')], '/hello': [(None, '/hello')], 'name_1': [(None, '/hello')], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], 'name_2': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], 'name_3': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/object/<id:int>': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], 'name_4': [(None, '/object/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f1647106520>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], 'name_5': [(None, '/show/'), ('name', <class 'str'>)], '/static/<path:path>': [(None, '/static/'), ('path', <class 'str'>)], 'name_6': [(None, '/static/'), ('path', <class 'str'>)]}
+--------------------------------------------------
