@@ -1,0 +1,324 @@
+/root/bottle/learn/08_Router/router_01.py:10: SyntaxWarning: invalid escape sequence '\<'
+  "/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
+/root/bottle/learn/08_Router/router_01.py:12: SyntaxWarning: invalid escape sequence '\<'
+  "/\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>",
+/root/bottle/learn/08_Router/router_01.py:22: DeprecationWarning: Warning: Use of deprecated feature or API. (Deprecated in Bottle-0.13)
+Cause: Use of old route syntax.
+Fix: Use <name> instead of :name in routes.
+
+  router.add(rules[i], method, f"handler_{i}", name=f"name_{i}")
+添加一个新路由
+Router add rule: /index
+Router add method: GET
+Router add target: handler_0
+Router add name: name_0
+    _itertokens (/index, None, None)
+    Router add anons: 0
+    Router add keys: []
+    Router add pattern: /index
+    Router add filters: []
+    Router add builder: [(None, '/index')]
+    Router add is_static: True
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')]}
+Router add self.static: {'GET': {'/index': ('handler_0', None)}}
+添加一个新路由
+Router add rule: /contact
+Router add method: POST
+Router add target: handler_1
+Router add name: name_1
+    _itertokens (/contact, None, None)
+    Router add anons: 0
+    Router add keys: []
+    Router add pattern: /contact
+    Router add filters: []
+    Router add builder: [(None, '/contact')]
+    Router add is_static: True
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')]}
+Router add self.static: {'GET': {'/index': ('handler_0', None)}, 'POST': {'/contact': ('handler_1', None)}}
+添加一个新路由
+Router add rule: /user1/<id:int>/name/<name1:re:[a-z]+>
+Router add method: PUT
+Router add target: handler_2
+Router add name: name_2
+    _itertokens (/user1/, None, None)
+    _itertokens (id, int, None)
+        Router add mask: -?\d+
+        Router add in_filter: <class 'int'>
+        Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>
+    _itertokens (/name/, None, None)
+    _itertokens (name1, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 0
+    Router add keys: ['id', 'name1']
+    Router add pattern: /user1/(?P<id>-?\d+)/name/(?P<name1>[a-z]+)
+    Router add filters: [('id', <class 'int'>)]
+    Router add builder: [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)]}
+Router add whole_rule: ('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)
+Router add self._groups: {}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0}
+Router _compile method: PUT
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)]}
+Router _compile self.dyna_regexes: {}
+Router _compile self.dyna_regexes: {'PUT': []}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])]
+添加一个新路由
+Router add rule: /user2/:id/name/:re
+Router add method: GET
+Router add target: handler_3
+Router add name: name_3
+    _itertokens (/user2/, None, None)
+    _itertokens (id, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/name/, None, None)
+    _itertokens (re, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 0
+    Router add keys: ['id', 're']
+    Router add pattern: /user2/(?P<id>[^/]+)/name/(?P<re>[^/]+)
+    Router add filters: []
+    Router add builder: [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)]}
+Router add whole_rule: ('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0}
+Router _compile method: GET
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': []}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])]
+添加一个新路由
+Router add rule: /<its0>/<:re:.+>/<test>/<name:re:[a-z]+>
+Router add method: POST
+Router add target: handler_4
+Router add name: name_4
+    _itertokens (/, None, None)
+    _itertokens (its0, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (None, re, .+)
+        Router add mask: .+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (test, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (name, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 1
+    Router add keys: ['its0', 'test', 'name']
+    Router add pattern: /(?P<its0>[^/]+)/(?:.+)/(?P<test>[^/]+)/(?P<name>[a-z]+)
+    Router add filters: []
+    Router add builder: [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], '/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_4': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0}
+Router _compile method: POST
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': []}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]
+添加一个新路由
+Router add rule: /\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>
+Router add method: PUT
+Router add target: handler_5
+Router add name: name_5
+    _itertokens (/<its1>/, None, None)
+    _itertokens (None, re, .+)
+        Router add mask: .+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (test, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (name, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 1
+    Router add keys: ['test', 'name']
+    Router add pattern: /<its1>/(?:.+)/(?P<test>[^/]+)/(?P<name>[a-z]+)
+    Router add filters: []
+    Router add builder: [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], '/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_4': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_5': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1}
+Router _compile method: PUT
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x7f2caf9dfdc0>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile self.dyna_regexes: {'PUT': [], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])]
+添加一个新路由
+Router add rule: /\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>
+Router add method: GET
+Router add target: handler_6
+Router add name: name_6
+    _itertokens (/<its2>/, None, None)
+    _itertokens (None, re, .+)
+        Router add mask: .+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (test, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (name, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 1
+    Router add keys: ['test', 'name']
+    Router add pattern: /<its2>/(?:.+)/(?P<test>[^/]+)/(?P<name>[a-z]+)
+    Router add filters: []
+    Router add builder: [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], '/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_4': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_5': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_6': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1, ('/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'GET'): 1}
+Router _compile method: GET
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x7f2caf8ce8f0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])]
+添加一个新路由
+Router add rule: /\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>
+Router add method: POST
+Router add target: handler_7
+Router add name: name_7
+    _itertokens (/, None, None)
+    _itertokens (its3, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (None, re, .+)
+        Router add mask: .+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (test, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (name, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 1
+    Router add keys: ['its3', 'test', 'name']
+    Router add pattern: /(?P<its3>[^/]+)/(?:.+)/(?P<test>[^/]+)/(?P<name>[a-z]+)
+    Router add filters: []
+    Router add builder: [(None, '/'), ('its3', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], '/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_4': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_5': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_6': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its3', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_7': [(None, '/'), ('its3', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1, ('/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'GET'): 1}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1, ('/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'GET'): 1}
+Router _compile method: POST
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_4', <function Router.add.<locals>.getargs at 0x7f2caeba6200>)])]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': []}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)])]
+添加一个新路由
+Router add rule: /\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>
+Router add method: PUT
+Router add target: handler_8
+Router add name: name_8
+    _itertokens (/, None, None)
+    _itertokens (its4, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (None, re, .+)
+        Router add mask: .+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (test, default, None)
+        Router add mask: [^/]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (/, None, None)
+    _itertokens (name, re, [a-z]+)
+        Router add mask: [a-z]+
+        Router add in_filter: None
+        Router add out_filter: None
+    _itertokens (, None, None)
+    Router add anons: 1
+    Router add keys: ['its4', 'test', 'name']
+    Router add pattern: /(?P<its4>[^/]+)/(?:.+)/(?P<test>[^/]+)/(?P<name>[a-z]+)
+    Router add filters: []
+    Router add builder: [(None, '/'), ('its4', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]
+    Router add is_static: False
+    _itertokens
+Router add self.builder: {'/index': [(None, '/index')], 'name_0': [(None, '/index')], '/contact': [(None, '/contact')], 'name_1': [(None, '/contact')], '/user1/<id:int>/name/<name1:re:[a-z]+>': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], 'name_2': [(None, '/user1/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2caeba62a0>), (None, '/name/'), ('name1', <class 'str'>)], '/user2/:id/name/:re': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], 'name_3': [(None, '/user2/'), ('id', <class 'str'>), (None, '/name/'), ('re', <class 'str'>)], '/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_4': [(None, '/'), ('its0', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_5': [(None, '/<its1>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_6': [(None, '/<its2>/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its3', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_7': [(None, '/'), ('its3', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], '/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>': [(None, '/'), ('its4', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)], 'name_8': [(None, '/'), ('its4', <class 'str'>), (None, '/'), ('anon0', <class 'str'>), (None, '/'), ('test', <class 'str'>), (None, '/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_8', <function Router.add.<locals>.getargs at 0x7f2caeba63e0>)
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1, ('/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'GET'): 1}
+Router add self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>), ('/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_8', <function Router.add.<locals>.getargs at 0x7f2caeba63e0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)]}
+Router add self._groups: {('/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'PUT'): 0, ('/user2/(?:[^/]+)/name/(?:[^/]+)', 'GET'): 0, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'POST'): 0, ('/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 1, ('/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'GET'): 1, ('/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'PUT'): 2}
+Router _compile method: PUT
+Router _compile self.dyna_routes: {'PUT': [('/user1/<id:int>/name/<name1:re:[a-z]+>', '/user1/(?:-?\\d+)/name/(?:[a-z]+)', 'handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('/\\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its1>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>), ('/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_8', <function Router.add.<locals>.getargs at 0x7f2caeba63e0>)], 'GET': [('/user2/:id/name/:re', '/user2/(?:[^/]+)/name/(?:[^/]+)', 'handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>', '/<its2>/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)], 'POST': [('/\\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>', '/(?:[^/]+)/(?:.+)/(?:[^/]+)/(?:[a-z]+)', 'handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)]}
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53be10>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)])]}
+Router _compile self.dyna_regexes: {'PUT': [], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)])]}
+Router _compile comborules: []
+Router _compile self.dyna_regexes: {'PUT': [(<built-in method match of re.Pattern object at 0x1b53ca20>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>), ('handler_8', <function Router.add.<locals>.getargs at 0x7f2caeba63e0>)])], 'GET': [(<built-in method match of re.Pattern object at 0x1b7064e0>, [('handler_3', <function Router.add.<locals>.getargs at 0x7f2caeba6520>), ('handler_6', <function Router.add.<locals>.getargs at 0x7f2caeba6700>)])], 'POST': [(<built-in method match of re.Pattern object at 0x7f2caed1d690>, [('handler_7', <function Router.add.<locals>.getargs at 0x7f2caeba6660>)])]}
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x1b53ca20>, [('handler_2', <function Router.add.<locals>.getargs at 0x7f2caeba6480>), ('handler_5', <function Router.add.<locals>.getargs at 0x7f2caeba65c0>), ('handler_8', <function Router.add.<locals>.getargs at 0x7f2caeba63e0>)])]

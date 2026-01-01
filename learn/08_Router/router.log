@@ -1,3 +1,9 @@
+/root/bottle/learn/08_Router/router.py:26: DeprecationWarning: Warning: Use of deprecated feature or API. (Deprecated in Bottle-0.13)
+Cause: Use of old route syntax.
+Fix: Use <name> instead of :name in routes.
+
+  router.add("//old/:name", "POST", "old_handler")
+1 ------------------------------
 添加一个新路由
 Router add rule: /index
 Router add method: GET
@@ -6,16 +12,21 @@ Router add name: None
     拆分路由规则
     Router _itertokens rule: /index
     Router _itertokens self.rule_syntax.finditer(rule): []
+    Router _itertokens self.rule_syntax.finditer(rule): 0
 路由拆分完成
 Router add key: /index
 Router add mode: None
 Router add conf: None
 这是一个静态路径字符串部分
-Router add pattern: /index
-Router add builder: [(None, '/index')]
 Router add key: /index
+Router add mode: None
+Router add conf: None
+Router add anons: 0
 Router add keys: []
+Router add pattern: /index
 Router add filters: []
+Router add builder: [(None, '/index')]
+Router add is_static: True
 Router add self.builder: {'/index': [(None, '/index')]}
 反向解析
 Router build _name: /index
@@ -24,26 +35,31 @@ Router build query: {}
 Router build builder: [(None, '/index')]
 Router build url: /index
 Router add self.static: {'GET': {'/index': ('index_handler', None)}}
-------------------------------
+2 ------------------------------
 添加一个新路由
 Router add rule: /contact
 Router add method: GET
 Router add target: contact_handler
-Router add name: None
+Router add name: contact_route
     拆分路由规则
     Router _itertokens rule: /contact
     Router _itertokens self.rule_syntax.finditer(rule): []
+    Router _itertokens self.rule_syntax.finditer(rule): 0
 路由拆分完成
 Router add key: /contact
 Router add mode: None
 Router add conf: None
 这是一个静态路径字符串部分
-Router add pattern: /contact
-Router add builder: [(None, '/contact')]
 Router add key: /contact
+Router add mode: None
+Router add conf: None
+Router add anons: 0
 Router add keys: []
+Router add pattern: /contact
 Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')]}
+Router add builder: [(None, '/contact')]
+Router add is_static: True
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], 'contact_route': [(None, '/contact')]}
 反向解析
 Router build _name: /contact
 Router build anons: ()
@@ -51,7 +67,7 @@ Router build query: {}
 Router build builder: [(None, '/contact')]
 Router build url: /contact
 Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
-------------------------------
+3 ------------------------------
 请求匹配
 Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/index'}
 Router match verb: GET
@@ -59,958 +75,66 @@ Router match path: /index
 Router match methods: ('PROXY', 'GET', 'ANY')
 Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
 Router match self.dyna_regexes: {}
+Router match target: index_handler
+Router match getargs: None
 ('index_handler', {})
-------------------------------
+4 ------------------------------
 添加一个新路由
-Router add rule: /user/<id:int>
-Router add method: GET
-Router add target: user_detail
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /user/<id:int>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 14), match='<id:int>'>]
-    Router _itertokens prefix: /user/
-    Router _itertokens g: ('', None, None, None, 'id', 'int', None)
-路由拆分完成
-Router add key: /user/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /user/
-Router add builder: [(None, '/user/')]
-Router add key: /user/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: id
-    Router _itertokens filtr: int
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: id
-Router add mode: int
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: -?\d+
-Router add in_filter: <class 'int'>
-Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>
-Router add pattern: /user/(?P<id>-?\d+)
-Router add builder: [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)]
-Router add key: id
-Router add keys: ['id']
-Router add filters: [('id', <class 'int'>)]
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /user/(?P<id>-?\d+)
-Router add builder: [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)]
-Router add key: 
-Router add keys: ['id']
-Router add filters: [('id', <class 'int'>)]
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)]}
-Router add whole_rule: ('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)
-Router add self._groups: {}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)]}
-Router _compile self.dyna_regexes: {}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2b94d5d360>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)])]
-------------------------------
-添加一个新路由
-Router add rule: /item/<price:float>
-Router add method: GET
-Router add target: item_price
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /item/<price:float>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 19), match='<price:float>'>]
-    Router _itertokens prefix: /item/
-    Router _itertokens g: ('', None, None, None, 'price', 'float', None)
-路由拆分完成
-Router add key: /item/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /item/
-Router add builder: [(None, '/item/')]
-Router add key: /item/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: price
-    Router _itertokens filtr: float
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: price
-Router add mode: float
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: -?[\d.]+
-Router add in_filter: <class 'float'>
-Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>
-Router add pattern: /item/(?P<price>-?[\d.]+)
-Router add builder: [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)]
-Router add key: price
-Router add keys: ['price']
-Router add filters: [('price', <class 'float'>)]
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /item/(?P<price>-?[\d.]+)
-Router add builder: [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)]
-Router add key: 
-Router add keys: ['price']
-Router add filters: [('price', <class 'float'>)]
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)]}
-Router add whole_rule: ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x7f2b94d5d360>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2b94375300>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)])]
-------------------------------
-添加一个新路由
-Router add rule: /static/<file:path>
-Router add method: GET
-Router add target: static_file
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /static/<file:path>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(8, 19), match='<file:path>'>]
-    Router _itertokens prefix: /static/
-    Router _itertokens g: ('', None, None, None, 'file', 'path', None)
-路由拆分完成
-Router add key: /static/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /static/
-Router add builder: [(None, '/static/')]
-Router add key: /static/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: file
-    Router _itertokens filtr: path
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: file
-Router add mode: path
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: .+?
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /static/(?P<file>.+?)
-Router add builder: [(None, '/static/'), ('file', <class 'str'>)]
-Router add key: file
-Router add keys: ['file']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /static/(?P<file>.+?)
-Router add builder: [(None, '/static/'), ('file', <class 'str'>)]
-Router add key: 
-Router add keys: ['file']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)]}
-Router add whole_rule: ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x7f2b94375300>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca44240>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)])]
-------------------------------
-添加一个新路由
-Router add rule: /hello/<name>
-Router add method: GET
-Router add target: hello_detail
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /hello/<name>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 13), match='<name>'>]
-    Router _itertokens prefix: /hello/
-    Router _itertokens g: ('', None, None, None, 'name', None, None)
-路由拆分完成
-Router add key: /hello/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /hello/
-Router add builder: [(None, '/hello/')]
-Router add key: /hello/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: name
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: name
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /hello/(?P<name>[^/]+)
-Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
-Router add key: name
-Router add keys: ['name']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /hello/(?P<name>[^/]+)
-Router add builder: [(None, '/hello/'), ('name', <class 'str'>)]
-Router add key: 
-Router add keys: ['name']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)]}
-Router add whole_rule: ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca44240>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3c7d3660>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)])]
-------------------------------
-添加一个新路由
-Router add rule: /<action>/<user>
-Router add method: GET
-Router add target: action_handler1
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /<action>/<user>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(1, 9), match='<action>'>, <re.Match object; span=(10, 16), match='<user>'>]
-    Router _itertokens prefix: /
-    Router _itertokens g: ('', None, None, None, 'action', None, None)
-路由拆分完成
-Router add key: /
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /
-Router add builder: [(None, '/')]
-Router add key: /
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: action
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: action
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /(?P<action>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>)]
-Router add key: action
-Router add keys: ['action']
-Router add filters: []
-    Router _itertokens prefix: /
-    Router _itertokens g: ('', None, None, None, 'user', None, None)
-路由拆分完成
-Router add key: /
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /(?P<action>[^/]+)/
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/')]
-Router add key: /
-Router add keys: ['action']
-Router add filters: []
-    Router _itertokens name: user
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: user
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add key: user
-Router add keys: ['action', 'user']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add key: 
-Router add keys: ['action', 'user']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
-Router add whole_rule: ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3c7d3660>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3c8754b0>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)])]
-------------------------------
-添加一个新路由
-Router add rule: /action2/<action>/<user>
-Router add method: GET
-Router add target: action_handler2
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /action2/<action>/<user>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(9, 17), match='<action>'>, <re.Match object; span=(18, 24), match='<user>'>]
-    Router _itertokens prefix: /action2/
-    Router _itertokens g: ('', None, None, None, 'action', None, None)
-路由拆分完成
-Router add key: /action2/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /action2/
-Router add builder: [(None, '/action2/')]
-Router add key: /action2/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: action
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: action
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /action2/(?P<action>[^/]+)
-Router add builder: [(None, '/action2/'), ('action', <class 'str'>)]
-Router add key: action
-Router add keys: ['action']
-Router add filters: []
-    Router _itertokens prefix: /
-    Router _itertokens g: ('', None, None, None, 'user', None, None)
-路由拆分完成
-Router add key: /
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /action2/(?P<action>[^/]+)/
-Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/')]
-Router add key: /
-Router add keys: ['action']
-Router add filters: []
-    Router _itertokens name: user
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: user
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /action2/(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add key: user
-Router add keys: ['action', 'user']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /action2/(?P<action>[^/]+)/(?P<user>[^/]+)
-Router add builder: [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]
-Router add key: 
-Router add keys: ['action', 'user']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)]}
-Router add whole_rule: ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3c8754b0>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca14500>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)])]
-------------------------------
-添加一个新路由
-Router add rule: /show/<name:re:[a-z]+>
-Router add method: GET
-Router add target: show_handler
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /show/<name:re:[a-z]+>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 22), match='<name:re:[a-z]+>'>]
-    Router _itertokens prefix: /show/
-    Router _itertokens g: ('', None, None, None, 'name', 're', '[a-z]+')
-路由拆分完成
-Router add key: /show/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /show/
-Router add builder: [(None, '/show/')]
-Router add key: /show/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: name
-    Router _itertokens filtr: re
-    Router _itertokens conf: [a-z]+
-路由拆分完成
-Router add key: name
-Router add mode: re
-Router add conf: [a-z]+
-这是一个动态通配符部分
-Router add mask: [a-z]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /show/(?P<name>[a-z]+)
-Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
-Router add key: name
-Router add keys: ['name']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /show/(?P<name>[a-z]+)
-Router add builder: [(None, '/show/'), ('name', <class 'str'>)]
-Router add key: 
-Router add keys: ['name']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)]}
-Router add whole_rule: ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca14500>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca73e70>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)])]
-------------------------------
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/user/123'}
-Router match verb: GET
-Router match path: /user/123
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca73e70>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)])]}
-('user_detail', {'id': 123})
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/item/19.99'}
-Router match verb: GET
-Router match path: /item/19.99
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca73e70>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)])]}
-('item_price', {'price': 19.99})
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/static/img/logo.png'}
-Router match verb: GET
-Router match path: /static/img/logo.png
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca73e70>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)])]}
-('static_file', {'file': 'img/logo.png'})
-------------------------------
-添加一个新路由
-Router add rule: /archive/<y:year>
-Router add method: GET
-Router add target: archive_handler
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /archive/<y:year>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(9, 17), match='<y:year>'>]
-    Router _itertokens prefix: /archive/
-    Router _itertokens g: ('', None, None, None, 'y', 'year', None)
-路由拆分完成
-Router add key: /archive/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /archive/
-Router add builder: [(None, '/archive/')]
-Router add key: /archive/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: y
-    Router _itertokens filtr: year
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: y
-Router add mode: year
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: \d{4}
-Router add in_filter: <class 'int'>
-Router add out_filter: <class 'str'>
-Router add pattern: /archive/(?P<y>\d{4})
-Router add builder: [(None, '/archive/'), ('y', <class 'str'>)]
-Router add key: y
-Router add keys: ['y']
-Router add filters: [('y', <class 'int'>)]
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /archive/(?P<y>\d{4})
-Router add builder: [(None, '/archive/'), ('y', <class 'str'>)]
-Router add key: 
-Router add keys: ['y']
-Router add filters: [('y', <class 'int'>)]
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)]}
-Router add whole_rule: ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca73e70>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca77b80>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)])]
-添加一个新路由
-Router add rule: /page/<:int>
-Router add method: GET
-Router add target: page_handler
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /page/<:int>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 12), match='<:int>'>]
-    Router _itertokens prefix: /page/
-    Router _itertokens g: ('', None, None, None, None, 'int', None)
-路由拆分完成
-Router add key: /page/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /page/
-Router add builder: [(None, '/page/')]
-Router add key: /page/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: None
-    Router _itertokens filtr: int
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: None
-Router add mode: int
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: -?\d+
-Router add in_filter: <class 'int'>
-Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>
-Router add pattern: /page/(?:-?\d+)
-Router add builder: [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)]
-Router add key: anon0
-Router add keys: []
-Router add filters: [('anon0', <class 'int'>)]
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /page/(?:-?\d+)
-Router add builder: [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)]
-Router add key: 
-Router add keys: []
-Router add filters: [('anon0', <class 'int'>)]
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)]}
-Router add whole_rule: ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca77b80>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)|(^/page/(?:-?\d+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca7ad90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)])]
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/archive/2024'}
-Router match verb: GET
-Router match path: /archive/2024
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7ad90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)])]}
-('action_handler1', {'action': 'archive', 'user': '2024'})
-添加一个新路由
-Router add rule: /blog/<id:int>
-Router add method: GET
-Router add target: view_post
-Router add name: blog_post
-    拆分路由规则
-    Router _itertokens rule: /blog/<id:int>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 14), match='<id:int>'>]
-    Router _itertokens prefix: /blog/
-    Router _itertokens g: ('', None, None, None, 'id', 'int', None)
-路由拆分完成
-Router add key: /blog/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /blog/
-Router add builder: [(None, '/blog/')]
-Router add key: /blog/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: id
-    Router _itertokens filtr: int
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: id
-Router add mode: int
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: -?\d+
-Router add in_filter: <class 'int'>
-Router add out_filter: <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>
-Router add pattern: /blog/(?P<id>-?\d+)
-Router add builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)]
-Router add key: id
-Router add keys: ['id']
-Router add filters: [('id', <class 'int'>)]
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /blog/(?P<id>-?\d+)
-Router add builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)]
-Router add key: 
-Router add keys: ['id']
-Router add filters: [('id', <class 'int'>)]
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)]}
-Router add whole_rule: ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7ad90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)|(^/page/(?:-?\d+)$)|(^/blog/(?:-?\d+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca7bc90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)])]
-反向解析
-Router build _name: /blog/<id:int>
-Router build anons: ()
-Router build query: {'id': 100}
-Router build builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)]
-Router build url: /blog/100
-/blog/100
-反向解析
-Router build _name: blog_post
-Router build anons: ()
-Router build query: {'id': 100, 'section': 'comments'}
-Router build builder: [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)]
-Router build url: /blog/100?section=comments
-/blog/100?section=comments
-添加一个新路由
-Router add rule: /api/data
+Router add rule: //old/:name
 Router add method: POST
-Router add target: post_handler
+Router add target: old_handler
 Router add name: None
     拆分路由规则
-    Router _itertokens rule: /api/data
-    Router _itertokens self.rule_syntax.finditer(rule): []
+    Router _itertokens rule: //old/:name
+    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 11), match=':name'>]
+    Router _itertokens self.rule_syntax.finditer(rule): 1
+    Router _itertokens prefix: //old/
+    Router _itertokens g: ('', 'name', '', None, None, None, None)
 路由拆分完成
-Router add key: /api/data
+Router add key: //old/
 Router add mode: None
 Router add conf: None
 这是一个静态路径字符串部分
-Router add pattern: /api/data
-Router add builder: [(None, '/api/data')]
-Router add key: /api/data
-Router add keys: []
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], '/api/data': [(None, '/api/data')]}
-反向解析
-Router build _name: /api/data
-Router build anons: ()
-Router build query: {}
-Router build builder: [(None, '/api/data')]
-Router build url: /api/data
-Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
-添加一个新路由
-Router add rule: /api/data
-Router add method: GET
-Router add target: get_handler
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /api/data
-    Router _itertokens self.rule_syntax.finditer(rule): []
-路由拆分完成
-Router add key: /api/data
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /api/data
-Router add builder: [(None, '/api/data')]
-Router add key: /api/data
-Router add keys: []
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], '/api/data': [(None, '/api/data')]}
-反向解析
-Router build _name: /api/data
-Router build anons: ()
-Router build query: {}
-Router build builder: [(None, '/api/data')]
-Router build url: /api/data
-Router add self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None), '/api/data': ('get_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/missing'}
-Router match verb: GET
-Router match path: /missing
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None), '/api/data': ('get_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7bc90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)])]}
-(404, "Not found: '/missing'")
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'DELETE', 'PATH_INFO': '/api/data'}
-Router match verb: DELETE
-Router match path: /api/data
-Router match methods: ('PROXY', 'DELETE', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None), '/api/data': ('get_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7bc90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)])]}
-(405, 'Method not allowed.') Allow: GET,POST
-添加一个新路由
-Router add rule: /alpha/<v1>
-Router add method: GET
-Router add target: target1
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /alpha/<v1>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 11), match='<v1>'>]
-    Router _itertokens prefix: /alpha/
-    Router _itertokens g: ('', None, None, None, 'v1', None, None)
-路由拆分完成
-Router add key: /alpha/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /alpha/
-Router add builder: [(None, '/alpha/')]
-Router add key: /alpha/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: v1
-    Router _itertokens filtr: None
+    Router _itertokens name: name
+    Router _itertokens filtr: 
     Router _itertokens conf: None
 路由拆分完成
-Router add key: v1
+Router add key: name
 Router add mode: default
 Router add conf: None
 这是一个动态通配符部分
 Router add mask: [^/]+
 Router add in_filter: None
 Router add out_filter: None
-Router add pattern: /alpha/(?P<v1>[^/]+)
-Router add builder: [(None, '/alpha/'), ('v1', <class 'str'>)]
-Router add key: v1
-Router add keys: ['v1']
-Router add filters: []
 路由拆分完成
 Router add key: 
 Router add mode: None
 Router add conf: None
-Router add pattern: /alpha/(?P<v1>[^/]+)
-Router add builder: [(None, '/alpha/'), ('v1', <class 'str'>)]
 Router add key: 
-Router add keys: ['v1']
+Router add mode: None
+Router add conf: None
+Router add anons: 0
+Router add keys: ['name']
+Router add pattern: //old/(?P<name>[^/]+)
 Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)]}
-Router add whole_rule: ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9, ('/alpha/(?:[^/]+)', 'GET'): 10}
+Router add builder: [(None, '//old/'), ('name', <class 'str'>)]
+Router add is_static: False
+Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], 'contact_route': [(None, '/contact')], '//old/:name': [(None, '//old/'), ('name', <class 'str'>)]}
+Router add whole_rule: ('//old/:name', '//old/(?:[^/]+)', 'old_handler', <function Router.add.<locals>.getargs at 0x7f2ce07a25c0>)
+Router add self._groups: {}
+Router add self.dyna_routes: {'POST': [('//old/:name', '//old/(?:[^/]+)', 'old_handler', <function Router.add.<locals>.getargs at 0x7f2ce07a25c0>)]}
+Router add self._groups: {('//old/(?:[^/]+)', 'POST'): 0}
 将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7bc90>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)]
+Router _compile method: POST
+Router _compile self.dyna_routes: {'POST': [('//old/:name', '//old/(?:[^/]+)', 'old_handler', <function Router.add.<locals>.getargs at 0x7f2ce07a25c0>)]}
+Router _compile self.dyna_regexes: {}
+Router _compile all_rules: [('//old/:name', '//old/(?:[^/]+)', 'old_handler', <function Router.add.<locals>.getargs at 0x7f2ce07a25c0>)]
 Router _compile comborules: []
 Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)|(^/page/(?:-?\d+)$)|(^/blog/(?:-?\d+)$)|(^/alpha/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca7c960>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)])]
-添加一个新路由
-Router add rule: /beta/<v2>
-Router add method: GET
-Router add target: target2
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /beta/<v2>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(6, 10), match='<v2>'>]
-    Router _itertokens prefix: /beta/
-    Router _itertokens g: ('', None, None, None, 'v2', None, None)
-路由拆分完成
-Router add key: /beta/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /beta/
-Router add builder: [(None, '/beta/')]
-Router add key: /beta/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: v2
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: v2
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /beta/(?P<v2>[^/]+)
-Router add builder: [(None, '/beta/'), ('v2', <class 'str'>)]
-Router add key: v2
-Router add keys: ['v2']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /beta/(?P<v2>[^/]+)
-Router add builder: [(None, '/beta/'), ('v2', <class 'str'>)]
-Router add key: 
-Router add keys: ['v2']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)], '/beta/<v2>': [(None, '/beta/'), ('v2', <class 'str'>)]}
-Router add whole_rule: ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9, ('/alpha/(?:[^/]+)', 'GET'): 10}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9, ('/alpha/(?:[^/]+)', 'GET'): 10, ('/beta/(?:[^/]+)', 'GET'): 11}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca7c960>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)|(^/page/(?:-?\d+)$)|(^/blog/(?:-?\d+)$)|(^/alpha/(?:[^/]+)$)|(^/beta/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca84960>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)])]
-添加一个新路由
-Router add rule: /gamma/<v3>
-Router add method: GET
-Router add target: target3
-Router add name: None
-    拆分路由规则
-    Router _itertokens rule: /gamma/<v3>
-    Router _itertokens self.rule_syntax.finditer(rule): [<re.Match object; span=(7, 11), match='<v3>'>]
-    Router _itertokens prefix: /gamma/
-    Router _itertokens g: ('', None, None, None, 'v3', None, None)
-路由拆分完成
-Router add key: /gamma/
-Router add mode: None
-Router add conf: None
-这是一个静态路径字符串部分
-Router add pattern: /gamma/
-Router add builder: [(None, '/gamma/')]
-Router add key: /gamma/
-Router add keys: []
-Router add filters: []
-    Router _itertokens name: v3
-    Router _itertokens filtr: None
-    Router _itertokens conf: None
-路由拆分完成
-Router add key: v3
-Router add mode: default
-Router add conf: None
-这是一个动态通配符部分
-Router add mask: [^/]+
-Router add in_filter: None
-Router add out_filter: None
-Router add pattern: /gamma/(?P<v3>[^/]+)
-Router add builder: [(None, '/gamma/'), ('v3', <class 'str'>)]
-Router add key: v3
-Router add keys: ['v3']
-Router add filters: []
-路由拆分完成
-Router add key: 
-Router add mode: None
-Router add conf: None
-Router add pattern: /gamma/(?P<v3>[^/]+)
-Router add builder: [(None, '/gamma/'), ('v3', <class 'str'>)]
-Router add key: 
-Router add keys: ['v3']
-Router add filters: []
-Router add self.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f23e0>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f25c0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/hello/<name>': [(None, '/hello/'), ('name', <class 'str'>)], '/<action>/<user>': [(None, '/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/action2/<action>/<user>': [(None, '/action2/'), ('action', <class 'str'>), (None, '/'), ('user', <class 'str'>)], '/show/<name:re:[a-z]+>': [(None, '/show/'), ('name', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2480>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f2b941f2b60>)], '/api/data': [(None, '/api/data')], '/alpha/<v1>': [(None, '/alpha/'), ('v1', <class 'str'>)], '/beta/<v2>': [(None, '/beta/'), ('v2', <class 'str'>)], '/gamma/<v3>': [(None, '/gamma/'), ('v3', <class 'str'>)]}
-Router add whole_rule: ('/gamma/<v3>', '/gamma/(?:[^/]+)', 'target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9, ('/alpha/(?:[^/]+)', 'GET'): 10, ('/beta/(?:[^/]+)', 'GET'): 11}
-Router add self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>), ('/gamma/<v3>', '/gamma/(?:[^/]+)', 'target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)]}
-Router add self._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/hello/(?:[^/]+)', 'GET'): 3, ('/(?:[^/]+)/(?:[^/]+)', 'GET'): 4, ('/action2/(?:[^/]+)/(?:[^/]+)', 'GET'): 5, ('/show/(?:[a-z]+)', 'GET'): 6, ('/archive/(?:\\d{4})', 'GET'): 7, ('/page/(?:-?\\d+)', 'GET'): 8, ('/blog/(?:-?\\d+)', 'GET'): 9, ('/alpha/(?:[^/]+)', 'GET'): 10, ('/beta/(?:[^/]+)', 'GET'): 11, ('/gamma/(?:[^/]+)', 'GET'): 12}
-将多个路由的正则表达式合并为一个
-Router _compile method: GET
-Router _compile self.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>), ('/gamma/<v3>', '/gamma/(?:[^/]+)', 'target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)]}
-Router _compile self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca84960>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>)])]}
-Router _compile all_rules: [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('/hello/<name>', '/hello/(?:[^/]+)', 'hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('/<action>/<user>', '/(?:[^/]+)/(?:[^/]+)', 'action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('/action2/<action>/<user>', '/action2/(?:[^/]+)/(?:[^/]+)', 'action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('/show/<name:re:[a-z]+>', '/show/(?:[a-z]+)', 'show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('/alpha/<v1>', '/alpha/(?:[^/]+)', 'target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('/beta/<v2>', '/beta/(?:[^/]+)', 'target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>), ('/gamma/<v3>', '/gamma/(?:[^/]+)', 'target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)]
-Router _compile comborules: []
-Router _compile maxgroups: 99
-Router _compile combined: (^/user/(?:-?\d+)$)|(^/item/(?:-?[\d.]+)$)|(^/static/(?:.+?)$)|(^/hello/(?:[^/]+)$)|(^/(?:[^/]+)/(?:[^/]+)$)|(^/action2/(?:[^/]+)/(?:[^/]+)$)|(^/show/(?:[a-z]+)$)|(^/archive/(?:\d{4})$)|(^/page/(?:-?\d+)$)|(^/blog/(?:-?\d+)$)|(^/alpha/(?:[^/]+)$)|(^/beta/(?:[^/]+)$)|(^/gamma/(?:[^/]+)$)
-Router _compile comborules: [(<built-in method match of re.Pattern object at 0x3ca88a30>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>), ('target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)])]
-请求匹配
-Router match environ: {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/beta/hello'}
-Router match verb: GET
-Router match path: /beta/hello
-Router match methods: ('PROXY', 'GET', 'ANY')
-Router match self.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None), '/api/data': ('get_handler', None)}, 'POST': {'/api/data': ('post_handler', None)}}
-Router match self.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x3ca88a30>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2520>), ('item_price', <function Router.add.<locals>.getargs at 0x7f2b941f2700>), ('static_file', <function Router.add.<locals>.getargs at 0x7f2b941f2200>), ('hello_detail', <function Router.add.<locals>.getargs at 0x7f2b941f2340>), ('action_handler1', <function Router.add.<locals>.getargs at 0x7f2b941f22a0>), ('action_handler2', <function Router.add.<locals>.getargs at 0x7f2b941f2660>), ('show_handler', <function Router.add.<locals>.getargs at 0x7f2b941f27a0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2a20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f2b941f2ac0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f2b941f2d40>), ('target1', <function Router.add.<locals>.getargs at 0x7f2b941f2980>), ('target2', <function Router.add.<locals>.getargs at 0x7f2b941f2c00>), ('target3', <function Router.add.<locals>.getargs at 0x7f2b941f2ca0>)])]}
-('action_handler1', {'action': 'beta', 'user': 'hello'})
+Router _compile combined: (^//old/(?:[^/]+)$)
+Router _compile comborules: [(<built-in method match of re.Pattern object at 0x7f2ce131a840>, [('old_handler', <function Router.add.<locals>.getargs at 0x7f2ce07a25c0>)])]
+5 ------------------------------
+Traceback (most recent call last):
+  File "/root/bottle/learn/08_Router/router.py", line 29, in <module>
+    router.add("/validate/:i/:f/:csv")
+TypeError: Router.add() missing 2 required positional arguments: 'method' and 'target'

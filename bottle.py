@@ -550,18 +550,16 @@ class Router(object):
         """
         迭代器: 将字符串规则拆分为 (变量名, 过滤器名, 过滤配置) 的标记流
         """
-        print(f"    拆分路由规则")
-        print(f"    Router _itertokens rule: {rule}")
 
         offset, prefix = 0, ""
-        print(
-            f"    Router _itertokens self.rule_syntax.finditer(rule): {list(self.rule_syntax.finditer(rule))}"
-        )
         for match in self.rule_syntax.finditer(rule):
+            # print(f"_itertokens offset: {offset}")
+            # print(f"_itertokens prefix: {prefix}")
+
             prefix += rule[offset : match.start()]
+            # print(f"_itertokens prefix: {prefix}")
+
             g = match.groups()
-            print(f"    Router _itertokens prefix: {prefix}")
-            print(f"    Router _itertokens g: {g}")
 
             # 处理旧语法警告(:name)
             if g[2] is not None:
@@ -573,11 +571,43 @@ class Router(object):
                     stacklevel=4,
                 )
 
-            # Escaped wildcard
-            # 处理转义: 如果通配符前有奇数个反斜杠, 说明它是被转义的普通字符
+            """
+            Escaped wildcard
+            处理转义: 如果通配符前有奇数个反斜杠, 说明它是被转义的普通字符
+            在 Bottle 路由语法中, < 和 >(或者旧版的 :)是特殊字符, 用于定义动态变量.
+            如果你想定义一个动态变量, 你会写: /user/<id>.
+            但如果你想让 URL 字面上就包含 <id> 这个字符串(而不把它当成变量), 你就需要一种方法告诉解析器: "别解析这个通配符, 把它当普通文本".
+            这就是转义(Escaping)发挥作用的地方.
+
+            1. 为什么是 len(g[0]) % 2?
+            这里的 g[0] 匹配的是通配符(< 或 :)前面的所有反斜杠 \.
+
+            偶数个反斜杠(如 \\):
+            反斜杠在转义自己. 每两个 \\ 变成一个字面上的 \. 这意味着反斜杠已经被消耗完了, 后面的 < 依然具有特殊含义.
+
+            奇数个反斜杠(如 \ 或 \\\):
+            最后一个反斜杠是用来转义它紧接着的那个字符(即 <)的. 这表示通配符被"屏蔽"了, 它不再是通配符, 而是普通文本.
+
+            2. 场景举例说明
+            场景 A: 字面意义上的通配符标签
+            假设你正在写一个关于编程的博客, 你想定义一个路由来显示关于标签的帮助文档.
+            你的预期 URL 是: /help/<tags>
+            错误写法: router.add('/help/<tags>', ...)
+            结果: Router 会把 tags 当成一个动态变量.
+            正确写法(转义): router.add('/help/\<tags>', ...)
+
+            场景 B: 路径中包含反斜杠字符
+            假设你想匹配一个路径, 这个路径前面必须有一个字面意义上的反斜杠, 后面跟着一个真正的变量.
+            你的预期 URL 是: /\<id>(这里你想表达的是: 一个斜杠 + 一个反斜杠 + 一个变量)
+            写法: router.add('/\\<id>', ...)
+            """
+            # print(f"_itertokens len(g[0]): {len(g[0])}")
+            # print(f"_itertokens len(g[0]): {len(g[0]) % 2}")
             if len(g[0]) % 2:
                 prefix += match.group(0)[len(g[0]) :]
                 offset = match.end()
+                # print(f"_itertokens offset: {offset}")
+                # print(f"_itertokens prefix: {prefix}")
                 continue
 
             # 返回静态部分
@@ -586,9 +616,6 @@ class Router(object):
 
             # 提取通配符名称、过滤器类型和配置
             name, filtr, conf = g[4:7] if g[2] is None else g[1:4]
-            print(f"    Router _itertokens name: {name}")
-            print(f"    Router _itertokens filtr: {filtr}")
-            print(f"    Router _itertokens conf: {conf}")
             yield name, filtr or "default", conf or None
             offset, prefix = match.end(), ""
         if offset <= len(rule) or prefix:
@@ -624,21 +651,95 @@ class Router(object):
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
-            print(f"路由拆分完成")
-            print(f"Router add key: {key}")
-            print(f"Router add mode: {mode}")
-            print(f"Router add conf: {conf}")
+            """
+            "/index",
+                [('/index', None, None)]
+            "/contact",
+                [('/contact', None, None)]
+            "/user1/<id:int>/name/<name1:re:[a-z]+>",
+                [
+                    ('/user1/', None, None),
+                    ('id', 'int', None),
+                    ('/name/', None, None),
+                    ('name1', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            "/user2/:id/name/:re",
+                [
+                    ('/user2/', None, None),
+                    ('id', 'default', None),
+                    ('/name/', None, None),
+                    ('re', 'default', None),
+                    ('', None, None)
+                ]
+            "/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>",
+                [
+                    ('/', None, None),
+                    ('its0', 'default', None),
+                    ('/', None, None),
+                    (None, 're', '.+'),
+                    ('/', None, None),
+                    ('test', 'default', None),
+                    ('/', None, None),
+                    ('name', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            "/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
+                [
+                    ('/<its1>/', None, None),
+                    (None, 're', '.+'),
+                    ('/', None, None),
+                    ('test', 'default', None),
+                    ('/', None, None),
+                    ('name', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            "/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>",
+                [
+                    ('/<its2>/', None, None),
+                    (None, 're', '.+'),
+                    ('/', None, None),
+                    ('test', 'default', None),
+                    ('/', None, None),
+                    ('name', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            "/\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>",
+                [
+                    ('/', None, None),
+                    ('its3', 'default', None),
+                    ('/', None, None),
+                    (None, 're', '.+'),
+                    ('/', None, None),
+                    ('test', 'default', None),
+                    ('/', None, None),
+                    ('name', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            "/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>",
+                [
+                    ('/', None, None),
+                    ('its4', 'default', None),
+                    ('/', None, None),
+                    (None, 're', '.+'),
+                    ('/', None, None),
+                    ('test', 'default', None),
+                    ('/', None, None),
+                    ('name', 're', '[a-z]+'),
+                    ('', None, None)
+                ]
+            """
+            print(f"    _itertokens ({key}, {mode}, {conf})")
 
             if mode:  # 这是一个动态通配符部分
-                print(f"这是一个动态通配符部分")
                 is_static = False
                 if mode == "default":
                     mode = self.default_filter
                 # 获取该过滤器的正则掩码和转换器
                 mask, in_filter, out_filter = self.filters[mode](conf)
-                print(f"Router add mask: {mask}")
-                print(f"Router add in_filter: {in_filter}")
-                print(f"Router add out_filter: {out_filter}")
+                print(f"        Router add mask: {mask}")
+                print(f"        Router add in_filter: {in_filter}")
+                print(f"        Router add out_filter: {out_filter}")
                 if not key:  # 匿名通配符 < :int >
                     pattern += "(?:%s)" % mask
                     key = "anon%d" % anons
@@ -650,14 +751,16 @@ class Router(object):
                     filters.append((key, in_filter))
                 builder.append((key, out_filter or str))
             elif key:  # 这是一个静态路径字符串部分
-                print(f"这是一个静态路径字符串部分")
                 pattern += re.escape(key)
                 builder.append((None, key))
-            print(f"Router add pattern: {pattern}")
-            print(f"Router add builder: {builder}")
-            print(f"Router add key: {key}")
-            print(f"Router add keys: {keys}")
-            print(f"Router add filters: {filters}")
+
+        print(f"    Router add anons: {anons}")
+        print(f"    Router add keys: {keys}")
+        print(f"    Router add pattern: {pattern}")
+        print(f"    Router add filters: {filters}")
+        print(f"    Router add builder: {builder}")
+        print(f"    Router add is_static: {is_static}")
+        print(f"    _itertokens")
 
         self.builder[rule] = builder  # 存储以便反向生成
         if name:
@@ -733,40 +836,47 @@ class Router(object):
         当路径为 /user/123 时, 正则表达式匹配成功. 由于它是第一个分支, match.lastindex 为 1. 程序立刻知道应该调用 rules[0] 对应的目标函数.
         这种方式避开了 Python for 循环逐个匹配的开销, 将匹配压力交给了经过 C 语言优化的 re 引擎.
         """
-        print(f"将多个路由的正则表达式合并为一个")
         print(f"Router _compile method: {method}")
-
         print(f"Router _compile self.dyna_routes: {self.dyna_routes}")
         print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
 
         all_rules = self.dyna_routes[method]
         comborules = self.dyna_regexes[method] = []
         maxgroups = self._MAX_GROUPS_PER_PATTERN
-        print(f"Router _compile all_rules: {all_rules}")
+        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
         print(f"Router _compile comborules: {comborules}")
-        print(f"Router _compile maxgroups: {maxgroups}")
 
-        # 按 99 个一组进行分块处理
+        """
+        按 99 个一组进行分块处理
+        >>> all_rules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> all_rules
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> maxgroups = 3
+        >>> for x in range(0, len(all_rules), maxgroups):
+        ...     some = all_rules[x : x + maxgroups]
+        ...     print(some)
+        ...
+        [1, 2, 3]
+        [4, 5, 6]
+        [7, 8, 9]
+        [10]
+        >>>
+        """
         for x in range(0, len(all_rules), maxgroups):
             some = all_rules[x : x + maxgroups]
             # 合并正则分支
             combined = (flatpat for (_, flatpat, _, _) in some)
             combined = "|".join("(^%s$)" % flatpat for flatpat in combined)
-            print(f"Router _compile combined: {combined}")
             combined = re.compile(combined).match
             rules = [(target, getargs) for (_, _, target, getargs) in some]
             comborules.append((combined, rules))
+        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
         print(f"Router _compile comborules: {comborules}")
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
-        print(f"反向解析")
-        print(f"Router build _name: {_name}")
-        print(f"Router build anons: {anons}")
-        print(f"Router build query: {query}")
 
         builder = self.builder.get(_name)
-        print(f"Router build builder: {builder}")
 
         if not builder:
             raise RouteBuildError("No route with that name.", _name)
@@ -799,7 +909,6 @@ class Router(object):
             # 检查 query 字典是否为空
             if not query:
                 # 如果没有剩余参数, 直接返回生成的路径部分
-                print(f"Router build url: {url}")
                 return url
             else:
                 # 如果还有剩余参数, 将它们编码为 URL 查询字符串(例如: key1=val1&key2=val2)
@@ -807,7 +916,7 @@ class Router(object):
 
                 # 将编码后的字符串追加到路径后面, 用 "?" 分隔
                 full_url = url + "?" + query_string
-                print(f"Router build url: {full_url}")
+                # print(f"Router build url: {full_url}")
                 return full_url
 
         except KeyError as E:
@@ -843,6 +952,8 @@ class Router(object):
             # A. 快速尝试静态匹配
             if method in self.static and path in self.static[method]:
                 target, getargs = self.static[method][path]
+                print(f"Router match target: {target}")
+                print(f"Router match getargs: {getargs}")
                 return target, getargs(path) if getargs else {}
             # B. 尝试合并正则匹配
             elif method in self.dyna_regexes:

@@ -1,0 +1,234 @@
+/root/bottle/learn/08_Router/rule_syntax.py:107: SyntaxWarning: invalid escape sequence '\<'
+  "/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
+/root/bottle/learn/08_Router/rule_syntax.py:109: SyntaxWarning: invalid escape sequence '\<'
+  "/\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>",
+/root/bottle/bottle.py:583: SyntaxWarning: invalid escape sequence '\.'
+  这里的 g[0] 匹配的是通配符(< 或 :)前面的所有反斜杠 \.
+rule: /index
+rule_syntax.finditer(rule): []
+rule_syntax.finditer(rule): 0
+rule: [('/index', None, None)]
+------------------------------
+rule: /contact
+rule_syntax.finditer(rule): []
+rule_syntax.finditer(rule): 0
+rule: [('/contact', None, None)]
+------------------------------
+rule: /user1/<id:int>/name/<name1:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(7, 15), match='<id:int>'>, <re.Match object; span=(21, 38), match='<name1:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 2
+match: <re.Match object; span=(7, 15), match='<id:int>'>
+match.group(0): <id:int>
+match.start(): 7
+match.end(): 15
+match.groups(): ('', None, None, None, 'id', 'int', None)
+match: <re.Match object; span=(21, 38), match='<name1:re:[a-z]+>'>
+match.group(0): <name1:re:[a-z]+>
+match.start(): 21
+match.end(): 38
+match.groups(): ('', None, None, None, 'name1', 're', '[a-z]+')
+rule: [
+    ('/user1/', None, None),
+    ('id', 'int', None),
+    ('/name/', None, None),
+    ('name1', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------
+rule: /user2/:id/name/:re
+rule_syntax.finditer(rule): [<re.Match object; span=(7, 10), match=':id'>, <re.Match object; span=(16, 19), match=':re'>]
+rule_syntax.finditer(rule): 2
+match: <re.Match object; span=(7, 10), match=':id'>
+match.group(0): :id
+match.start(): 7
+match.end(): 10
+match.groups(): ('', 'id', '', None, None, None, None)
+match: <re.Match object; span=(16, 19), match=':re'>
+match.group(0): :re
+match.start(): 16
+match.end(): 19
+match.groups(): ('', 're', '', None, None, None, None)
+rule: [
+    ('/user2/', None, None),
+    ('id', 'default', None),
+    ('/name/', None, None),
+    ('re', 'default', None),
+    ('', None, None)
+]
+------------------------------
+"/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>",
+rule: /<its0>/<:re:.+>/<test>/<name:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(1, 7), match='<its0>'>, <re.Match object; span=(8, 16), match='<:re:.+>'>, <re.Match object; span=(17, 23), match='<test>'>, <re.Match object; span=(24, 40), match='<name:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 4
+match: <re.Match object; span=(1, 7), match='<its0>'>
+match.group(0): <its0>
+match.start(): 1
+match.end(): 7
+match.groups(): ('', None, None, None, 'its0', None, None)
+match: <re.Match object; span=(8, 16), match='<:re:.+>'>
+match.group(0): <:re:.+>
+match.start(): 8
+match.end(): 16
+match.groups(): ('', None, None, None, None, 're', '.+')
+match: <re.Match object; span=(17, 23), match='<test>'>
+match.group(0): <test>
+match.start(): 17
+match.end(): 23
+match.groups(): ('', None, None, None, 'test', None, None)
+match: <re.Match object; span=(24, 40), match='<name:re:[a-z]+>'>
+match.group(0): <name:re:[a-z]+>
+match.start(): 24
+match.end(): 40
+match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+rule: [
+    ('/', None, None),
+    ('its0', 'default', None),
+    ('/', None, None),
+    (None, 're', '.+'),
+    ('/', None, None),
+    ('test', 'default', None),
+    ('/', None, None),
+    ('name', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------
+"/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
+rule: /\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(1, 8), match='\\<its1>'>, <re.Match object; span=(9, 17), match='<:re:.+>'>, <re.Match object; span=(18, 24), match='<test>'>, <re.Match object; span=(25, 41), match='<name:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 4
+match: <re.Match object; span=(1, 8), match='\\<its1>'>
+match.group(0): \<its1>
+match.start(): 1
+match.end(): 8
+match.groups(): ('\\', None, None, None, 'its1', None, None)
+match: <re.Match object; span=(9, 17), match='<:re:.+>'>
+match.group(0): <:re:.+>
+match.start(): 9
+match.end(): 17
+match.groups(): ('', None, None, None, None, 're', '.+')
+match: <re.Match object; span=(18, 24), match='<test>'>
+match.group(0): <test>
+match.start(): 18
+match.end(): 24
+match.groups(): ('', None, None, None, 'test', None, None)
+match: <re.Match object; span=(25, 41), match='<name:re:[a-z]+>'>
+match.group(0): <name:re:[a-z]+>
+match.start(): 25
+match.end(): 41
+match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+rule: [
+    ('/<its1>/', None, None),
+    (None, 're', '.+'),
+    ('/', None, None),
+    ('test', 'default', None),
+    ('/', None, None),
+    ('name', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------
+"/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>"
+rule: /\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(1, 8), match='\\<its2>'>, <re.Match object; span=(9, 17), match='<:re:.+>'>, <re.Match object; span=(18, 24), match='<test>'>, <re.Match object; span=(25, 41), match='<name:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 4
+match: <re.Match object; span=(1, 8), match='\\<its2>'>
+match.group(0): \<its2>
+match.start(): 1
+match.end(): 8
+match.groups(): ('\\', None, None, None, 'its2', None, None)
+match: <re.Match object; span=(9, 17), match='<:re:.+>'>
+match.group(0): <:re:.+>
+match.start(): 9
+match.end(): 17
+match.groups(): ('', None, None, None, None, 're', '.+')
+match: <re.Match object; span=(18, 24), match='<test>'>
+match.group(0): <test>
+match.start(): 18
+match.end(): 24
+match.groups(): ('', None, None, None, 'test', None, None)
+match: <re.Match object; span=(25, 41), match='<name:re:[a-z]+>'>
+match.group(0): <name:re:[a-z]+>
+match.start(): 25
+match.end(): 41
+match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+rule: [
+    ('/<its2>/', None, None),
+    (None, 're', '.+'),
+    ('/', None, None),
+    ('test', 'default', None),
+    ('/', None, None),
+    ('name', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------
+"/\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>"
+rule: /\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(1, 9), match='\\\\<its3>'>, <re.Match object; span=(10, 18), match='<:re:.+>'>, <re.Match object; span=(19, 25), match='<test>'>, <re.Match object; span=(26, 42), match='<name:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 4
+match: <re.Match object; span=(1, 9), match='\\\\<its3>'>
+match.group(0): \\<its3>
+match.start(): 1
+match.end(): 9
+match.groups(): ('\\\\', None, None, None, 'its3', None, None)
+match: <re.Match object; span=(10, 18), match='<:re:.+>'>
+match.group(0): <:re:.+>
+match.start(): 10
+match.end(): 18
+match.groups(): ('', None, None, None, None, 're', '.+')
+match: <re.Match object; span=(19, 25), match='<test>'>
+match.group(0): <test>
+match.start(): 19
+match.end(): 25
+match.groups(): ('', None, None, None, 'test', None, None)
+match: <re.Match object; span=(26, 42), match='<name:re:[a-z]+>'>
+match.group(0): <name:re:[a-z]+>
+match.start(): 26
+match.end(): 42
+match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+rule: [
+    ('/', None, None),
+    ('its3', 'default', None),
+    ('/', None, None),
+    (None, 're', '.+'),
+    ('/', None, None),
+    ('test', 'default', None),
+    ('/', None, None),
+    ('name', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------
+"/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>"
+rule: /\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>
+rule_syntax.finditer(rule): [<re.Match object; span=(1, 9), match='\\\\<its4>'>, <re.Match object; span=(10, 18), match='<:re:.+>'>, <re.Match object; span=(19, 25), match='<test>'>, <re.Match object; span=(26, 42), match='<name:re:[a-z]+>'>]
+rule_syntax.finditer(rule): 4
+match: <re.Match object; span=(1, 9), match='\\\\<its4>'>
+match.group(0): \\<its4>
+match.start(): 1
+match.end(): 9
+match.groups(): ('\\\\', None, None, None, 'its4', None, None)
+match: <re.Match object; span=(10, 18), match='<:re:.+>'>
+match.group(0): <:re:.+>
+match.start(): 10
+match.end(): 18
+match.groups(): ('', None, None, None, None, 're', '.+')
+match: <re.Match object; span=(19, 25), match='<test>'>
+match.group(0): <test>
+match.start(): 19
+match.end(): 25
+match.groups(): ('', None, None, None, 'test', None, None)
+match: <re.Match object; span=(26, 42), match='<name:re:[a-z]+>'>
+match.group(0): <name:re:[a-z]+>
+match.start(): 26
+match.end(): 42
+match.groups(): ('', None, None, None, 'name', 're', '[a-z]+')
+rule: [
+    ('/', None, None),
+    ('its4', 'default', None),
+    ('/', None, None),
+    (None, 're', '.+'),
+    ('/', None, None),
+    ('test', 'default', None),
+    ('/', None, None),
+    ('name', 're', '[a-z]+'),
+    ('', None, None)
+]
+------------------------------

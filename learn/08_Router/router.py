@@ -6,20 +6,27 @@ from bottle import Router, HTTPError
 router = Router()
 
 # 添加静态路由
+print("1", "---" * 10)
 router.add("/index", "GET", "index_handler")
-print("---" * 10)
-router.add("/contact", "GET", "contact_handler")
-print("---" * 10)
 
+print("2", "---" * 10)
+router.add("/contact", "GET", "contact_handler", name="contact_route")
+
+print("3", "---" * 10)
 # 模拟请求匹配
 print(router.match({"REQUEST_METHOD": "GET", "PATH_INFO": "/index"}))
 # 输出: ('index_handler', {})
-print("---" * 10)
+
 
 # 2. 核心场景: 动态通配符与过滤器
 # 演示 int、float 和 path 过滤器的使用, 以及它们如何自动转换 Python 类型.
 
 # router = Router()
+print("4", "---" * 10)
+router.add("//old/:name", "POST", "old_handler")
+
+print("5", "---" * 10)
+router.add("/validate/:i/:f/:csv")
 
 # 1. 整数过滤器: 匹配 /user/123
 router.add("/user/<id:int>", "GET", "user_detail")
