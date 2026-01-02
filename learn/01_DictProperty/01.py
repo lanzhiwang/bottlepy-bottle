@@ -86,7 +86,7 @@ class User:
     # 指定 key 为 "rank_level", 且设置为只读
     @DictProperty(attr="_info_cache", key="rank_level", read_only=True)
     def rank(self):
-        print(f"正在为用户计算等级（耗时操作）...")
+        print(f"正在为用户计算等级(耗时操作)...")
         import time
 
         time.sleep(1)
@@ -163,7 +163,7 @@ DictProperty __get__ self.attr: _info_cache
 DictProperty __get__ key: rank_level
 DictProperty __get__ storage: {'name': 'Alice'}
 DictProperty __get__ key not in storage: True
-正在为用户计算等级（耗时操作）...
+正在为用户计算等级(耗时操作)...
 DictProperty __get__ result: Gold Member
 Rank: Gold Member
 DictProperty __get__ self: <__main__.DictProperty object at 0x7f1b7175ad50>

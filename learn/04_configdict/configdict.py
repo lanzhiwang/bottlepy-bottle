@@ -492,7 +492,7 @@ def run_config_demo():
     overlay_conf = conf._make_overlay()
     print(f"run_config_demo overlay_conf: {overlay_conf}")
     print(f"子配置读取父级 Port: {overlay_conf['server.port']}")
-    # 修改子配置（变成非虚拟键）
+    # 修改子配置(变成非虚拟键)
     print("修改子配置的 Port...")
     overlay_conf["server.port"] = 9090
     print(f"父配置 Port (保持不变): {conf['server.port']}")

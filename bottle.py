@@ -482,7 +482,7 @@ def _re_flatten(p):
 
 
 class Router(object):
-    """A Router is an ordered collection of route->target pairs. It is used to
+    r"""A Router is an ordered collection of route->target pairs. It is used to
     efficiently match WSGI requests against a number of routes and return
     the first target that satisfies the request. The target may be anything,
     usually a string, ID or callable object. A route consists of a path-rule
@@ -496,24 +496,32 @@ class Router(object):
     它巧妙地利用了正则表达式的"合并不确定有限自动机"(NFA)特性, 将路由匹配的时间复杂度从 O(N) 降低到了接近 O(1) 的量级.
 
     核心设计思想: 为什么要这样写?
-    1. 静态与动态路由分离: 大部分 Web 应用的路由是静态的(如 /index). 代码优先检查 self.static 字典(O(1)), 只有匹配失败才会去跑复杂的正则.
-    2. 正则合并优化(Merged Regex): 这是 Bottle 路由最精才的部分.
-       如果我有 100 条动态路由, 通常做法是循环 100 次 re.match. Bottle 将它们合并成一个巨大的正则表达式: (^/user/(?P<id>\\d+)$)|(^/wiki/(?P<page>.+)$)|....
-       通过一次正则扫描就能找到匹配项, 利用 match.lastindex 确定是第几个路由.
-    3. 正则分组限制处理: Python 的 re 模块限制一个正则表达式最多只能有 99 个分组. Bottle 通过 _MAX_GROUPS_PER_PATTERN 将路由分块(Chunks), 每 99 个一组, 平衡了性能与限制.
-    4. 双向映射: 不仅支持"路径 -> 目标", 还支持通过 build 方法实现"路由名/规则 -> 路径"的反向生成.
+    静态与动态路由分离: 大部分 Web 应用的路由是静态的(如 /index). 代码优先检查 self.static 字典(O(1)), 只有匹配失败才会去跑复杂的正则.
+    正则合并优化(Merged Regex): 这是 Bottle 路由最精才的部分. 如果我有 100 条动态路由, 通常做法是循环 100 次 re.match.
+                              Bottle 将它们合并成一个巨大的正则表达式: (^/user/(?P<id>\d+)$)|(^/wiki/(?P<page>.+)$)|....
+                              通过一次正则扫描就能找到匹配项, 利用 match.lastindex 确定是第几个路由.
+    正则分组限制处理: Python 的 re 模块限制一个正则表达式最多只能有 99 个分组. Bottle 通过 _MAX_GROUPS_PER_PATTERN 将路由分块(Chunks), 每 99 个一组, 平衡了性能与限制.
+    双向映射: 不仅支持"路径 -> 目标", 还支持通过 build 方法实现"路由名/规则 -> 路径"的反向生成.
+
+    路由类: 一个有序的 路由->目标 映射集合.
+    用于高效匹配 WSGI 请求并返回第一个满足要求的变量/回调.
     """
 
     # 默认通配符匹配模式: 匹配非斜杠的任意字符
     default_pattern = "[^/]+"
     default_filter = "re"
 
-    #: The current CPython regexp implementation does not allow more
-    #: than 99 matching groups per regular expression.
-    # CPython 正则限制: 一个表达式中不能有超过 99 个匹配分组
-    # _MAX_GROUPS_PER_PATTERN 的必要性
-    # CPython 的 re 模块在内部解析时, 为每个括号分组分配编号. 由于历史原因和内存布局限制, 一旦分组超过 99 个, 编译就会报错.
-    # Bottle 通过将 1000 条路由拆分成 11 个合并正则块(10个满载, 1个残余), 在不违反 Python 限制的前提下, 依然获得了极致的性能.
+    """
+    The current CPython regexp implementation does not allow more
+    than 99 matching groups per regular expression.
+
+    CPython 正则限制: 一个表达式中不能有超过 99 个匹配分组
+
+    _MAX_GROUPS_PER_PATTERN 的必要性
+    CPython 的 re 模块在内部解析时, 为每个括号分组分配编号. 由于历史原因和内存布局限制, 一旦分组超过 99 个, 编译就会报错.
+    Bottle 通过将 1000 条路由拆分成 11 个合并正则块(10个满载, 1个残余), 在不违反 Python 限制的前提下, 依然获得了极致的性能.
+    """
+
     _MAX_GROUPS_PER_PATTERN = 99
 
     def __init__(self, strict=False):
@@ -553,14 +561,15 @@ class Router(object):
         }
 
     def add_filter(self, name, func):
-        """
+        r"""
         Add a filter. The provided function is called with the configuration
         string as parameter and must return a (regexp, to_python, to_url) tuple.
         The first element is a string, the last two are callables or None.
 
         add_filter 允许开发者自定义类型转换. 比如:
 
-        router.add_filter('user_id', lambda conf: (r'u_\\d+', lambda x: int(x[2:]), None))
+        router.add_filter('user_id', lambda conf: (r'u_\d+', lambda x: int(x[2:]), None))
+        router.add_filter("year", lambda conf: (r"\d{4}", int, str))
 
         # 路由定义: /profile/<uid:user_id>
         # 路径输入: /profile/u_123
@@ -604,32 +613,36 @@ class Router(object):
             r"""
             Escaped wildcard
             处理转义: 如果通配符前有奇数个反斜杠, 说明它是被转义的普通字符
+
             在 Bottle 路由语法中, < 和 >(或者旧版的 :)是特殊字符, 用于定义动态变量.
+
             如果你想定义一个动态变量, 你会写: /user/<id>.
             但如果你想让 URL 字面上就包含 <id> 这个字符串(而不把它当成变量), 你就需要一种方法告诉解析器: "别解析这个通配符, 把它当普通文本".
             这就是转义(Escaping)发挥作用的地方.
 
             1. 为什么是 len(g[0]) % 2?
             这里的 g[0] 匹配的是通配符(< 或 :)前面的所有反斜杠 \.
-
             偶数个反斜杠(如 \\):
             反斜杠在转义自己. 每两个 \\ 变成一个字面上的 \. 这意味着反斜杠已经被消耗完了, 后面的 < 依然具有特殊含义.
-
             奇数个反斜杠(如 \ 或 \\\):
             最后一个反斜杠是用来转义它紧接着的那个字符(即 <)的. 这表示通配符被"屏蔽"了, 它不再是通配符, 而是普通文本.
 
             2. 场景举例说明
+
             场景 A: 字面意义上的通配符标签
             假设你正在写一个关于编程的博客, 你想定义一个路由来显示关于标签的帮助文档.
             你的预期 URL 是: /help/<tags>
             错误写法: router.add('/help/<tags>', ...)
             结果: Router 会把 tags 当成一个动态变量.
             正确写法(转义): router.add('/help/\<tags>', ...)
+            结果: 该路由只会精确匹配字符串 /help/<tags>, 而不会提取任何变量.
 
             场景 B: 路径中包含反斜杠字符
             假设你想匹配一个路径, 这个路径前面必须有一个字面意义上的反斜杠, 后面跟着一个真正的变量.
             你的预期 URL 是: /\<id>(这里你想表达的是: 一个斜杠 + 一个反斜杠 + 一个变量)
             写法: router.add('/\\<id>', ...)
+            注意: 在 Python 字符串里, 你需要写两个斜杠来表示一个物理斜杠.
+            结果: 匹配类似 /\123 的路径, 并将 123 赋值给变量 id.
             """
             # print(f"_itertokens len(g[0]): {len(g[0])}")
             # print(f"_itertokens len(g[0]): {len(g[0]) % 2}")
@@ -681,84 +694,6 @@ class Router(object):
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
-            r"""
-            "/index",
-                [('/index', None, None)]
-            "/contact",
-                [('/contact', None, None)]
-            "/user1/<id:int>/name/<name1:re:[a-z]+>",
-                [
-                    ('/user1/', None, None),
-                    ('id', 'int', None),
-                    ('/name/', None, None),
-                    ('name1', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            "/user2/:id/name/:re",
-                [
-                    ('/user2/', None, None),
-                    ('id', 'default', None),
-                    ('/name/', None, None),
-                    ('re', 'default', None),
-                    ('', None, None)
-                ]
-            "/<its0>/<:re:.+>/<test>/<name:re:[a-z]+>",
-                [
-                    ('/', None, None),
-                    ('its0', 'default', None),
-                    ('/', None, None),
-                    (None, 're', '.+'),
-                    ('/', None, None),
-                    ('test', 'default', None),
-                    ('/', None, None),
-                    ('name', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            "/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
-                [
-                    ('/<its1>/', None, None),
-                    (None, 're', '.+'),
-                    ('/', None, None),
-                    ('test', 'default', None),
-                    ('/', None, None),
-                    ('name', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            "/\\<its2>/<:re:.+>/<test>/<name:re:[a-z]+>",
-                [
-                    ('/<its2>/', None, None),
-                    (None, 're', '.+'),
-                    ('/', None, None),
-                    ('test', 'default', None),
-                    ('/', None, None),
-                    ('name', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            "/\\\<its3>/<:re:.+>/<test>/<name:re:[a-z]+>",
-                [
-                    ('/', None, None),
-                    ('its3', 'default', None),
-                    ('/', None, None),
-                    (None, 're', '.+'),
-                    ('/', None, None),
-                    ('test', 'default', None),
-                    ('/', None, None),
-                    ('name', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            "/\\\\<its4>/<:re:.+>/<test>/<name:re:[a-z]+>",
-                [
-                    ('/', None, None),
-                    ('its4', 'default', None),
-                    ('/', None, None),
-                    (None, 're', '.+'),
-                    ('/', None, None),
-                    ('test', 'default', None),
-                    ('/', None, None),
-                    ('name', 're', '[a-z]+'),
-                    ('', None, None)
-                ]
-            """
             # print(f"    _itertokens ({key}, {mode}, {conf})")
 
             if mode:  # 这是一个动态通配符部分
@@ -774,7 +709,10 @@ class Router(object):
                     pattern += "(?:%s)" % mask
                     key = "anon%d" % anons
                     anons += 1
-                else:  # 有名通配符 <id:int> -> (?P<id>-?\d+)
+                else:
+                    r"""
+                    有名通配符 <id:int> -> (?P<id>-?\d+)
+                    """
                     pattern += "(?P<%s>%s)" % (key, mask)
                     keys.append(key)
                 if in_filter:
@@ -859,16 +797,16 @@ class Router(object):
         self._compile(method)
 
     def _compile(self, method):
-        """
+        r"""
         性能核心: 将多个路由的正则表达式合并为一个.
         例如: Route1: ^/a$, Route2: ^/b$ -> 合并为 (^/a$)|(^/b$)
 
         _compile 中的正则合并逻辑
         如果你有如下路由:
-        /user/<id:int> -> ^/user/(?P<id>-?\\d+)$
+        /user/<id:int> -> ^/user/(?P<id>-?\d+)$
         /static/<file:path> -> ^/static/(?P<file>.+?)$
         Bottle 会将其编译为:
-        (^/user/(?P<id>-?\\d+)$)|(^/static/(?P<file>.+?)$)
+        (^/user/(?P<id>-?\d+)$)|(^/static/(?P<file>.+?)$)
         当路径为 /user/123 时, 正则表达式匹配成功. 由于它是第一个分支, match.lastindex 为 1. 程序立刻知道应该调用 rules[0] 对应的目标函数.
         这种方式避开了 Python for 循环逐个匹配的开销, 将匹配压力交给了经过 C 语言优化的 re 引擎.
         """
