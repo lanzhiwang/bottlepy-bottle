@@ -5,6 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "bottle_entry_points",
+            "type": "debugpy",
+            "request": "launch",
+            // ./bottle.py --help
+            // python -m bottle --help
+            // /root/miniconda3/envs/bottle_python_3_12/bin/bottle --help
+            // bottle --help
+            // ./bottle.py --debug learn.command.mymodule:app
+            // python -m bottle --debug learn.command.mymodule:app
+            // /root/miniconda3/envs/bottle_python_3_12/bin/bottle --debug learn.command.mymodule:app
+            // bottle --debug learn.command.mymodule:app
+            "program": "./bottle.py",
+            "args": [
+                "--debug",
+                "learn.command.mymodule:app"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
             "name": "bottle-debug-conda-python_3_12",
             "type": "debugpy",
             "request": "launch",

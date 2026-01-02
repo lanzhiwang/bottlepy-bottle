@@ -30,6 +30,13 @@ __license__ = "MIT"
 
 
 def _cli_parse(args):  # pragma: no coverage
+    """
+    print(args)
+    ['./bottle.py', '--help']
+
+    print(args)
+    ['./bottle.py', '--debug', '--reload', 'mymodule']
+    """
     from argparse import ArgumentParser
 
     parser = ArgumentParser(prog=args[0], usage="%(prog)s [options] package.module:app")
@@ -62,8 +69,21 @@ def _cli_parse(args):  # pragma: no coverage
 
 
 def _cli_patch(cli_args):  # pragma: no coverage
+    """
+    print(cli_args)
+    ['./bottle.py', '--help']
+
+    print(cli_args)
+    ['./bottle.py', '--debug', '--reload', 'mymodule']
+    """
     parsed_args, _ = _cli_parse(cli_args)
     opts = parsed_args
+    """
+    print(parsed_args)
+    Namespace(version=False, bind=None, server='wsgiref', plugin=None, conf=None, param=None, debug=True, reload=True, app='mymodule')
+    print(opts)
+    Namespace(version=False, bind=None, server='wsgiref', plugin=None, conf=None, param=None, debug=True, reload=True, app='mymodule')
+    """
     if opts.server:
         if opts.server.startswith("gevent"):
             import gevent.monkey
@@ -78,6 +98,16 @@ def _cli_patch(cli_args):  # pragma: no coverage
 """
 print(__name__)
 bottle
+
+print(__name__)
+__main__
+print(sys.argv)
+['./bottle.py', '--help']
+
+print(__name__)
+__main__
+print(sys.argv)
+['./bottle.py', '--debug', '--reload', 'mymodule']
 """
 if __name__ == "__main__":
     _cli_patch(sys.argv)
@@ -571,7 +601,7 @@ class Router(object):
                     stacklevel=4,
                 )
 
-            """
+            r"""
             Escaped wildcard
             处理转义: 如果通配符前有奇数个反斜杠, 说明它是被转义的普通字符
             在 Bottle 路由语法中, < 和 >(或者旧版的 :)是特殊字符, 用于定义动态变量.
@@ -627,11 +657,11 @@ class Router(object):
         添加一个新路由.
         核心逻辑: 将路径规则转换为正则表达式
         """
-        print(f"添加一个新路由")
-        print(f"Router add rule: {rule}")
-        print(f"Router add method: {method}")
-        print(f"Router add target: {target}")
-        print(f"Router add name: {name}")
+        # print(f"添加一个新路由")
+        # print(f"Router add rule: {rule}")
+        # print(f"Router add method: {method}")
+        # print(f"Router add target: {target}")
+        # print(f"Router add name: {name}")
 
         # Number of anonymous wildcards found
         # 匿名通配符计数
@@ -651,7 +681,7 @@ class Router(object):
         is_static = True
 
         for key, mode, conf in self._itertokens(rule):
-            """
+            r"""
             "/index",
                 [('/index', None, None)]
             "/contact",
@@ -729,7 +759,7 @@ class Router(object):
                     ('', None, None)
                 ]
             """
-            print(f"    _itertokens ({key}, {mode}, {conf})")
+            # print(f"    _itertokens ({key}, {mode}, {conf})")
 
             if mode:  # 这是一个动态通配符部分
                 is_static = False
@@ -737,9 +767,9 @@ class Router(object):
                     mode = self.default_filter
                 # 获取该过滤器的正则掩码和转换器
                 mask, in_filter, out_filter = self.filters[mode](conf)
-                print(f"        Router add mask: {mask}")
-                print(f"        Router add in_filter: {in_filter}")
-                print(f"        Router add out_filter: {out_filter}")
+                # print(f"        Router add mask: {mask}")
+                # print(f"        Router add in_filter: {in_filter}")
+                # print(f"        Router add out_filter: {out_filter}")
                 if not key:  # 匿名通配符 < :int >
                     pattern += "(?:%s)" % mask
                     key = "anon%d" % anons
@@ -754,24 +784,24 @@ class Router(object):
                 pattern += re.escape(key)
                 builder.append((None, key))
 
-        print(f"    Router add anons: {anons}")
-        print(f"    Router add keys: {keys}")
-        print(f"    Router add pattern: {pattern}")
-        print(f"    Router add filters: {filters}")
-        print(f"    Router add builder: {builder}")
-        print(f"    Router add is_static: {is_static}")
-        print(f"    _itertokens")
+        # print(f"    Router add anons: {anons}")
+        # print(f"    Router add keys: {keys}")
+        # print(f"    Router add pattern: {pattern}")
+        # print(f"    Router add filters: {filters}")
+        # print(f"    Router add builder: {builder}")
+        # print(f"    Router add is_static: {is_static}")
+        # print(f"    _itertokens")
 
         self.builder[rule] = builder  # 存储以便反向生成
         if name:
             self.builder[name] = builder
-        print(f"Router add self.builder: {self.builder}")
+        # print(f"Router add self.builder: {self.builder}")
 
         # 优化: 如果是纯静态路由且非严格顺序模式, 存入静态字典以实现 O(1) 查询
         if is_static and not self.strict_order:
             self.static.setdefault(method, {})
             self.static[method][self.build(rule)] = (target, None)
-            print(f"Router add self.static: {self.static}")
+            # print(f"Router add self.static: {self.static}")
             return
 
         # 编译并测试生成的正则表达式是否合法
@@ -786,6 +816,12 @@ class Router(object):
 
             def getargs(path):
                 url_args = re_match(path).groupdict()
+                """
+                print(url_args)
+                {'id': '123'}
+                print(filters)
+                [('id', <class 'int'>)]
+                """
                 for name, wildcard_filter in filters:
                     try:
                         url_args[name] = wildcard_filter(url_args[name])
@@ -804,9 +840,9 @@ class Router(object):
         # 将路由信息存入动态路由表
         flatpat = _re_flatten(pattern)
         whole_rule = (rule, flatpat, target, getargs)
-        print(f"Router add whole_rule: {whole_rule}")
+        # print(f"Router add whole_rule: {whole_rule}")
 
-        print(f"Router add self._groups: {self._groups}")
+        # print(f"Router add self._groups: {self._groups}")
         if (flatpat, method) in self._groups:
             if DEBUG:
                 msg = "Route <%s %s> overwrites a previously defined route"
@@ -816,8 +852,8 @@ class Router(object):
         else:
             self.dyna_routes.setdefault(method, []).append(whole_rule)
             self._groups[flatpat, method] = len(self.dyna_routes[method]) - 1
-        print(f"Router add self.dyna_routes: {self.dyna_routes}")
-        print(f"Router add self._groups: {self._groups}")
+        # print(f"Router add self.dyna_routes: {self.dyna_routes}")
+        # print(f"Router add self._groups: {self._groups}")
 
         # 增量编译: 将当前的动态路由列表重新编译成合并后的正则表达式块
         self._compile(method)
@@ -836,15 +872,15 @@ class Router(object):
         当路径为 /user/123 时, 正则表达式匹配成功. 由于它是第一个分支, match.lastindex 为 1. 程序立刻知道应该调用 rules[0] 对应的目标函数.
         这种方式避开了 Python for 循环逐个匹配的开销, 将匹配压力交给了经过 C 语言优化的 re 引擎.
         """
-        print(f"Router _compile method: {method}")
-        print(f"Router _compile self.dyna_routes: {self.dyna_routes}")
-        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
+        # print(f"Router _compile method: {method}")
+        # print(f"Router _compile self.dyna_routes: {self.dyna_routes}")
+        # print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
 
         all_rules = self.dyna_routes[method]
         comborules = self.dyna_regexes[method] = []
         maxgroups = self._MAX_GROUPS_PER_PATTERN
-        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
-        print(f"Router _compile comborules: {comborules}")
+        # print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
+        # print(f"Router _compile comborules: {comborules}")
 
         """
         按 99 个一组进行分块处理
@@ -870,13 +906,18 @@ class Router(object):
             combined = re.compile(combined).match
             rules = [(target, getargs) for (_, _, target, getargs) in some]
             comborules.append((combined, rules))
-        print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
-        print(f"Router _compile comborules: {comborules}")
+        # print(f"Router _compile self.dyna_regexes: {self.dyna_regexes}")
+        # print(f"Router _compile comborules: {comborules}")
 
     def build(self, _name, *anons, **query):
         """Build an URL by filling the wildcards in a rule."""
 
+        # print(f"Router build _name: {_name}")
+        # print(f"Router build anons: {anons}")
+        # print(f"Router build query: {query}")
+
         builder = self.builder.get(_name)
+        # print(f"Router build builder: {builder}")
 
         if not builder:
             raise RouteBuildError("No route with that name.", _name)
@@ -930,8 +971,7 @@ class Router(object):
         2. 依次检查动态路由合并块.
         """
 
-        print(f"请求匹配")
-        print(f"Router match environ: {environ}")
+        # print(f"Router match environ: {environ}")
 
         verb = environ["REQUEST_METHOD"].upper()
         path = environ["PATH_INFO"] or "/"
@@ -942,23 +982,24 @@ class Router(object):
             if verb == "HEAD"
             else ("PROXY", verb, "ANY")
         )
-        print(f"Router match verb: {verb}")
-        print(f"Router match path: {path}")
-        print(f"Router match methods: {methods}")
+        # print(f"Router match verb: {verb}")
+        # print(f"Router match path: {path}")
+        # print(f"Router match methods: {methods}")
 
-        print(f"Router match self.static: {self.static}")
-        print(f"Router match self.dyna_regexes: {self.dyna_regexes}")
+        # print(f"Router match self.static: {self.static}")
+        # print(f"Router match self.dyna_regexes: {self.dyna_regexes}")
         for method in methods:
             # A. 快速尝试静态匹配
             if method in self.static and path in self.static[method]:
                 target, getargs = self.static[method][path]
-                print(f"Router match target: {target}")
-                print(f"Router match getargs: {getargs}")
+                # print(f"Router match static target: {target}")
+                # print(f"Router match static getargs: {getargs}")
                 return target, getargs(path) if getargs else {}
             # B. 尝试合并正则匹配
             elif method in self.dyna_regexes:
                 for combined, rules in self.dyna_regexes[method]:
                     match = combined(path)
+                    # print(f"Router match dyna_regexes match: {match}")
                     if match:
                         """
                         重点: match.lastindex 指示了合并正则中哪一个分支(即哪一个路由)匹配成功
@@ -968,6 +1009,8 @@ class Router(object):
                         这是 Bottle 能够瞬间定位目标函数的秘密武器.
                         """
                         target, getargs = rules[match.lastindex - 1]
+                        # print(f"Router match dyna_regexes target: {target}")
+                        # print(f"Router match dyna_regexes getargs: {getargs}")
                         return target, getargs(path) if getargs else {}
 
         # No matching route found. Collect alternative methods for 405 response
@@ -5966,6 +6009,12 @@ print(ext)
 
 def _main(argv):  # pragma: no coverage
     args, parser = _cli_parse(argv)
+    """
+    print(args)
+    Namespace(version=False, bind=None, server='wsgiref', plugin=None, conf=None, param=None, debug=True, reload=False, app='mymodule')
+    print(parser)
+    ArgumentParser(prog='./bottle.py', usage='%(prog)s [options] package.module:app', description=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+    """
 
     def _cli_error(cli_msg):
         parser.print_help()
@@ -6021,6 +6070,10 @@ def _main(argv):  # pragma: no coverage
 
 
 def main():
+    """
+    print(sys.argv)
+    ['./bottle.py', '--debug', '--reload', 'mymodule']
+    """
     _main(sys.argv)
 
 

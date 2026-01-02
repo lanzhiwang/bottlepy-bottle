@@ -1,0 +1,55 @@
+/root/bottle/bottle.py:583: SyntaxWarning: invalid escape sequence '\.'
+  这里的 g[0] 匹配的是通配符(< 或 :)前面的所有反斜杠 \.
+/root/bottle/bottle.py:687: SyntaxWarning: invalid escape sequence '\<'
+  "/\<its1>/<:re:.+>/<test>/<name:re:[a-z]+>",
+1 ------------------------------------------------------------------------------------------
+router.rules: []
+router._groups: {}
+router.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')]}
+router.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
+router.dyna_routes: {}
+router.dyna_regexes: {}
+router.strict_order: False
+router.filters: {'re': <function Router.__init__.<locals>.<lambda> at 0x7f67b558e340>, 'int': <function Router.__init__.<locals>.<lambda> at 0x7f67b530df80>, 'float': <function Router.__init__.<locals>.<lambda> at 0x7f67b530ed40>, 'path': <function Router.__init__.<locals>.<lambda> at 0x7f67b4e48f40>}
+('index_handler', {})
+2 ------------------------------------------------------------------------------------------
+router.rules: []
+router._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2}
+router.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8720>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b89a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)]}
+router.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
+router.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>)]}
+router.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x27ba1a30>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>)])]}
+router.strict_order: False
+router.filters: {'re': <function Router.__init__.<locals>.<lambda> at 0x7f67b558e340>, 'int': <function Router.__init__.<locals>.<lambda> at 0x7f67b530df80>, 'float': <function Router.__init__.<locals>.<lambda> at 0x7f67b530ed40>, 'path': <function Router.__init__.<locals>.<lambda> at 0x7f67b4e48f40>}
+('user_detail', {'id': 123})
+('item_price', {'price': 19.99})
+('static_file', {'file': 'img/logo.png'})
+3 ------------------------------------------------------------------------------------------
+router.rules: []
+router._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/archive/(?:\\d{4})', 'GET'): 3, ('/page/(?:-?\\d+)', 'GET'): 4}
+router.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8720>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b89a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8d60>)]}
+router.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
+router.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8c20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8cc0>)]}
+router.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x27e23240>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8c20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8cc0>)])]}
+router.strict_order: False
+router.filters: {'re': <function Router.__init__.<locals>.<lambda> at 0x7f67b558e340>, 'int': <function Router.__init__.<locals>.<lambda> at 0x7f67b530df80>, 'float': <function Router.__init__.<locals>.<lambda> at 0x7f67b530ed40>, 'path': <function Router.__init__.<locals>.<lambda> at 0x7f67b4e48f40>, 'year': <function <lambda> at 0x7f67b45b8b80>}
+('archive_handler', {'y': 2024})
+4 ------------------------------------------------------------------------------------------
+router.rules: []
+router._groups: {('/user/(?:-?\\d+)', 'GET'): 0, ('/item/(?:-?[\\d.]+)', 'GET'): 1, ('/static/(?:.+?)', 'GET'): 2, ('/archive/(?:\\d{4})', 'GET'): 3, ('/page/(?:-?\\d+)', 'GET'): 4, ('/blog/(?:-?\\d+)', 'GET'): 5}
+router.builder: {'/index': [(None, '/index')], '/contact': [(None, '/contact')], '/user/<id:int>': [(None, '/user/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8720>)], '/item/<price:float>': [(None, '/item/'), ('price', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b89a0>)], '/static/<file:path>': [(None, '/static/'), ('file', <class 'str'>)], '/archive/<y:year>': [(None, '/archive/'), ('y', <class 'str'>)], '/page/<:int>': [(None, '/page/'), ('anon0', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8d60>)], '/blog/<id:int>': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8f40>)], 'blog_post': [(None, '/blog/'), ('id', <function Router.__init__.<locals>.<lambda>.<locals>.<lambda> at 0x7f67b45b8f40>)]}
+router.static: {'GET': {'/index': ('index_handler', None), '/contact': ('contact_handler', None)}}
+router.dyna_routes: {'GET': [('/user/<id:int>', '/user/(?:-?\\d+)', 'user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('/item/<price:float>', '/item/(?:-?[\\d.]+)', 'item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('/static/<file:path>', '/static/(?:.+?)', 'static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>), ('/archive/<y:year>', '/archive/(?:\\d{4})', 'archive_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8c20>), ('/page/<:int>', '/page/(?:-?\\d+)', 'page_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8cc0>), ('/blog/<id:int>', '/blog/(?:-?\\d+)', 'view_post', <function Router.add.<locals>.getargs at 0x7f67b45b8e00>)]}
+router.dyna_regexes: {'GET': [(<built-in method match of re.Pattern object at 0x281893b0>, [('user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8c20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8cc0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f67b45b8e00>)])]}
+router.strict_order: False
+router.filters: {'re': <function Router.__init__.<locals>.<lambda> at 0x7f67b558e340>, 'int': <function Router.__init__.<locals>.<lambda> at 0x7f67b530df80>, 'float': <function Router.__init__.<locals>.<lambda> at 0x7f67b530ed40>, 'path': <function Router.__init__.<locals>.<lambda> at 0x7f67b4e48f40>, 'year': <function <lambda> at 0x7f67b45b8b80>}
+/blog/100
+/blog/100?section=comments
+/page/10?section=comments
+5 ------------------------------------------------------------------------------------------
+(404, "Not found: '/missing'")
+(405, 'Method not allowed.') Allow: GET,POST
+6 ------------------------------------------------------------------------------------------
+combined: <built-in method match of re.Pattern object at 0x27bbdce0>
+rules: [('user_detail', <function Router.add.<locals>.getargs at 0x7f67b45b87c0>), ('item_price', <function Router.add.<locals>.getargs at 0x7f67b45b8900>), ('static_file', <function Router.add.<locals>.getargs at 0x7f67b45b8ae0>), ('archive_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8c20>), ('page_handler', <function Router.add.<locals>.getargs at 0x7f67b45b8cc0>), ('view_post', <function Router.add.<locals>.getargs at 0x7f67b45b8e00>), ('target1', <function Router.add.<locals>.getargs at 0x7f67b45b8a40>), ('target2', <function Router.add.<locals>.getargs at 0x7f67b45b8fe0>), ('target3', <function Router.add.<locals>.getargs at 0x7f67b45b9080>)]
+('target2', {'v2': 'hello'})
